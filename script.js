@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Logo Typing Animation - Looping
-    const logoHighlights = document.querySelectorAll('.logo-highlight');
+    const logoHighlights = document.querySelectorAll('.nav-logo .logo-highlight');
     if (logoHighlights.length > 0) {
         logoHighlights.forEach(el => {
             const text = "Jaguaré";
@@ -136,12 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'Ajustador Mecânico': 'manutencao',
         'Reparador de Linha Branca': 'manutencao',
         'Eletricista Instalador': 'manutencao',
-        'Operador de Microcomputador': 'informatica',
-        'Web Designer': 'informatica',
-        'Assistente de TI': 'informatica',
-        'Controle de Qualidade': 'administracao',
+        'Informática Básica': 'tecnologia',
+        'Web Designer': 'tecnologia',
+        'Tecnologia da Informação (TI)': 'tecnologia',
+        'Logística': 'administracao',
         'Recursos Humanos (RH)': 'administracao',
-        'Auxiliar Administrativo': 'administracao'
+        'Administração': 'administracao'
     };
 
     // Initialize course categories on sections
@@ -274,5 +274,224 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
+    }
+
+    // ===== CONTADOR ANIMADO NO HERO =====
+    const counterElement = document.querySelector('.impact-number');
+    if (counterElement) {
+        const target = parseInt(counterElement.getAttribute('data-target'));
+        const duration = 2000; // 2 segundos
+        let started = false;
+
+        const startCounter = () => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentCount = Math.floor(progress * target);
+                
+                // Formata com ponto (ex: 7.000)
+                counterElement.textContent = currentCount.toLocaleString('pt-BR');
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    counterElement.textContent = target.toLocaleString('pt-BR');
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !started) {
+                    started = true;
+                    setTimeout(startCounter, 500); // Pequeno delay para suavidade
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counterObserver.observe(counterElement);
+    }
+
+    // ===== LÓGICA DE FILTROS DA PÁGINA DE EVENTOS =====
+    const categoryBtns = document.querySelectorAll('.event-filter-btn');
+    const yearSelect = document.getElementById('yearSelect');
+    const eventCards = document.querySelectorAll('.event-card');
+    const noEventsMessage = document.getElementById('noEventsMessage');
+
+    if (categoryBtns.length > 0 && eventCards.length > 0) {
+        
+        let currentCategory = 'all';
+        let currentYear = 'all';
+
+        const filterEvents = () => {
+            let visibleCount = 0;
+
+            eventCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                const cardYear = card.getAttribute('data-year');
+
+                // Condição de Match
+                const matchCategory = currentCategory === 'all' || cardCategory === currentCategory;
+                const matchYear = currentYear === 'all' || cardYear === currentYear;
+
+                if (matchCategory && matchYear) {
+                    // Mostrar com animação
+                    card.style.display = 'flex';
+                    setTimeout(() => {
+                        card.classList.remove('hiding');
+                    }, 50);
+                    visibleCount++;
+                } else {
+                    // Esconder com animação
+                    card.classList.add('hiding');
+                    setTimeout(() => {
+                        if (card.classList.contains('hiding')) {
+                            card.style.display = 'none';
+                        }
+                    }, 400); // Tempo igual a transição do CSS
+                }
+            });
+
+            // Mostra ou esconde mensagem "nenhum evento"
+            if (noEventsMessage) {
+                setTimeout(() => {
+                    noEventsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+                }, 400);
+            }
+        };
+
+        // Event Listeners Category
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Atualiza UI dos bots
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentCategory = btn.getAttribute('data-filter');
+                filterEvents();
+            });
+        });
+
+        // Event Listener Year
+        if (yearSelect) {
+            yearSelect.addEventListener('change', (e) => {
+                currentYear = e.target.value;
+                filterEvents();
+            });
+        }
+    }
+
+    // ===== LÓGICA DO LIGHTBOX DE ÁLBUNS =====
+    const lightboxOverlay = document.getElementById('albumLightbox');
+    if (lightboxOverlay && typeof ALBUMS_DATA !== 'undefined') {
+        const titleEl = document.getElementById('lightboxTitle');
+        const gridView = document.getElementById('lightboxGrid');
+        const fullView = document.getElementById('lightboxFullscreen');
+        const fullscreenImg = document.getElementById('fullscreenImage');
+        const currentImgNum = document.getElementById('currentImgNum');
+        const totalImgNum = document.getElementById('totalImgNum');
+        const closeBtn = document.querySelector('.lightbox-close');
+        
+        let currentAlbum = null;
+        let currentIndex = 0;
+
+        // Abrir o álbum a partir dos cartões (toda a área do card)
+        const albumCards = document.querySelectorAll('.event-card[data-album]');
+        albumCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                const albumId = card.getAttribute('data-album');
+                if(ALBUMS_DATA[albumId]) {
+                    openAlbum(albumId);
+                }
+            });
+        });
+
+        function openAlbum(albumId) {
+            currentAlbum = ALBUMS_DATA[albumId];
+            titleEl.textContent = currentAlbum.title;
+            
+            // Limpa o grid antigo e monta o novo
+            gridView.innerHTML = '';
+            
+            currentAlbum.images.forEach((imgName, idx) => {
+                const img = document.createElement('img');
+                img.src = `${currentAlbum.path}thumb/${imgName}`;
+                img.classList.add('lightbox-thumb');
+                img.loading = 'lazy';
+                img.style.animationDelay = `${(idx % 15) * 0.05}s`;
+                
+                img.onload = () => img.classList.add('loaded');
+                
+                img.addEventListener('click', () => {
+                    openFullscreen(idx);
+                });
+                
+                gridView.appendChild(img);
+            });
+
+            // Reseta Views
+            gridView.style.display = 'grid';
+            fullView.style.display = 'none';
+            lightboxOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Evita scroll do site atrás do modal
+        }
+
+        // Navegação Tela Cheia
+        function openFullscreen(index) {
+            currentIndex = index;
+            const imgName = currentAlbum.images[currentIndex];
+            fullscreenImg.src = `${currentAlbum.path}full/${imgName}`;
+            
+            totalImgNum.textContent = currentAlbum.images.length;
+            currentImgNum.textContent = currentIndex + 1;
+            
+            gridView.style.display = 'none';
+            fullView.style.display = 'flex';
+        }
+
+        function showNext() {
+            if(currentIndex < currentAlbum.images.length - 1) {
+                openFullscreen(currentIndex + 1);
+            }
+        }
+
+        function showPrev() {
+            if(currentIndex > 0) {
+                openFullscreen(currentIndex - 1);
+            }
+        }
+
+        document.querySelector('.next-btn')?.addEventListener('click', showNext);
+        document.querySelector('.prev-btn')?.addEventListener('click', showPrev);
+
+        // Suporte a Setas do Teclado e Esc para fechar
+        document.addEventListener('keydown', (e) => {
+            if(!lightboxOverlay.classList.contains('active')) return;
+            
+            if(e.key === 'Escape') {
+                if(fullView.style.display === 'flex') {
+                    // Se estava tela cheia, volta pra grade
+                    fullView.style.display = 'none';
+                    gridView.style.display = 'grid';
+                } else {
+                    // Fecha o modal inteiro
+                    closeLightbox();
+                }
+            }
+            if(e.key === 'ArrowRight' && fullView.style.display === 'flex') showNext();
+            if(e.key === 'ArrowLeft' && fullView.style.display === 'flex') showPrev();
+        });
+
+        function closeLightbox() {
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            // Limpa fonte d'água grande após animação
+            setTimeout(() => { fullscreenImg.src = ''; }, 400); 
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
     }
 });

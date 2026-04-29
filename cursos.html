@@ -38,10 +38,21 @@
             <div class="nav-links">
                 <a href="historia.html">Nossa História</a>
                 <a href="cursos.html">Cursos</a>
-                <a href="index.html#eventos">Eventos</a>
+                <a href="eventos.html">Eventos</a>
                 <a href="calendario.html">Calendário</a>
             </div>
             <div class="nav-actions">
+                <div class="nav-social">
+                    <a href="https://www.instagram.com/cedespjaguare/" target="_blank" class="nav-social-link" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-social-icon"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@cedesp.jaguar?_r=1&_t=ZS-95mfSbp6soq" target="_blank" class="nav-social-link" aria-label="TikTok">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="nav-social-icon" viewBox="0 0 16 16">
+                            <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z"/>
+                        </svg>
+                    </a>
+                </div>
+
                 <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a>
                 <button class="mobile-menu-btn" aria-label="Abrir menu">
                     <span></span>
@@ -79,18 +90,138 @@
             </p>
 
             <!-- Filtro de Categorias -->
-            <div class="course-filters animate-on-scroll delay-1">
+            <div class="course-filters animate-on-scroll delay-1" id="filtros-cursos">
                 <span class="filter-label">Categorias:</span>
                 <button class="filter-btn active" data-filter="todos">Todos</button>
                 <button class="filter-btn" data-filter="administracao">Administração</button>
                 <button class="filter-btn" data-filter="manutencao">Manutenção</button>
-                <button class="filter-btn" data-filter="informatica">Informática</button>
+                <button class="filter-btn" data-filter="tecnologia">Tecnologia</button>
             </div>
         </div>
     </header>
 
-    <main>
-        <!-- 1. Ajustador Mecânico (White - Normal) -->
+    <main id="lista-de-cursos">
+        <!-- 1. Informática Básica (Tecnologia) - White - Normal -->
+        <section class="theme-white">
+            <div class="container">
+                <div class="course-row-wrapper animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Informática Básica</h2>
+                        <p>O ponto de partida essencial para o mundo digital. Aprenda a operar microcomputadores, softwares de escritório e ferramentas fundamentais.</p>
+                        <a href="cursos/operador-de-microcomputador.html" class="btn btn-primary">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Tecnologia da Informação (TI) (Tecnologia) - Purple - Reverse -->
+        <section class="theme-purple">
+            <div class="container">
+                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Tecnologia da Informação (TI)</h2>
+                        <p>Domine hardware, redes e suporte técnico. Uma formação completa para ingressar na área tecnológica e de suporte a sistemas.</p>
+                        <a href="cursos/assistente-de-ti.html" class="btn btn-outline">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Web Designer (Tecnologia) - Orange - Normal -->
+        <section class="theme-orange">
+            <div class="container">
+                <div class="course-row-wrapper animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Web Designer</h2>
+                        <p>Torne-se um criador da internet. Aprenda a pensar no layout, usabilidade e codificação de sites modernos, atrativos e acessíveis.</p>
+                        <a href="cursos/web-designer.html" class="btn btn-primary">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Administração (Administração) - White - Reverse -->
+        <section class="theme-white">
+            <div class="container">
+                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Administração</h2>
+                        <p>Desenvolva habilidades essenciais em gestão de documentos, rotinas administrativas e processos organizacionais para diversos setores.</p>
+                        <a href="cursos/auxiliar-administrativo.html" class="btn btn-primary">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Logística (Administração) - Purple - Normal -->
+        <section class="theme-purple">
+            <div class="container">
+                <div class="course-row-wrapper animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Logística</h2>
+                        <p>Aprenda a otimizar processos de armazenamento, distribuição e padrões de qualidade, garantindo eficiência na cadeia de suprimentos.</p>
+                        <a href="cursos/controle-de-qualidade.html" class="btn btn-outline">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Recursos Humanos (RH) (Administração) - Orange - Reverse -->
+        <section class="theme-orange">
+            <div class="container">
+                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
+                    <div class="course-media">
+                        <div class="course-video-placeholder">
+                            <div class="play-circle">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <h2>Recursos Humanos (RH)</h2>
+                        <p>Saiba atuar com processos de recrutamento, departamento pessoal, desenvolvimento de talentos corporativos e gestão de clima organizacional.</p>
+                        <a href="cursos/rh.html" class="btn btn-primary">Ver detalhes do curso</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Ajustador Mecânico (Manutenção) - White - Normal -->
         <section class="theme-white">
             <div class="container">
                 <div class="course-row-wrapper animate-on-scroll delay-1">
@@ -110,70 +241,10 @@
             </div>
         </section>
 
-        <!-- 2. Assistente de TI (Purple - Reverse) -->
+        <!-- 8. Eletricista Instalador (Manutenção) - Purple - Reverse -->
         <section class="theme-purple">
             <div class="container">
                 <div class="course-row-wrapper reverse animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Assistente de TI</h2>
-                        <p>Entenda o funcionamento de hardware, redes e suporte a sistemas. Profissão central em qualquer empresa atual.</p>
-                        <a href="cursos/assistente-de-ti.html" class="btn btn-outline">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Auxiliar Administrativo (Orange - Normal) -->
-        <section class="theme-orange">
-            <div class="container">
-                <div class="course-row-wrapper animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Auxiliar Administrativo</h2>
-                        <p>O motor de toda organização. Desde arquivamento, atendimento até controle logístico e financeiro rotineiro.</p>
-                        <a href="cursos/auxiliar-administrativo.html" class="btn btn-primary">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Controle de Qualidade (White - Reverse) -->
-        <section class="theme-white">
-            <div class="container">
-                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Controle de Qualidade</h2>
-                        <p>Aprenda as ferramentas de inspeção, normas e metodologias para garantir que os padrões produtivos sejam sempre excepcionais.</p>
-                        <a href="cursos/controle-de-qualidade.html" class="btn btn-primary">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. Eletricista Instalador (Purple - Normal) -->
-        <section class="theme-purple">
-            <div class="container">
-                <div class="course-row-wrapper animate-on-scroll delay-1">
                     <div class="course-media">
                         <div class="course-video-placeholder">
                             <div class="play-circle">
@@ -190,50 +261,10 @@
             </div>
         </section>
 
-        <!-- 6. Operador de Microcomputador (Orange - Reverse) -->
+        <!-- 9. Reparador de Linha Branca (Manutenção) - Orange - Normal -->
         <section class="theme-orange">
             <div class="container">
-                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Operador de Microcomputador</h2>
-                        <p>O primeiro passo para o mundo digital. Aprenda os principais softwares de escritório, sistemas operacionais e navegação avançada.</p>
-                        <a href="cursos/operador-de-microcomputador.html" class="btn btn-primary">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. Recursos Humanos (RH) (White - Normal) -->
-        <section class="theme-white">
-            <div class="container">
                 <div class="course-row-wrapper animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Recursos Humanos (RH)</h2>
-                        <p>Saiba atuar com processos de recrutamento, departamento pessoal, desenvolvimento de talentos corporativos e gestão de clima organizacional.</p>
-                        <a href="cursos/rh.html" class="btn btn-primary">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. Reparador de Linha Branca (Purple - Reverse) -->
-        <section class="theme-purple">
-            <div class="container">
-                <div class="course-row-wrapper reverse animate-on-scroll delay-1">
                     <div class="course-media">
                         <div class="course-video-placeholder">
                             <div class="play-circle">
@@ -244,27 +275,7 @@
                     <div class="course-content">
                         <h2>Reparador de Linha Branca</h2>
                         <p>Domine o consertos de geladeiras, máquinas de lavar e fogões. Uma profissão de alta demanda técnica e excelente retorno no mercado.</p>
-                        <a href="cursos/reparador-de-linha-branca.html" class="btn btn-outline">Ver detalhes do curso</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 9. Web Designer (Orange - Normal) -->
-        <section class="theme-orange">
-            <div class="container">
-                <div class="course-row-wrapper animate-on-scroll delay-1">
-                    <div class="course-media">
-                        <div class="course-video-placeholder">
-                            <div class="play-circle">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-content">
-                        <h2>Web Designer</h2>
-                        <p>Torne-se um criador da internet. Aprenda a pensar no layout, usabilidade e codificação de sites modernos, atrativos e acessíveis.</p>
-                        <a href="cursos/web-designer.html" class="btn btn-primary">Ver detalhes do curso</a>
+                        <a href="cursos/reparador-de-linha-branca.html" class="btn btn-primary">Ver detalhes do curso</a>
                     </div>
                 </div>
             </div>

@@ -3,105 +3,579 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${c.name} | Rede Comunitá Jaguaré</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Web Designer | Rede Comunitá Jaguaré</title>
+    <meta name="description" content="Curso gratuito de Web Designer no CEDESP Jaguaré. HTML, CSS, JavaScript e Figma com certificação SENAI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* ── Course tokens ── */
+        :root {--c-accent:#7c3aed;--c-rgb:124,58,237;--c-light:#f5f0ff;}
+
+        /* ── HERO ── */
+        .course-hero {
+            background:linear-gradient(135deg, #1e0035 0%, #4c1d95 50%, #7c3aed 100%);
+            padding:150px 0 0; position:relative; overflow:hidden;
+        }
+        .course-hero::after {
+            content:''; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(ellipse 80% 55% at 80% 20%,rgba(255,255,255,0.07),transparent 70%),
+                       radial-gradient(ellipse 50% 70% at 10% 85%,rgba(0,0,0,0.18),transparent 60%);
+        }
+        .hero-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:60px;
+            align-items:center; position:relative; z-index:2; padding-bottom:90px;
+        }
+
+        /* eyebrow — SENAI badge */
+        .hero-eyebrow {
+            display:inline-flex; align-items:center; gap:10px;
+            background:rgba(255,255,255,0.15); backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.3);
+            padding:8px 20px; border-radius:40px; margin-bottom:28px;
+            font-size:0.8rem; font-weight:700; color:white;
+            letter-spacing:0.08em; text-transform:uppercase;
+        }
+        .hero-eyebrow .senai-img {
+            height:22px; background:white;
+            padding:3px 6px; border-radius:6px;
+            display:block; object-fit:contain;
+        }
+
+        .course-title {
+            font-size:clamp(2.8rem,5vw,4.4rem);
+            font-weight:900; line-height:1.05; margin-bottom:24px;
+            color:white; letter-spacing:-0.02em;
+        }
+        .course-title .accent{color:#FFD166;}
+        .course-desc {
+            font-size:1.12rem; line-height:1.78;
+            color:rgba(255,255,255,0.88); margin-bottom:40px; max-width:500px;
+        }
+        .hero-pills{display:flex; gap:14px; flex-wrap:wrap;}
+        .hero-pill {
+            display:flex; align-items:center; gap:10px;
+            padding:12px 24px; border-radius:50px;
+            background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.25);
+            font-weight:700; font-size:0.9rem; color:white; backdrop-filter:blur(6px);
+        }
+        .hero-pill .pill-value{font-size:1.1rem; font-weight:900; color:#FFD166; margin-right:2px;}
+
+        /* ── ORBITAL SYSTEM ── */
+        .hero-visual {
+            position:relative; display:flex;
+            align-items:center; justify-content:center; min-height:380px;
+        }
+        .orbit-system {
+            position:relative; width:380px; height:380px;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .o-ring {
+            position:absolute; border-radius:50%;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+        .o-ring-inner {width:220px; height:220px;}
+        .o-ring-outer {
+            width:350px; height:350px;
+            border-style:dashed; border-color:rgba(255,255,255,0.06);
+        }
+        .o-core {
+            position:absolute; width:88px; height:88px; border-radius:50%;
+            background:radial-gradient(circle at 35% 35%, rgba(255,255,255,0.35), #7c3aed);
+            box-shadow:0 0 0 14px rgba(124,58,237,0.18), 0 0 50px rgba(124,58,237,0.5);
+            animation:corePulse 3.5s ease-in-out infinite;
+        }
+        @keyframes corePulse {
+            0%,100% {transform:scale(1); box-shadow:0 0 0 14px rgba(124,58,237,0.18),0 0 50px rgba(124,58,237,0.5);}
+            50%  {transform:scale(1.1); box-shadow:0 0 0 20px rgba(124,58,237,0.12),0 0 70px rgba(124,58,237,0.7);}
+        }
+        .o-logo {
+            position:absolute; top:50%; left:50%;
+            margin:-32px 0 0 -32px;
+            width:64px; height:64px;
+            background:white; border-radius:18px; padding:10px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 8px 28px rgba(0,0,0,0.25);
+        }
+        .o-logo img{width:100%; height:100%; object-fit:contain;}
+
+        /* per-logo orbit keyframes */
+        @keyframes orb_html5_svg_0_cw {
+    0% { transform: translate(0.0px, -110.0px); }
+    25% { transform: translate(110.0px, -0.0px); }
+    50% { transform: translate(0.0px, 110.0px); }
+    75% { transform: translate(-110.0px, 0.0px); }
+    100% { transform: translate(-0.0px, -110.0px); }
+}
+
+@keyframes orb_css3_svg_180_cw {
+    0% { transform: translate(0.0px, 110.0px); }
+    25% { transform: translate(-110.0px, 0.0px); }
+    50% { transform: translate(-0.0px, -110.0px); }
+    75% { transform: translate(110.0px, -0.0px); }
+    100% { transform: translate(0.0px, 110.0px); }
+}
+
+@keyframes orb_javascript_svg_0_ccw {
+    0% { transform: translate(0.0px, -175.0px); }
+    25% { transform: translate(-175.0px, -0.0px); }
+    50% { transform: translate(-0.0px, 175.0px); }
+    75% { transform: translate(175.0px, 0.0px); }
+    100% { transform: translate(0.0px, -175.0px); }
+}
+
+@keyframes orb_figma_svg_120_ccw {
+    0% { transform: translate(151.6px, 87.5px); }
+    25% { transform: translate(87.5px, -151.6px); }
+    50% { transform: translate(-151.6px, -87.5px); }
+    75% { transform: translate(-87.5px, 151.6px); }
+    100% { transform: translate(151.6px, 87.5px); }
+}
+
+@keyframes orb_vscode_svg_240_ccw {
+    0% { transform: translate(-151.6px, 87.5px); }
+    25% { transform: translate(87.5px, 151.6px); }
+    50% { transform: translate(151.6px, -87.5px); }
+    75% { transform: translate(-87.5px, -151.6px); }
+    100% { transform: translate(-151.6px, 87.5px); }
+}
+
+        /* ── SCROLL HINT ── */
+        .scroll-hint {
+            position:absolute; bottom:28px; left:50%;
+            transform:translateX(-50%); z-index:4;
+            display:flex; flex-direction:column; align-items:center; gap:8px;
+            color:rgba(255,255,255,0.6); cursor:pointer;
+            animation:scrollFade 2s ease-in-out infinite;
+            text-decoration:none;
+        }
+        .scroll-hint span {
+            font-size:0.72rem; font-weight:700;
+            letter-spacing:0.15em; text-transform:uppercase;
+        }
+        .scroll-hint-dots {
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+        }
+        .scroll-hint-dots i {
+            width:6px; height:6px; border-radius:50%;
+            background:rgba(255,255,255,0.5);
+            animation:dotBounce 1.4s ease-in-out infinite;
+        }
+        .scroll-hint-dots i:nth-child(2) { animation-delay:0.2s; }
+        .scroll-hint-dots i:nth-child(3) { animation-delay:0.4s; }
+        @keyframes dotBounce {
+            0%,100% { opacity:0.3; transform:scaleY(0.6); }
+            50%      { opacity:1;   transform:scaleY(1.4); }
+        }
+        @keyframes scrollFade {
+            0%,100% { opacity:0.5; transform:translateX(-50%) translateY(0); }
+            50%      { opacity:1;   transform:translateX(-50%) translateY(6px); }
+        }
+
+        /* ── DIVIDER ── */
+        .hero-divider {
+            height:65px; background:white;
+            clip-path:ellipse(54% 100% at 50% 100%); margin-top:-1px;
+        }
+
+        /* ── HIGHLIGHTS BRIDGE ── */
+        .course-highlights {
+            background:white;
+            padding:0 0 2px;
+        }
+        .highlights-strip {
+            display:grid; grid-template-columns:repeat(4,1fr);
+            border-radius:24px; overflow:hidden;
+            box-shadow:0 4px 30px rgba(0,0,0,0.08);
+            border:1px solid #f0f0f0;
+            margin-bottom:0;
+        }
+        .hl-item {
+            padding:32px 28px; display:flex;
+            align-items:center; gap:18px;
+            background:white; position:relative;
+            transition:background 0.25s ease;
+        }
+        .hl-item:not(:last-child)::after {
+            content:''; position:absolute; right:0; top:20%; height:60%;
+            width:1px; background:#f0f0f0;
+        }
+        .hl-item:hover { background:var(--c-light); }
+        .hl-icon {
+            width:52px; height:52px; border-radius:16px; flex-shrink:0;
+            background:linear-gradient(135deg,#7c3aed,rgba(124,58,237,0.5));
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.4rem; box-shadow:0 4px 14px rgba(124,58,237,0.3);
+        }
+        .hl-text { display:flex; flex-direction:column; }
+        .hl-value {
+            font-size:1.2rem; font-weight:900; color:var(--dark); line-height:1.1;
+        }
+        .hl-label {
+            font-size:0.82rem; color:var(--text-muted); font-weight:500; margin-top:3px;
+        }
+        @media (max-width:900px) {
+            .highlights-strip { grid-template-columns:repeat(2,1fr); }
+            .hl-item:nth-child(2)::after { display:none; }
+        }
+        @media (max-width:560px) {
+            .highlights-strip { grid-template-columns:1fr 1fr; }
+            .hl-item { padding:24px 18px; gap:12px; }
+        }
+
+        /* ── BODY ── */
+        .course-body{background:var(--bg-light);}
+
+        /* ── SECTION HEADER ── */
+        .c-section-header{text-align:center; margin-bottom:60px;}
+        .c-section-tag {
+            display:inline-block; padding:6px 18px; border-radius:40px;
+            background:rgba(124,58,237,0.1); border:1.5px solid rgba(124,58,237,0.25);
+            color:#7c3aed; font-size:0.78rem; font-weight:800;
+            letter-spacing:0.12em; text-transform:uppercase; margin-bottom:16px;
+        }
+        .c-section-title{font-size:2.2rem; font-weight:900; color:var(--dark); line-height:1.15; letter-spacing:-0.01em;}
+        .c-section-sub{color:var(--text-muted); font-size:1.05rem; margin-top:12px;}
+
+        /* ── VIDEO ── */
+        .c-video-section{background:white; padding:80px 0;}
+        .c-video-wrap{max-width:880px; margin:0 auto;}
+        .c-video-placeholder {
+            width:100%; aspect-ratio:16/9;
+            background:linear-gradient(135deg,#0f0f1e 0%,#1a102e 100%);
+            border-radius:24px; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:20px;
+            box-shadow:0 25px 60px rgba(0,0,0,0.2); cursor:pointer;
+            border:1px solid rgba(255,255,255,0.06); position:relative; overflow:hidden;
+            transition:transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .c-video-placeholder::before {
+            content:''; position:absolute; inset:0;
+            background:radial-gradient(ellipse at 50% 50%,rgba(124,58,237,0.18),transparent 70%);
+        }
+        .c-video-placeholder:hover{transform:translateY(-4px); box-shadow:0 35px 70px rgba(0,0,0,0.28);}
+        .c-play-btn {
+            width:84px; height:84px; border-radius:50%; background:#7c3aed;
+            box-shadow:0 0 0 14px rgba(124,58,237,0.2);
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s ease; position:relative; z-index:1;
+        }
+        .c-play-btn svg{width:32px; height:32px; fill:white; margin-left:6px;}
+        .c-video-placeholder:hover .c-play-btn{transform:scale(1.1); box-shadow:0 0 0 20px rgba(124,58,237,0.12);}
+        .c-video-label{
+            color:rgba(255,255,255,0.4); font-size:0.82rem;
+            font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+            position:relative; z-index:1;
+        }
+
+        /* ── MODULES ── */
+        .c-modules-section{background:var(--c-light); padding:90px 0;}
+        .c-modules{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:28px;}
+        .c-module {
+            background:white; border-radius:20px; padding:36px 32px 32px;
+            box-shadow:0 4px 24px rgba(0,0,0,0.06);
+            border:1px solid rgba(0,0,0,0.05);
+            position:relative; overflow:hidden;
+            transition:transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .c-module::before {
+            content:''; position:absolute;
+            top:0; left:0; right:0; height:5px;
+            background:linear-gradient(90deg,#7c3aed,#FFD166);
+        }
+        .c-module:hover{transform:translateY(-8px); box-shadow:0 20px 50px rgba(124,58,237,0.18);}
+        .c-module-num {
+            font-size:5rem; font-weight:900; line-height:1;
+            color:rgba(124,58,237,0.07); position:absolute; top:14px; right:22px; user-select:none;
+        }
+        .c-module h3{font-size:1.2rem; font-weight:800; color:var(--dark); margin-bottom:14px; position:relative;}
+        .c-module p{color:var(--text-muted); font-size:0.97rem; line-height:1.75; position:relative;}
+
+        /* ── TOOLS ── */
+        .c-tools-section{background:white; padding:90px 0;}
+        .c-tools-grid{display:flex; flex-wrap:wrap; justify-content:center; gap:16px;}
+        .c-tool {
+            background:#f8fafc; border-radius:16px; padding:18px 28px;
+            display:flex; align-items:center; gap:14px;
+            border:1.5px solid #eef2f7; transition:all 0.25s ease; cursor:default;
+        }
+        .c-tool:hover{
+            background:white; border-color:#7c3aed;
+            box-shadow:0 8px 30px rgba(124,58,237,0.15); transform:translateY(-4px);
+        }
+        .c-tool-icon{width:38px; height:38px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+        .c-tool-icon img{width:100%; height:100%; object-fit:contain;}
+        .c-tool-name{font-weight:700; color:var(--dark); font-size:0.97rem; white-space:nowrap;}
+
+        /* ── CTA ── */
+        .c-cta-section{padding:60px 0 100px; background:var(--bg-light);}
+        .c-cta {
+            background:linear-gradient(135deg, #1e0035 0%, #4c1d95 50%, #7c3aed 100%);
+            border-radius:32px; padding:90px 40px; text-align:center;
+            position:relative; overflow:hidden;
+            box-shadow:0 20px 60px rgba(0,0,0,0.22);
+        }
+        .c-cta::after {
+            content:''; position:absolute; inset:0;
+            background:radial-gradient(ellipse 70% 60% at 80% 30%,rgba(255,255,255,0.08),transparent 70%);
+        }
+        .c-cta-inner{position:relative; z-index:2;}
+        .c-cta h2{font-size:2.8rem; font-weight:900; margin-bottom:18px; color:white; letter-spacing:-0.02em;}
+        .c-cta p{font-size:1.2rem; color:rgba(255,255,255,0.87); margin:0 auto 44px; max-width:580px;}
+        .c-cta-btns{display:flex; gap:20px; justify-content:center; flex-wrap:wrap;}
+        .btn-cta-primary {
+            padding:18px 48px; border-radius:50px; background:#FFD166; color:#1a1a1a;
+            font-weight:900; font-size:1rem; letter-spacing:0.02em;
+            text-decoration:none; transition:all 0.3s;
+            box-shadow:0 10px 30px rgba(255,209,102,0.4); display:inline-block;
+        }
+        .btn-cta-primary:hover{transform:translateY(-3px); box-shadow:0 16px 40px rgba(255,209,102,0.6);}
+        .btn-cta-outline {
+            padding:18px 48px; border-radius:50px;
+            background:rgba(255,255,255,0.12); color:white; font-weight:700; font-size:1rem;
+            text-decoration:none; border:2px solid rgba(255,255,255,0.4);
+            transition:all 0.3s; backdrop-filter:blur(8px); display:inline-block;
+        }
+        .btn-cta-outline:hover{background:rgba(255,255,255,0.22); border-color:white; transform:translateY(-3px);}
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:768px){
+            .hero-grid{grid-template-columns:1fr; gap:24px; padding-bottom:50px;}
+            .hero-visual{min-height:260px;}
+            .orbit-system{transform:scale(0.68); transform-origin:center;}
+            .course-title{font-size:2.6rem;}
+            .c-cta h2{font-size:2.1rem;}
+        }
+    </style>
 </head>
 <body>
-    <div class="ticker-wrap">
-        <div class="ticker">
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
-        </div>
-    </div>
-    
+    <div class="ticker-wrap"><div class="ticker"><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span><span class="ticker-item">Quebrando barreiras, mudando destinos</span></div></div>
+
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="../index.html" class="nav-logo">
-                <img src="../images/logo_rede_comunita.png" alt="Rede Comunitá" class="logo-img">
-                <span class="logo-wrapper">
-                    <span class="logo-highlight">Jaguaré</span>
-                </span>
-            </a>
-            <div class="nav-links">
-                <a href="../cursos.html">Cursos</a>
-                <a href="../index.html#eventos">Eventos</a>
-                <a href="../index.html#calendario">Calendário</a>
-            </div>
-            <div class="nav-actions">
-                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a>
-                <button class="mobile-menu-btn" aria-label="Abrir menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
+            <a href="../index.html" class="nav-logo"><img src="../images/logo_rede_comunita.png" alt="CEDESP" class="logo-icon-crop"><span class="logo-text-cedesp">CEDESP</span><span class="logo-wrapper"><span class="logo-highlight">Jaguaré</span></span></a>
+            <div class="nav-links"><a href="../historia.html">Nossa História</a><a href="../cursos.html">Cursos</a><a href="../eventos.html">Eventos</a><a href="../calendario.html">Calendário</a></div>
+            <div class="nav-actions"><a href="https://wa.me/5511972423702" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a></div>
         </div>
     </nav>
 
-    <header class="page-header theme-white" style="padding-top: 180px;">
+    <!-- ── HERO ── -->
+    <header class="course-hero">
         <div class="container">
-            <h1 style="color: var(--hero-bg);">${c.name}</h1>
-            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto; color: var(--text-muted);">
-                ${c.desc}
-            </p>
-        </div>
-    </header>
+            <div class="hero-grid">
+                <div class="hero-text animate-on-scroll is-visible">
+                                                                                                    <div class="trust-badges" style="margin-bottom: 32px; position: relative; flex-direction: row; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div class="trust-badge senai-badge">
+                            <div class="badge-logo-container">
+                                <img src="../images/logo_senai.png?v=1.2" alt="SENAI">
+                            </div>
+                            <div class="badge-text">
+                                <span class="badge-title">Certificação Oficial</span>
+                                <span class="badge-sub">Padrão SENAI</span>
+                            </div>
+                        </div>
+                        <div class="trust-badge bu-badge">
+                            <div class="badge-logo-container">
+                                <img src="../images/logobu.png" alt="Bilhete Único">
+                            </div>
+                            <div class="badge-text">
+                                <span class="badge-title">Bilhete Único</span>
+                                <span class="badge-sub">Passe Livre Estudantil</span>
+                            </div>
+                        </div>
 
-    <main style="padding: 60px 0; min-height: 40vh;">
-        <div class="container" style="text-align: center;">
-            <div style="background: rgba(247, 190, 19, 0.1); padding: 40px; border-radius: 20px; max-width: 600px; margin: 0 auto;">
-                <h2>Turmas Abertas em Breve</h2>
-                <p style="margin-top: 20px;">Preencha seus dados para receber o aviso de matrículas para a próxima turma de <strong>${c.name}</strong>.</p>
-                <div style="margin-top: 40px; display: flex; justify-content: center; gap: 16px;">
-                    <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!">Tenho Interesse</a>
-                    <a href="../cursos.html" class="btn btn-outline btn-large">Voltar aos Cursos</a>
+                        <!-- Selo Flutuante de Benefícios -->
+                        <div class="floating-benefits-seal" style="top: -20px; right: -10px;">
+                            <div class="seal-icons">🍴 📚</div>
+                            <div class="seal-text">Lanche +<br>Material<br>GRÁTIS</div>
+                        </div>
+                    </div>
+                    <h1 class="course-title">Web<br><span class="accent">Designer</span></h1>
+                    <p class="course-desc">Crie sites modernos e experiências digitais incríveis. Da prototipagem no Figma ao código — construa sua presença no mercado digital.</p>
+                    <div class="hero-pills">
+                        <div class="hero-pill"><span class="pill-value">600h</span>Carga horária</div>
+                        <div class="hero-pill"><span class="pill-value">SENAI</span>Certificação</div>
+                        <div class="hero-pill"><span class="pill-value">100%</span>Gratuito</div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+            <div class="orbit-system">
+                <div class="o-ring o-ring-inner"></div>
+                <div class="o-ring o-ring-outer"></div>
+                <div class="o-core"></div>
+            <div class="o-logo" style="animation:orb_html5_svg_0_cw 10s linear infinite;"><img src="logos/html5.svg" alt="HTML5"></div>
+            <div class="o-logo" style="animation:orb_css3_svg_180_cw 10s linear infinite;"><img src="logos/css3.svg" alt="CSS3"></div>
+            <div class="o-logo" style="animation:orb_javascript_svg_0_ccw 17s linear infinite;"><img src="logos/javascript.svg" alt="JavaScript"></div>
+            <div class="o-logo" style="animation:orb_figma_svg_120_ccw 17s linear infinite;"><img src="logos/figma.svg" alt="Figma"></div>
+            <div class="o-logo" style="animation:orb_vscode_svg_240_ccw 17s linear infinite;"><img src="logos/vscode.svg" alt="VS Code"></div>
+            </div>
                 </div>
             </div>
         </div>
+        <!-- scroll indicator -->
+        <a class="scroll-hint" href="#course-highlights">
+            <span>Descubra o curso</span>
+            <div class="scroll-hint-dots"><i></i><i></i><i></i></div>
+        </a>
+    </header>
+    <div class="hero-divider"></div>
+
+    <!-- ── HIGHLIGHTS BRIDGE ── -->
+    <section class="course-highlights" id="course-highlights">
+        <div class="container">
+            <div class="highlights-strip animate-on-scroll is-visible">
+                <div class="hl-item">
+                    <div class="hl-icon">🏆</div>
+                    <div class="hl-text">
+                        <span class="hl-value">Certificação SENAI</span>
+                        <span class="hl-label">Reconhecida em todo o Brasil</span>
+                    </div>
+                </div>
+                <div class="hl-item">
+                    <div class="hl-icon">⏱️</div>
+                    <div class="hl-text">
+                        <span class="hl-value">600h de curso</span>
+                        <span class="hl-label">Formação prática e completa</span>
+                    </div>
+                </div>
+                <div class="hl-item">
+                    <div class="hl-icon">💰</div>
+                    <div class="hl-text">
+                        <span class="hl-value">100% Gratuito</span>
+                        <span class="hl-label">Sem mensalidades ou taxas</span>
+                    </div>
+                </div>
+                <div class="hl-item">
+                    <div class="hl-icon">💼</div>
+                    <div class="hl-text">
+                        <span class="hl-value">Alta Empregabilidade</span>
+                        <span class="hl-label">Profissionais em alta demanda</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="course-body">
+
+        <!-- ── VÍDEO ── -->
+        <section class="c-video-section">
+            <div class="container">
+                <div class="c-section-header animate-on-scroll">
+                    <div class="c-section-tag">🎥 Conheça o Curso</div>
+                    <h2 class="c-section-title">O professor apresenta</h2>
+                    <p class="c-section-sub">Assista e descubra o que este curso tem a oferecer para a sua carreira</p>
+                </div>
+                <div class="c-video-wrap">
+                    <div class="c-video-placeholder animate-on-scroll">
+                        <div class="c-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                        <span class="c-video-label">Vídeo de apresentação</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── MÓDULOS ── -->
+        <section class="c-modules-section">
+            <div class="container">
+                <div class="c-section-header animate-on-scroll">
+                    <div class="c-section-tag">📚 Conteúdo Programático</div>
+                    <h2 class="c-section-title">O que você vai aprender</h2>
+                    <p class="c-section-sub">Conteúdo baseado no plano de ensino oficial do SENAI</p>
+                </div>
+                <div class="c-modules">
+            <div class="c-module animate-on-scroll">
+                <span class="c-module-num">01</span>
+                <h3>HTML5 Semântico</h3>
+                <p>Estruturação de páginas com tags semânticas, acessibilidade (ARIA), formulários avançados, multimídia e SEO on-page.</p>
+            </div>
+            <div class="c-module animate-on-scroll">
+                <span class="c-module-num">02</span>
+                <h3>CSS3 e Design Responsivo</h3>
+                <p>Flexbox, Grid Layout, animações CSS, media queries e metodologia BEM para criar interfaces em qualquer tela.</p>
+            </div>
+            <div class="c-module animate-on-scroll">
+                <span class="c-module-num">03</span>
+                <h3>JavaScript Essencial</h3>
+                <p>Manipulação do DOM, eventos, fetch API, validação de formulários e introdução a frameworks modernos.</p>
+            </div>
+            <div class="c-module animate-on-scroll">
+                <span class="c-module-num">04</span>
+                <h3>UI/UX com Figma</h3>
+                <p>Wireframes, protótipos navegáveis, sistemas de design e handoff para desenvolvimento — o workflow completo do designer.</p>
+            </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── FERRAMENTAS ── -->
+        <section class="c-tools-section">
+            <div class="container">
+                <div class="c-section-header animate-on-scroll">
+                    <div class="c-section-tag">🛠️ Ferramentas na Prática</div>
+                    <h2 class="c-section-title">Tecnologias que você vai dominar</h2>
+                    <p class="c-section-sub">Softwares e plataformas usadas no mercado de trabalho</p>
+                </div>
+                <div class="c-tools-grid">
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/html5.svg" alt="HTML5"></div>
+                <span class="c-tool-name">HTML5</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/css3.svg" alt="CSS3"></div>
+                <span class="c-tool-name">CSS3</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/javascript.svg" alt="JS"></div>
+                <span class="c-tool-name">JavaScript</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/figma.svg" alt="Figma"></div>
+                <span class="c-tool-name">Figma</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/vscode.svg" alt="VS Code"></div>
+                <span class="c-tool-name">VS Code</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/wordpress.svg" alt="WordPress"></div>
+                <span class="c-tool-name">WordPress</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/chrome.svg" alt="Chrome"></div>
+                <span class="c-tool-name">Chrome DevTools</span>
+            </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CTA ── -->
+        <section class="c-cta-section">
+            <div class="container">
+                <div class="c-cta animate-on-scroll">
+                    <div class="c-cta-inner">
+                        <h2>Construa o futuro da web.</h2>
+                        <p>Vagas gratuitas com certificação SENAI inclusa.</p>
+                        <div class="c-cta-btns">
+                            <a href="https://wa.me/5511972423702?text=Olá+quero+me+matricular+no+curso+de+Web+Designer!" target="_blank" class="btn-cta-primary">FALAR COM A SECRETARIA</a>
+                            <a href="../cursos.html" class="btn-cta-outline">Ver Todos os Cursos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="footer">
         <div class="container footer-grid">
-            <div class="footer-brand">
-                <div class="footer-logo">
-                    <img src="../images/logo_rede_comunita.png" alt="Rede Comunitá" class="logo-img">
-                    <span class="logo-wrapper">
-                        <span class="logo-highlight">Jaguaré</span>
-                    </span>
-                </div>
-                <p>Transformando vidas na região do Jaguaré, construindo um futuro com mais dignidade.</p>
-            </div>
-            <div class="footer-links">
-                <h4>Links</h4>
-                <a href="../index.html#programas">Programas e Serviços</a>
-                <a href="../index.html#sobre">Sobre nós</a>
-                <a href="../index.html#impacto">Impacto</a>
-                <a href="../index.html#participe">Participe</a>
-            </div>
-            <div class="footer-contact">
-                <h4>Contato</h4>
-                <p>R. Floresto Bandecchi, 156 - Jaguaré, São Paulo - SP, 05336-010</p>
-                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" class="btn btn-whatsapp" target="_blank">Falar no WhatsApp</a>
-            </div>
+            <div class="footer-brand"><div class="footer-brand-container"><div class="footer-logo-row"><img src="../images/logo_rede_comunita.png" alt="Rede Comunitá" class="logo-img"><span class="footer-text-cedesp">CEDESP</span></div><div class="footer-logo-subtitle"><span class="logo-wrapper"><span class="logo-highlight">Jaguaré</span></span></div></div><p>Transformando vidas na região do Jaguaré.</p></div>
+            <div class="footer-links"><h4>Links</h4><a href="../historia.html">Nossa História</a><a href="../index.html#programas">Programas</a></div>
+            <div class="footer-contact"><h4>Contato</h4><p>R. Floresto Bandecchi, 156 - Jaguaré, SP</p><a href="https://wa.me/5511972423702" class="btn btn-whatsapp" target="_blank">Falar no WhatsApp</a></div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Rede Comunitá Jaguaré. Todos os direitos reservados.</p>
-            <div class="footer-legal">
-                <a href="#">Política de Privacidade</a>
-                <a href="#">Termos de Uso</a>
-            </div>
-        </div>
+        <div class="footer-bottom"><p>&copy; 2026 Rede Comunitá Jaguaré.</p></div>
     </footer>
-
     <script src="../script.js"></script>
 </body>
 </html>
