@@ -784,6 +784,96 @@ h2 {
     color: #4a5568;
 }
 
+@media (max-width: 1400px) {
+    .nav-container {
+        padding: 0 20px;
+        gap: 15px;
+    }
+    .nav-links {
+        gap: 20px;
+    }
+    .nav-actions {
+        gap: 10px;
+    }
+    .logo-text-cedesp, .logo-highlight {
+        font-size: 1.4rem;
+    }
+    .logo-wrapper {
+        min-width: 90px;
+    }
+    
+    .hero {
+        height: auto;
+        min-height: auto;
+        padding-top: 100px;
+    }
+    .hero-main-row {
+        padding-bottom: 40px;
+    }
+    .hero-content-left {
+        padding-top: 10px;
+        padding-right: 2%;
+    }
+    .hero-title {
+        font-size: clamp(1.8rem, 3.2vw, 2.3rem);
+        margin-bottom: 10px;
+    }
+    .hero-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+    }
+    .trust-badges {
+        gap: 8px;
+        margin: 15px 0 25px 0;
+        width: fit-content;
+    }
+    .trust-badge {
+        padding: 6px 12px 6px 6px;
+    }
+    .badge-logo-container {
+        width: 44px;
+        height: 44px;
+    }
+    .badge-title {
+        font-size: 0.75rem;
+    }
+    .badge-sub {
+        font-size: 0.65rem;
+    }
+    .floating-benefits-seal {
+        top: -15px;
+        right: -30px;
+        width: 65px;
+        height: 65px;
+        font-size: 0.5rem;
+    }
+    .hero-impact-highlight {
+        margin: 5px 0 15px;
+    }
+    .impact-number {
+        font-size: 1.8rem;
+    }
+    .impact-plus {
+        font-size: 1.4rem;
+    }
+    .impact-label {
+        font-size: 0.8rem;
+    }
+    .hero-buttons {
+        gap: 12px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .hero-buttons .btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+    .overlap-gallery {
+        max-width: 450px;
+        height: 480px;
+    }
+}
+
 @media (max-width: 992px) {
     .hero {
         height: auto;
