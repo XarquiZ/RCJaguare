@@ -357,10 +357,8 @@ h2 {
 .hero {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    /* FORÇA a tela a ter 100% da visualização antes do scroll */
-    min-height: 750px;
-    /* Proteção apenas para telas absurdamente pequenas */
+    min-height: max(100vh, 750px);
+    /* FORÇA a tela a ter 100% da visualização antes do scroll, podendo crescer */
     background: linear-gradient(110deg, #a74783 0%, #bf5d9a 40%, #E3835C 100%);
     position: relative;
     z-index: 1;
@@ -1696,6 +1694,7 @@ h2 {
 
 .senai-logo-img {
     height: 70px;
+    max-width: 100%;
     width: auto;
     object-fit: contain;
 }
@@ -1720,13 +1719,25 @@ h2 {
 }
 
 @media (max-width: 768px) {
+    .senai-cert-banner {
+        padding: 25px 20px;
+    }
+
+    .senai-logo-img {
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+    }
+
     .senai-banner-content {
         flex-direction: column;
         text-align: center;
+        gap: 20px;
     }
 
     .senai-banner-text {
         text-align: center;
+        min-width: 0;
     }
 }
 
