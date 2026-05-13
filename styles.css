@@ -653,7 +653,8 @@ h2 {
     position: relative;
     width: 100%;
     max-width: 580px;
-    height: 600px;
+    aspect-ratio: 580 / 600;
+    max-height: 60vh;
     margin: 0 auto;
 }
 
@@ -874,7 +875,6 @@ h2 {
     }
     .overlap-gallery {
         max-width: 450px;
-        height: 480px;
     }
 }
 
