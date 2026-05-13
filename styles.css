@@ -878,6 +878,21 @@ h2 {
     }
 }
 
+@media (max-width: 1200px) and (min-width: 993px) {
+    .hero-content-left {
+        flex: 0 0 60%;
+        max-width: 60%;
+        padding-left: 5%;
+    }
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    .hero-buttons .btn {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 992px) {
     .hero {
         height: auto;
