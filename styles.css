@@ -603,16 +603,22 @@ h2 {
 
 .hero-buttons {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 15px;
+    flex-wrap: nowrap;
     align-items: center;
-    margin-top: 24px; /* Reduzido de 40px */
-    margin-bottom: 20px; /* Reduzido de 40px */
+    margin-top: 24px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .hero-buttons .btn {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     border-radius: 40px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
 }
 
 .hero-buttons .btn-primary {
