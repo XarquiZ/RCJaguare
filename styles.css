@@ -2879,8 +2879,8 @@ h2 {
 /* View: Grade de Miniaturas (Modern CSS Grid) */
 .lightbox-grid-view {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
     padding: 20px 4vw 80px;
     overflow-y: auto;
     width: 100%;
@@ -2892,6 +2892,13 @@ h2 {
 
 .lightbox-grid-view.hidden-view {
     display: none !important;
+}
+
+@media (max-width: 1024px) {
+    .lightbox-grid-view {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
 }
 
 .lightbox-thumb {
@@ -3026,13 +3033,15 @@ h2 {
     }
 
     .lightbox-grid-view {
+        grid-template-columns: repeat(3, 1fr);
         padding: 15px 15px 40px;
         gap: 10px;
     }
 
     .lightbox-thumb {
-        width: calc(33.333% - 10px);
-        height: 110px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
     }
 
     .nav-btn {
