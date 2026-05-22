@@ -492,6 +492,15 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { fullscreenImg.src = ''; }, 400); 
         }
 
-        closeBtn.addEventListener('click', closeLightbox);
+        closeBtn.addEventListener('click', () => {
+            if (fullView.style.display === 'flex') {
+                // Se estava tela cheia, volta pra grade
+                fullView.style.display = 'none';
+                gridView.style.display = 'grid';
+            } else {
+                // Fecha o modal inteiro
+                closeLightbox();
+            }
+        });
     }
 });
