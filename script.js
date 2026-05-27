@@ -82,6 +82,85 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(nextSlide, 4000);
     });
 
+    // ===== HERO BANNER SLIDESHOW AUTOMÁTICO =====
+    const heroSlider = document.querySelector('.hero-slider');
+    if (heroSlider) {
+        const slides = heroSlider.querySelectorAll('.hero-slide');
+        const dotsContainer = document.querySelector('.hero-dots');
+        const prevBtn = document.querySelector('.hero-prev');
+        const nextBtn = document.querySelector('.hero-next');
+        
+        if (slides.length > 1) {
+            let currentIndex = 0;
+            let slideInterval;
+            const intervalTime = 2000; // 2 segundos por banner
+
+            // Cria dots
+            slides.forEach((_, i) => {
+                const dot = document.createElement('span');
+                dot.classList.add('hero-dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    goToSlide(i);
+                    resetTimer();
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            function goToSlide(index) {
+                // Remove active classes
+                slides[currentIndex].classList.remove('active');
+                if (dotsContainer && dotsContainer.children[currentIndex]) {
+                    dotsContainer.children[currentIndex].classList.remove('active');
+                }
+                
+                // Set new index
+                currentIndex = index;
+                
+                // Add active classes
+                slides[currentIndex].classList.add('active');
+                if (dotsContainer && dotsContainer.children[currentIndex]) {
+                    dotsContainer.children[currentIndex].classList.add('active');
+                }
+            }
+
+            function nextSlide() {
+                goToSlide((currentIndex + 1) % slides.length);
+            }
+
+            function prevSlide() {
+                goToSlide((currentIndex - 1 + slides.length) % slides.length);
+            }
+
+            // Click Handlers para setas
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    prevSlide();
+                    resetTimer();
+                });
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    nextSlide();
+                    resetTimer();
+                });
+            }
+
+            // Inicia o timer
+            function startTimer() {
+                slideInterval = setInterval(nextSlide, intervalTime);
+            }
+
+            // Reseta o timer ao interagir
+            function resetTimer() {
+                clearInterval(slideInterval);
+                startTimer();
+            }
+
+            startTimer();
+        }
+    }
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {

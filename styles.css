@@ -359,13 +359,100 @@ h2 {
     flex-direction: column;
     min-height: max(100vh, 750px);
     /* FORÇA a tela a ter 100% da visualização antes do scroll, podendo crescer */
-    background: linear-gradient(110deg, #a74783 0%, #bf5d9a 40%, #E3835C 100%);
     position: relative;
     z-index: 1;
+    overflow: hidden;
+}
+
+.hero-slider {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-top: 115px;
-    /* Reduzido levemente para sobrar mais espaço na tela */
     padding-bottom: 20px;
-    /* Mantém a caixa dos parceiros com folga */
+    z-index: 1;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+}
+
+.hero-prev,
+.hero-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(10px);
+}
+
+.hero-prev:hover,
+.hero-next:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hero-prev {
+    left: 24px;
+}
+
+.hero-next {
+    right: 24px;
+}
+
+.hero-dots {
+    position: absolute;
+    bottom: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+.hero-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 2px solid transparent;
+}
+
+.hero-dot.active {
+    background: var(--primary);
+    transform: scale(1.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 10px rgba(247, 190, 19, 0.6);
 }
 
 .hero-main-row {
@@ -581,11 +668,12 @@ h2 {
 }
 
 .hero-title {
-    font-size: clamp(2rem, 3.8vw, 3.2rem);
+    font-size: clamp(2rem, 3.2vw, 2.8rem);
     color: var(--light);
     margin-bottom: 16px;
     line-height: 1.15;
     font-weight: 800;
+    min-height: 115px; /* Alinha a altura do título nos 3 banners */
 }
 
 .hero-text-highlight {
@@ -599,6 +687,7 @@ h2 {
     color: rgba(255, 255, 255, 0.95);
     max-width: 500px;
     line-height: 1.5;
+    min-height: 80px; /* Alinha a altura do subtítulo nos 3 banners */
 }
 
 .hero-buttons {
@@ -901,6 +990,37 @@ h2 {
         padding-bottom: 0; /* Parceiros colados embaixo */
     }
 
+    .hero-slider {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .hero-slide {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        display: none;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .hero-slide.active {
+        position: relative;
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .hero-prev,
+    .hero-next {
+        display: none !important;
+    }
+
+    .hero-dots {
+        bottom: 85px;
+    }
+
     .hero-main-row {
         flex-direction: column;
         margin: 0;
@@ -920,12 +1040,14 @@ h2 {
     .hero-title {
         font-size: 2.2rem;
         line-height: 1.1;
+        min-height: auto; /* Desativa altura mínima no celular */
     }
 
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: 24px;
         max-width: 90%;
+        min-height: auto; /* Desativa altura mínima no celular */
     }
 
     .hero-buttons {
@@ -1021,7 +1143,7 @@ h2 {
 
 
 @media (max-height: 900px) and (min-width: 993px) {
-    .hero {
+    .hero-slide {
         padding-top: 90px;
         padding-bottom: 10px;
     }
