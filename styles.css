@@ -370,6 +370,7 @@ h2 {
     width: 100%;
     height: 100%;
     min-height: inherit;
+    background: #111; /* dark fallback to hide white gaps */
 }
 
 .hero-slide {
@@ -377,7 +378,8 @@ h2 {
     inset: 0;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+    transform: translateX(0);
+    transition: transform 0.8s ease, opacity 0.8s ease, visibility 0.8s;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -392,6 +394,19 @@ h2 {
     z-index: 2;
 }
 
+/* Swipe animation classes for hero slides (opacity only) */
+.slide-enter-right,
+.slide-enter-left {
+    opacity: 0;
+}
+.slide-exit-right,
+.slide-exit-left {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+.slide-animate-in {
+    transition: opacity 0.8s ease;
+}
 .hero-prev,
 .hero-next {
     position: absolute;
@@ -851,6 +866,427 @@ h2 {
         z-index: 3;
         transform: rotate(-2deg);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Custom Hero Layouts (Slide 2: Courses Grid & Slide 3: Single Framed Image) */
+
+/* Slide 2: Inscrições Abertas (3 Columns Golden Layout) */
+.hero-slide-three-cols .hero-main-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 0 4% 80px 4%;
+    width: 100%;
+}
+
+.hero-slide-three-cols .hero-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-slide-three-cols .hero-col-left {
+    flex: 0 0 30%;
+    max-width: 30%;
+    text-align: left;
+    align-items: flex-start;
+}
+
+.hero-slide-three-cols .hero-col-center {
+    flex: 0 0 38%;
+    max-width: 38%;
+}
+
+.hero-slide-three-cols .hero-col-right {
+    flex: 0 0 32%;
+    max-width: 32%;
+}
+
+/* Center Panel (Cursos) */
+.courses-panel-center {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    transition: var(--transition);
+}
+
+.courses-panel-center:hover {
+    border-color: rgba(255, 204, 51, 0.4);
+    box-shadow: 0 30px 60px rgba(255, 204, 51, 0.15);
+    transform: translateY(-4px);
+}
+
+.panel-center-title {
+    color: #ffffff; /* Título em branco puro */
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-left: 4px solid #ffffff; /* Detalhe em branco */
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.courses-vertical-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.course-pill-yellow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.course-pill-yellow:hover {
+    background: rgba(255, 255, 255, 0.12); /* Fundo com hover branco translúcido */
+    border-color: rgba(255, 255, 255, 0.35); /* Borda branca no hover */
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.pill-dot-white {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff; /* Ponto em branco brilhante */
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.course-pill-yellow:hover .pill-dot-white {
+    background: #ffffff;
+    box-shadow: 0 0 10px #ffffff;
+    transform: scale(1.25);
+}
+
+.pill-name {
+    color: #ffffff !important; /* Força a cor branca pura para leitura perfeita */
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* Right Panel (Horários & Refeições) */
+.schedules-panel-right {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    transition: var(--transition);
+}
+
+.schedules-panel-right:hover {
+    border-color: rgba(255, 204, 51, 0.4);
+    box-shadow: 0 30px 60px rgba(255, 204, 51, 0.15);
+    transform: translateY(-4px);
+}
+
+.schedules-title-yellow {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+}
+
+.schedules-list-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.schedule-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.schedule-item-compact:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateX(4px);
+}
+
+.schedule-badge-yellow {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px 6px;
+    border-radius: 6px;
+    color: #1a1a1a;
+    width: 60px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.schedule-badge-yellow.manha {
+    background: #FFCC33;
+    box-shadow: 0 0 10px rgba(255, 204, 51, 0.2);
+}
+
+.schedule-badge-yellow.tarde {
+    background: #FFF;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.schedule-badge-yellow.noite {
+    background: #e2e8f0;
+    box-shadow: 0 0 10px rgba(226, 232, 240, 0.15);
+}
+
+.schedule-desc {
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule-h {
+    color: #FFCC33;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.schedule-m {
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.meals-summary-bar {
+    margin-top: 12px;
+    background: rgba(255, 204, 51, 0.1);
+    border: 1px solid rgba(255, 204, 51, 0.25);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #FFCC33;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.meals-summary-bar svg {
+    color: #FF5A5F;
+    flex-shrink: 0;
+    animation: heartBeat 1.2s ease infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+/* Responsivo para 3 colunas */
+@media (max-width: 1200px) {
+    .hero-slide-three-cols .hero-main-row {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-slide-three-cols .hero-main-row {
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 40px 5% 40px 5% !important;
+    }
+    
+    .hero-slide-three-cols .hero-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        align-items: center !important;
+    }
+    
+    .hero-slide-three-cols .hero-col-left .hero-buttons {
+        display: none !important; /* Esconde botão duplicado no celular */
+    }
+    
+    .courses-panel-center, .schedules-panel-right {
+        width: 100% !important;
+        max-width: 500px !important;
+    }
+}
+
+
+/* Slide 3: Single Big Framed Image Layout */
+.hero-single-image-frame {
+    width: 100%;
+    max-width: 580px;
+    aspect-ratio: 16 / 11;
+    margin: 0 auto;
+    position: relative;
+}
+
+.single-image-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.single-image-wrapper:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(219, 39, 119, 0.35);
+    box-shadow: 0 45px 85px rgba(219, 39, 119, 0.25);
+}
+
+.single-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    display: block;
+}
+
+.single-image-wrapper:hover img {
+    transform: scale(1.04);
+}
+
+.image-glass-card {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(15, 10, 25, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.single-image-wrapper:hover .image-glass-card {
+    background: rgba(15, 10, 25, 0.75);
+    border-color: rgba(219, 39, 119, 0.3);
+}
+
+.glass-card-tag {
+    background: #db2777;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    width: fit-content;
+    letter-spacing: 0.05em;
+}
+
+.glass-card-text {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Swapped Column Layout for Reversed Slide */
+.hero-slide-reversed .hero-main-row {
+    flex-direction: row-reverse;
+}
+
+.hero-slide-reversed .hero-image-right {
+    flex: 0 0 46%; /* Foto com 46% (continua imponente e bem destacada) */
+    max-width: 46%;
+}
+
+.hero-slide-reversed .hero-content-left {
+    flex: 0 0 54%; /* Textos ganham mais espaço com 54% */
+    max-width: 54%;
+    padding: 40px 6% 0 4%;
+}
+
+.hero-slide-reversed .hero-single-image-frame {
+    max-width: 100%; /* Usa 100% do espaço da coluna esquerda à disposição */
+    width: 100%;
+    aspect-ratio: auto; /* Remove a proporção fixa de corte */
+}
+
+.hero-slide-reversed .single-image-wrapper {
+    width: 100%;
+    height: auto; /* Altura dinâmica para acomodar a foto perfeitamente */
+    border-radius: 24px;
+    box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+}
+
+.hero-slide-reversed .single-image-wrapper img {
+    width: 100%;
+    height: auto; /* Altura adaptável baseada na proporção original da imagem (4:3 ou 16:9) */
+    object-fit: contain; /* Exibe a foto em sua totalidade absoluta, sem cortes nas laterais ou topo */
+    display: block;
+}
+
+/* Evita que "Palestras & Práticas" em 2.4rem exploda o container */
+.hero-slide-reversed .impact-number {
+    font-size: 1.6rem; /* Ajustado de 2.4rem para caber confortavelmente */
+}
+
+.hero-slide-reversed .impact-plus {
+    font-size: 1.3rem;
+}
+
+.hero-slide-reversed .impact-label {
+    max-width: none; /* Permite fluidez do texto lateral */
+}
+
+/* Evita que botões e elementos do lado direito transbordem da tela */
+.hero-slide-reversed .hero-buttons {
+    flex-wrap: wrap; /* Permite que os botões quebrem de linha se faltar espaço */
+}
+
+.hero-slide-reversed .hero-buttons .btn {
+    flex: 1 1 200px; /* Tamanho base flexível para quebrar de linha com suavidade */
+    white-space: normal; /* Permite quebra de texto interna */
+    text-align: center;
+    min-width: 180px;
+}
+
+@media (max-width: 992px) {
+    .hero-slide-reversed .hero-main-row {
+        flex-direction: column; /* Restaura a coluna única vertical no mobile */
+    }
+    .hero-slide-reversed .hero-image-right,
+    .hero-slide-reversed .hero-content-left {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .hero-slide-reversed .hero-content-left {
+        padding: 40px 5% 20px !important;
+        text-align: center;
+        align-items: center;
     }
 }
 

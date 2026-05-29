@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (slides.length > 1) {
             let currentIndex = 0;
             let slideInterval;
-            const intervalTime = 2000; // 2 segundos por banner
+            const intervalTime = 5000; // 5 segundos por banner
 
             // Cria dots
             slides.forEach((_, i) => {
@@ -107,30 +107,97 @@ document.addEventListener('DOMContentLoaded', () => {
                 dotsContainer.appendChild(dot);
             });
 
-            function goToSlide(index) {
-                // Remove active classes
-                slides[currentIndex].classList.remove('active');
+            let isAnimating = false;
+            const animDuration = 850; // ms, slightly longer than CSS 0.8s
+
+            function goToSlide(index, direction = 'next') {
+                if (index === currentIndex || isAnimating) return;
+                isAnimating = true;
+
+                const outgoing = slides[currentIndex];
+                const incoming = slides[index];
+
+                // Update dots
                 if (dotsContainer && dotsContainer.children[currentIndex]) {
                     dotsContainer.children[currentIndex].classList.remove('active');
                 }
-                
-                // Set new index
-                currentIndex = index;
-                
-                // Add active classes
-                slides[currentIndex].classList.add('active');
-                if (dotsContainer && dotsContainer.children[currentIndex]) {
-                    dotsContainer.children[currentIndex].classList.add('active');
+                if (dotsContainer && dotsContainer.children[index]) {
+                    dotsContainer.children[index].classList.add('active');
                 }
+
+                // Make incoming visible but transparent
+                incoming.style.opacity = '0';
+                incoming.style.visibility = 'visible';
+                incoming.style.zIndex = '3';
+                incoming.classList.add('active');
+
+                // Force reflow
+                incoming.offsetHeight;
+
+                // Fade in incoming, fade out outgoing
+                incoming.style.transition = 'opacity 0.8s ease';
+                incoming.style.opacity = '1';
+                outgoing.style.transition = 'opacity 0.8s ease';
+                outgoing.style.opacity = '0';
+
+                // Cleanup after animation completes (guaranteed by setTimeout)
+                setTimeout(() => {
+                    outgoing.classList.remove('active');
+                    outgoing.style.opacity = '';
+                    outgoing.style.visibility = '';
+                    outgoing.style.zIndex = '';
+                    outgoing.style.transition = '';
+                    incoming.style.opacity = '';
+                    incoming.style.visibility = '';
+                    incoming.style.zIndex = '';
+                    incoming.style.transition = '';
+                    currentIndex = index;
+                    isAnimating = false;
+                }, animDuration);
             }
 
             function nextSlide() {
-                goToSlide((currentIndex + 1) % slides.length);
+                goToSlide((currentIndex + 1) % slides.length, 'next');
             }
 
             function prevSlide() {
-                goToSlide((currentIndex - 1 + slides.length) % slides.length);
+                goToSlide((currentIndex - 1 + slides.length) % slides.length, 'prev');
             }
+
+            // Swipe Detection
+            let touchStartX = 0;
+            const swipeThreshold = 50; // pixels
+            heroSlider.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+            });
+            heroSlider.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diffX = touchStartX - touchEndX;
+                if (Math.abs(diffX) > swipeThreshold) {
+                    if (diffX > 0) {
+                        // swipe left -> next
+                        nextSlide();
+                        resetTimer();
+                    } else {
+                        // swipe right -> previous
+                        prevSlide();
+                        resetTimer();
+                    }
+                }
+            });
+            // Optional mouse drag for desktop
+            let mouseDownX = 0;
+            heroSlider.addEventListener('mousedown', e => {
+                mouseDownX = e.clientX;
+            });
+            heroSlider.addEventListener('mouseup', e => {
+                const mouseUpX = e.clientX;
+                const diffX = mouseDownX - mouseUpX;
+                if (Math.abs(diffX) > swipeThreshold) {
+                    if (diffX > 0) { nextSlide(); } else { prevSlide(); }
+                    resetTimer();
+                }
+            });
 
             // Click Handlers para setas
             if (prevBtn) {
