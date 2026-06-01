@@ -1380,6 +1380,17 @@ h2 {
         min-height: auto;
         padding-top: 100px;
     }
+    .hero-slide {
+        position: absolute;
+        inset: 0;
+        display: none;
+    }
+    .hero-slide.active {
+        position: relative;
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
     .hero-main-row {
         padding-bottom: 40px;
     }
