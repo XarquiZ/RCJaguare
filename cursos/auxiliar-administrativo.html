@@ -220,8 +220,35 @@
             .hl-item:nth-child(2)::after { display:none; }
         }
         @media (max-width:560px) {
-            .highlights-strip { grid-template-columns:1fr 1fr; }
-            .hl-item { padding:24px 18px; gap:12px; }
+            .highlights-strip { grid-template-columns:1fr; }
+            .hl-item { padding:20px 24px; gap:16px; border-bottom:1px solid #f0f0f0; }
+            .hl-item:last-child { border-bottom:none; }
+            .hl-item::after { display:none; }
+            .course-title { font-size:1.8rem; }
+            .trust-badges { flex-direction:column !important; align-items:center !important; gap:10px !important; transform:scale(0.85); }
+        }
+
+        /* Optimization for ultra-compact mobile screens (iPhone SE & smaller) */
+        @media (max-width:375px) {
+            .course-title { font-size:1.6rem !important; }
+            .trust-badges { gap:8px !important; width: 100% !important; align-items: center !important; }
+            .trust-badge {
+                padding: 6px 12px 6px 6px !important;
+                border-radius: 16px !important;
+                width: 100% !important;
+                max-width: 280px !important;
+                justify-content: flex-start !important;
+                margin: 0 auto !important;
+            }
+            .badge-logo-container {
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 10px !important;
+                padding: 6px !important;
+            }
+            .badge-title { font-size: 0.75rem !important; }
+            .badge-sub { font-size: 0.65rem !important; }
+            .hero-pill { padding: 10px 18px !important; font-size: 0.8rem !important; width: 100% !important; max-width: 280px !important; justify-content: center !important; }
         }
 
         /* ── BODY ── */
@@ -342,10 +369,28 @@
         /* ── RESPONSIVE ── */
         @media (max-width:768px){
             .hero-grid{grid-template-columns:1fr; gap:24px; padding-bottom:50px;}
-            .hero-visual{min-height:260px;}
+            .hero-visual{min-height:260px; max-width: 100% !important; overflow: hidden !important;}
             .orbit-system{transform:scale(0.68); transform-origin:center;}
-            .course-title{font-size:2.6rem;}
+            .course-title{font-size:2.2rem; text-align:center;}
+            .course-desc{text-align:center; margin:0 auto 24px; font-size:1rem;}
+            .hero-text{display:flex; flex-direction:column; align-items:center; text-align:center;}
+            .hero-pills {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+            .hero-pill {
+                width: 100% !important;
+                max-width: 280px !important;
+                justify-content: center !important;
+            }
+            .trust-badges{justify-content:center; transform:scale(0.9); margin-bottom:24px !important;}
             .c-cta h2{font-size:2.1rem;}
+            .highlights-strip { grid-template-columns:1fr; }
+            .hl-item::after { display:none !important; }
+            .hl-item { border-bottom:1px solid #f0f0f0; padding:20px 24px !important; }
+            .hl-item:last-child { border-bottom:none; }
         }
     </style>
 </head>
@@ -356,7 +401,14 @@
         <div class="nav-container">
             <a href="../index.html" class="nav-logo"><img src="../images/logo_rede_comunita.png" alt="CEDESP" class="logo-icon-crop"><span class="logo-text-cedesp">CEDESP</span><span class="logo-wrapper"><span class="logo-highlight">Jaguaré</span></span></a>
             <div class="nav-links"><a href="../historia.html">Nossa História</a><a href="../cursos.html">Cursos</a><a href="../eventos.html">Eventos</a><a href="../calendario.html">Calendário</a></div>
-            <div class="nav-actions"><a href="https://wa.me/5511972423702" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a></div>
+            <div class="nav-actions">
+                <a href="https://wa.me/5511972423702" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a>
+                <button class="mobile-menu-btn" aria-label="Abrir menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -385,10 +437,18 @@
                             </div>
                         </div>
 
-                        <!-- Selo Flutuante de Benefícios -->
-                        <div class="floating-benefits-seal" style="top: -20px; right: -10px;">
-                            <div class="seal-icons">🍴 📚</div>
-                            <div class="seal-text">Lanche +<br>Material<br>GRÁTIS</div>
+                        <!-- Badge de Benefícios (Lanche & Material Grátis) -->
+                        <div class="trust-badge benefits-badge" style="background: rgba(227, 131, 92, 0.18); border-color: rgba(227, 131, 92, 0.45);">
+                            <div class="badge-logo-container" style="background: #E3835C; color: white;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="badge-text">
+                                <span class="badge-title" style="color: #fff;">Lanche &amp; Material</span>
+                                <span class="badge-sub" style="color: #ffb89a; font-weight: 700;">100% GRATUITO</span>
+                            </div>
                         </div>
                     </div>
                     <h1 class="course-title">Administração<br><span class="accent">& Gestão</span></h1>

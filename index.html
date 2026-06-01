@@ -312,61 +312,105 @@
         }
 
         /* ========== RESPONSIVO ========== */
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             .slide2-wrapper {
                 flex-direction: column;
-                gap: 20px;
-                padding: 10px 0;
+                gap: 24px;
+                padding: 40px 5% 110px;
+                align-items: center;
+                text-align: center;
             }
 
             .slide2-col-left,
             .slide2-col-right {
                 flex: 1 1 auto;
                 width: 100%;
+                align-items: center;
+                text-align: center;
+            }
+
+            .slide2-badge {
+                margin: 0 auto 16px auto;
+                transform: scale(0.85);
+            }
+
+            .slide2-title {
+                font-size: 2.2rem;
+                line-height: 1.1;
+                min-height: auto;
+                text-align: center;
+            }
+
+            .slide2-subtitle {
+                font-size: 1rem;
+                max-width: 90%;
+                margin: 0 auto;
+                min-height: auto;
+                text-align: center;
             }
 
             .slide2-courses-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 6px;
+                gap: 8px;
+                width: 100%;
+                max-width: 500px;
+                margin: 10px auto;
             }
 
             .slide2-course-pill {
-                font-size: 0.75rem;
-                padding: 7px 10px;
-            }
-
-            .slide2-subtitle {
-                max-width: 100%;
-            }
-
-            .slide2-btn-courses {
-                width: 100%;
-                align-self: stretch;
-                text-align: center;
+                font-size: 0.8rem;
+                padding: 8px 12px;
+                justify-content: flex-start;
             }
 
             .slide2-schedule-card {
-                padding: 14px 12px;
+                padding: 18px 16px;
+                width: 100%;
+                max-width: 500px;
+                margin: 0 auto;
+                text-align: left;
+            }
+
+            .slide2-btn {
+                font-size: 1rem;
+                padding: 16px 10px;
+                border-radius: 16px;
+                width: 100%;
+                max-width: 500px;
+                margin: 0 auto;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .slide2-btn-courses {
+                margin-top: 10px;
+                align-self: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide2-btn {
+                padding: 20px;
+                font-size: 1.1rem;
             }
         }
 
         @media (max-width: 480px) {
+            .slide2-title {
+                font-size: 1.8rem;
+            }
+
+            .slide2-subtitle {
+                font-size: 0.95rem;
+            }
+
             .slide2-courses-grid {
                 grid-template-columns: 1fr;
-                gap: 5px;
+                gap: 6px;
             }
 
             .slide2-course-pill {
                 font-size: 0.78rem;
                 padding: 9px 12px;
-            }
-
-            .slide2-title {
-                font-size: 1.35rem;
-            }
-
-            .slide2-subtitle {
-                font-size: 0.82rem;
             }
 
             .slide2-schedule-badge {
@@ -381,11 +425,6 @@
 
             .slide2-schedule-meal {
                 font-size: 0.68rem;
-            }
-
-            .slide2-btn {
-                font-size: 0.82rem;
-                padding: 10px 16px;
             }
         }
     </style>
@@ -567,7 +606,7 @@
                             </div>
 
                             <!-- Botão "Ver Cursos Ofertados" -->
-                            <a href="#filtros-cursos"
+                            <a href="cursos.html#filtros-cursos"
                                 class="slide2-btn slide2-btn-outline slide2-btn-courses animate-on-scroll delay-3">
                                 Ver Cursos Ofertados
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"

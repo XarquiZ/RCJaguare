@@ -1288,6 +1288,49 @@ h2 {
         text-align: center;
         align-items: center;
     }
+    .hero-slide-reversed .hero-buttons {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 16px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 40px !important;
+        flex-wrap: nowrap !important;
+    }
+    .hero-slide-reversed .hero-buttons .btn {
+        width: auto !important;
+        max-width: none !important;
+        flex: 1 !important;
+        justify-content: center !important;
+        padding: 16px 10px !important;
+        font-size: 1rem !important;
+        text-align: center !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+        min-width: 0 !important;
+        white-space: nowrap !important;
+    }
+    .hero-slide-reversed .impact-number {
+        font-size: 1.8rem !important;
+    }
+    .hero-slide-reversed .impact-plus {
+        font-size: 1.4rem !important;
+    }
+    .hero-slide-reversed .impact-label {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-slide-reversed .hero-buttons {
+        flex-direction: column !important;
+        padding: 0 5% !important;
+    }
+    .hero-slide-reversed .hero-buttons .btn {
+        width: 100% !important;
+        padding: 20px !important;
+        font-size: 1.1rem !important;
+    }
 }
 
 .bg-white {
@@ -1461,7 +1504,7 @@ h2 {
         flex-direction: column;
         margin: 0;
         border-radius: 0;
-        padding-bottom: 20px;
+        padding-bottom: 110px;
     }
 
     .hero-content-left {
