@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jogos de Férias na Rede Comunitá Jaguaré. Desafios, gincanas e muita diversão!">
+    <title>Jogos de Férias | Rede Comunitá Jaguaré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+    <style>
+        .games-hero {
+            background: linear-gradient(135deg, #FF5A5F 0%, #db2777 100%);
+            padding: 160px 0 80px 0;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .games-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.5;
+        }
+
+        .games-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .games-title {
+            color: #ffffff;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .games-subtitle {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 32px auto;
+            position: relative;
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .section-games {
+            padding: 80px 0;
+            background: #111;
+        }
+
+        .section-games-alt {
+            padding: 80px 0;
+            background: #1a1a1a;
+        }
+        
+        .section-header h2 {
+            color: #fff !important;
+        }
+
+        .section-header p {
+            color: #ccc !important;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 90, 95, 0.25);
+            border-color: rgba(255, 90, 95, 0.4);
+        }
+
+        .game-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF5A5F, #db2777);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(255, 90, 95, 0.3);
+        }
+
+        .game-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .game-card p {
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .game-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #FFCC33;
+            color: #1a1a1a;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Barras Laterais Animadas */
+        .sidebar-marquee {
+            position: fixed;
+            top: 0;
+            width: 45px;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            background: rgba(10, 10, 10, 0.95);
+            border-left: 2px solid #ff0055;
+            border-right: 2px solid #9d00ff;
+            animation: side-blink 1.2s ease-in-out infinite alternate;
+        }
+
+        .sidebar-marquee-left {
+            left: 0;
+        }
+
+        .sidebar-marquee-right {
+            right: 0;
+        }
+
+        .marquee-track {
+            display: flex;
+            flex-direction: column;
+            white-space: nowrap;
+        }
+
+        .marquee-track-up {
+            animation: scroll-up 20s linear infinite;
+        }
+
+        .marquee-track-down {
+            animation: scroll-down 20s linear infinite;
+        }
+
+        .marquee-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .marquee-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            padding: 8px 0;
+            color: #fff;
+            background: linear-gradient(to bottom, #ff0055, #ff5e00, #9d00ff, #ff0055);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 100% 300%;
+            animation: side-gradient-shift 4s linear infinite;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 8px 0;
+        }
+
+        @keyframes scroll-up {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        @keyframes scroll-down {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes side-blink {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 0, 85, 0.4), inset 0 0 5px rgba(255, 0, 85, 0.2);
+                border-color: rgba(255, 0, 85, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(255, 0, 85, 0.9), 0 0 25px rgba(157, 0, 255, 0.9), inset 0 0 15px rgba(157, 0, 255, 0.4);
+                border-color: rgba(157, 0, 255, 1);
+            }
+        }
+
+        @keyframes side-gradient-shift {
+            0% { background-position: 50% 0%; }
+            50% { background-position: 50% 100%; }
+            100% { background-position: 50% 0%; }
+        }
+
+        /* Responsividade para as Barras Laterais */
+        @media (min-width: 1025px) {
+            body {
+                padding-left: 45px;
+                padding-right: 45px;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .sidebar-marquee {
+                width: 30px;
+            }
+            .marquee-text {
+                font-size: 0.8rem;
+                letter-spacing: 0.15em;
+                padding: 20px 0;
+            }
+            .sidebar-brand {
+                font-size: 0.75rem;
+            }
+            body {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-marquee {
+                width: 22px;
+                border-left-width: 1px;
+                border-right-width: 1px;
+            }
+            .marquee-text {
+                font-size: 0.6rem;
+                letter-spacing: 0.1em;
+                padding: 10px 0;
+            }
+            .sidebar-brand {
+                font-size: 0.55rem;
+            }
+            body {
+                padding-left: 22px;
+                padding-right: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Barras Laterais Animadas -->
+    <div class="sidebar-marquee sidebar-marquee-left">
+        <div class="marquee-track marquee-track-up">
+            <div class="marquee-block">
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+            </div>
+            <div class="marquee-block">
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-marquee sidebar-marquee-right">
+        <div class="marquee-track marquee-track-down">
+            <div class="marquee-block">
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+            </div>
+            <div class="marquee-block">
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+                <span class="marquee-text">⚡ JOGOS DE FÉRIAS ⚡</span>
+                <span class="sidebar-brand">CEDESP Jaguaré</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticker Topo -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo_rede_comunita.png?v=1.2" alt="CEDESP Icon" class="logo-icon-crop">
+                <span class="logo-text-cedesp">CEDESP</span>
+                <span class="logo-wrapper">
+                    <span class="logo-highlight">Jaguaré</span>
+                </span>
+            </a>
+            <div class="nav-links">
+                <a href="jogos-ferias.html" class="nav-link-hot active" style="display: none;">
+                    Jogos de Férias
+                </a>
+                <a href="historia.html">Nossa História</a>
+                <a href="cursos.html">Cursos</a>
+                <a href="eventos.html">Eventos</a>
+                <a href="calendario.html">Calendário</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-social">
+                    <a href="https://www.instagram.com/cedespjaguare/" target="_blank" class="nav-social-link" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-social-icon"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@cedesp.jaguar?_r=1&_t=ZS-95mfSbp6soq" target="_blank" class="nav-social-link" aria-label="TikTok">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="nav-social-icon" viewBox="0 0 16 16"><path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3V0Z" /></svg>
+                    </a>
+                </div>
+                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a>
+                <button class="mobile-menu-btn" aria-label="Abrir menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="games-hero">
+        <div class="container animate-on-scroll">
+            <span class="games-badge">🔥 Temporada de Férias 2026</span>
+            <h1 class="games-title">Jogos de Férias</h1>
+            <p class="games-subtitle">Aqueça suas férias com desafios incríveis, gincanas, torneios e atividades interativas aqui no CEDESP Jaguaré. Venha se divertir com a gente!</p>
+            <a href="#desafios" class="btn btn-primary btn-large btn-caps" style="background:#FFCC33; color:#1a1a1a; font-weight:800; border:none; box-shadow:0 8px 25px rgba(0,0,0,0.2);">Ver Desafios</a>
+        </div>
+    </header>
+
+    <section class="section-games" id="desafios">
+        <div class="container">
+            <div class="section-header animate-on-scroll" style="text-align: center; max-width: 700px; margin: 0 auto;">
+                <h2>Desafios Especiais</h2>
+                <p>Teste suas habilidades, participe em equipe e concorra a prêmios incríveis durante nossa temporada de férias.</p>
+            </div>
+            
+            <div class="games-grid">
+                <div class="game-card animate-on-scroll delay-1">
+                    <span class="game-badge">Em Equipe</span>
+                    <div class="game-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3>Gincana Maker Global</h3>
+                    <p>Reúna sua equipe e enfrente desafios criativos de robótica e construção usando sucata e muita imaginação.</p>
+                </div>
+                
+                <div class="game-card animate-on-scroll delay-2">
+                    <span class="game-badge">Individual</span>
+                    <div class="game-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <h3>Hackathon Express</h3>
+                    <p>Um desafio de programação rápida de 4 horas onde você cria soluções para problemas reais da comunidade.</p>
+                </div>
+
+                <div class="game-card animate-on-scroll delay-3">
+                    <span class="game-badge">Aventura</span>
+                    <div class="game-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </div>
+                    <h3>Caça ao Tesouro QR</h3>
+                    <p>Siga as pistas espalhadas por toda a instituição lendo QR codes com seu celular e desvende o mistério final.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-games-alt" id="atividades">
+        <div class="container">
+            <div class="section-header animate-on-scroll" style="text-align: center; max-width: 700px; margin: 0 auto;">
+                <h2>Atividades e Oficinas</h2>
+                <p>Momento de aprender, interagir e se divertir com atividades para todas as idades.</p>
+            </div>
+            
+            <div class="games-grid">
+                <div class="game-card animate-on-scroll delay-1">
+                    <div class="game-icon" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><line x1="8" y1="2" x2="8" y2="22"></line><line x1="16" y1="2" x2="16" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                    </div>
+                    <h3>Jogos de Tabuleiro e RPG</h3>
+                    <p>Salas exclusivas equipadas com os melhores jogos de tabuleiro modernos e mesas de RPG abertas para iniciantes e veteranos.</p>
+                </div>
+                
+                <div class="game-card animate-on-scroll delay-2">
+                    <div class="game-icon" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect><path d="M12 12h.01"></path><path d="M17 12h.01"></path><path d="M7 12h.01"></path></svg>
+                    </div>
+                    <h3>Torneio de E-sports</h3>
+                    <p>Competições amigáveis de FIFA, League of Legends e Valorant no nosso laboratório de informática atualizado.</p>
+                </div>
+
+                <div class="game-card animate-on-scroll delay-3">
+                    <div class="game-icon" style="background: linear-gradient(135deg, #7c3aed, #4c1d95);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                    </div>
+                    <h3>Oficina de Teatro e Artes</h3>
+                    <p>Desenvolva sua expressão corporal e criatividade nas oficinas práticas de artes cênicas e pintura sustentável.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="footer-brand-container">
+                    <div class="footer-logo-row">
+                        <img src="images/logo_rede_comunita.png?v=1.2" alt="Rede Comunitá" class="logo-img">
+                        <span class="footer-text-cedesp">CEDESP</span>
+                    </div>
+                    <div class="footer-logo-subtitle">
+                        <span class="logo-wrapper">
+                            <span class="logo-highlight">Jaguaré</span>
+                        </span>
+                    </div>
+                </div>
+                <p>Transformando vidas na região do Jaguaré, construindo um futuro com mais dignidade através da educação profissional.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Links</h4>
+                <a href="historia.html">Nossa História</a>
+                <a href="index.html#programas">Programas e Serviços</a>
+                <a href="index.html#sobre">Sobre nós</a>
+                <a href="index.html#impacto">Impacto</a>
+                <a href="index.html#participe">Participe</a>
+            </div>
+            <div class="footer-contact">
+                <h4>Contato</h4>
+                <p>R. Floresto Bandecchi, 156 - Jaguaré, São Paulo - SP, 05336-010</p>
+                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" class="btn btn-whatsapp" target="_blank">Falar no WhatsApp</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rede Comunitá Jaguaré. Todos os direitos reservados.</p>
+            <div class="footer-legal">
+                <a href="#">Política de Privacidade</a>
+                <a href="#">Termos de Uso</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Whatsapp Flutuante -->
+    <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" class="floating-whatsapp" target="_blank" aria-label="Falar no WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+        </svg>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>

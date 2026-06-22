@@ -16,415 +16,428 @@
 
     <!-- Estilos específicos para o Slide 2 (Inscrições Abertas) -->
     <style>
-        /* Container principal do slide 2 */
-        .slide2-wrapper {
-            display: flex;
-            gap: 28px;
-            align-items: stretch;
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 20px 0;
+        /* Fundo e Orbs Decorativos */
+        .slide2-bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: 1;
+        }
+        .orb-1 {
+            top: -20%; left: -10%;
+            width: 500px; height: 500px;
+            background: rgba(147, 51, 234, 0.6);
+        }
+        .orb-2 {
+            bottom: -20%; right: -10%;
+            width: 600px; height: 600px;
+            background: rgba(245, 158, 11, 0.4);
         }
 
-        /* Coluna esquerda: informações + grade de cursos */
-        .slide2-col-left {
-            flex: 1 1 58%;
-            display: flex;
-            flex-direction: column;
+        /* Ajuste de alinhamento vertical e margens para o Slide 2 */
+        #slide2 {
+            padding-top: 115px; /* Alinhado perfeitamente com os outros banners no desktop */
+        }
+        #slide2 .hero-main-row {
+            padding-bottom: 90px; /* Alinhado com os outros slides */
+        }
+
+        @media (max-width: 992px) {
+            #slide2 {
+                padding-top: 0;
+            }
+            #slide2 .hero-main-row {
+                padding-bottom: 0 !important;
+                flex: 1;
+                justify-content: center;
+                gap: 20px;
+            }
+            #slide2 .hero-content-left {
+                gap: 8px !important;
+                padding: 10px 5% 0 !important;
+                justify-content: center;
+                flex: 0 0 auto;
+            }
+            .slide2-badge {
+                margin-bottom: 0 !important;
+                padding: 5px 14px !important;
+                font-size: 0.78rem !important;
+            }
+            .slide2-title {
+                min-height: auto !important;
+                margin-bottom: 0 !important;
+            }
+            .slide2-tags-cloud {
+                display: none !important;
+            }
+            .slide2-subtitle {
+                font-size: 0.9rem !important;
+                margin-bottom: 0 !important;
+                min-height: auto !important;
+                line-height: 1.3 !important;
+            }
+            .slide2-actions {
+                margin-top: 0 !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .slide2-actions {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+                padding: 0 5%;
+            }
+            .slide2-btn {
+                width: 100%;
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .slide2-tag {
+                padding: 4px 8px !important;
+                font-size: 0.72rem !important;
+            }
+            .slide2-title {
+                font-size: 1.7rem !important;
+            }
+            .slide2-subtitle {
+                font-size: 0.88rem !important;
+            }
+        }
+
+        /* Estrutura das colunas no desktop herdadas do hero global */
+        #slide2 .hero-content-left {
             gap: 18px;
-            justify-content: center;
+        }
+        #slide2 .hero-image-right {
+            justify-content: flex-end;
         }
 
-        /* Coluna direita: card de turnos + botão matrícula */
-        .slide2-col-right {
-            flex: 1 1 42%;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        /* Badge superior */
+        /* Badge Superior */
         .slide2-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(255, 204, 51, 0.18);
+            gap: 10px;
+            background: rgba(255, 204, 51, 0.15);
+            border: 1px solid rgba(255, 204, 51, 0.3);
             color: #FFCC33;
-            border: 1px solid rgba(255, 204, 51, 0.45);
-            padding: 8px 18px;
-            border-radius: 999px;
+            padding: 8px 20px;
+            border-radius: 100px;
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 0.12em;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             width: fit-content;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 4px 15px rgba(255, 204, 51, 0.1);
+            margin-bottom: 24px;
         }
-
-        .slide2-badge::before {
-            content: '';
-            display: inline-block;
+        .slide2-badge-dot {
             width: 8px;
             height: 8px;
             background: #FFCC33;
             border-radius: 50%;
-            animation: slide2-pulse 2s infinite;
-            box-shadow: 0 0 10px #FFCC33;
+            box-shadow: 0 0 10px #FFCC33, 0 0 20px #FFCC33;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.5); }
         }
 
-        @keyframes slide2-pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.5;
-                transform: scale(1.6);
-            }
-        }
-
-        /* Título */
+        /* Título e Subtítulo */
         .slide2-title {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            font-size: clamp(1.6rem, 2.4vw, 2.1rem);
-            color: #ffffff;
-            line-height: 1.2;
-            margin: 0;
-            letter-spacing: -0.01em;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            min-height: 115px; /* Alinha perfeitamente com os outros banners */
         }
-
         .slide2-title .highlight {
             color: #FFCC33;
+            position: relative;
+            display: inline-block;
         }
-
-        /* Subtítulo */
+        .slide2-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 204, 51, 0.4);
+            border-radius: 4px;
+            z-index: -1;
+        }
         .slide2-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.5;
-            margin: 0;
-            max-width: 480px;
+            min-height: 80px; /* Alinha perfeitamente com os outros banners */
         }
 
-        /* Grade de cursos (2 colunas) */
-        .slide2-courses-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 2px;
-        }
-
-        .slide2-course-pill {
+        /* Cloud de Tags de Cursos */
+        .slide2-tags-cloud {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .slide2-tag {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 8px 12px;
             color: #fff;
+            padding: 8px 16px;
+            border-radius: 100px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
             cursor: default;
-            white-space: nowrap;
         }
-
-        .slide2-course-pill:hover {
-            background: rgba(255, 204, 51, 0.12);
-            border-color: rgba(255, 204, 51, 0.4);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .slide2-course-dot {
-            flex-shrink: 0;
-            width: 7px;
-            height: 7px;
-            background: #FFCC33;
-            border-radius: 50%;
-            box-shadow: 0 0 6px rgba(255, 204, 51, 0.6);
-        }
-
-        /* Card de turnos */
-        .slide2-schedule-card {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 14px;
-            padding: 18px 16px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .slide2-schedule-title {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: #FFCC33;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin: 0 0 2px 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .slide2-schedule-title svg {
-            flex-shrink: 0;
-        }
-
-        .slide2-schedule-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .slide2-schedule-item:last-child {
-            border-bottom: none;
-        }
-
-        .slide2-schedule-badge {
-            flex-shrink: 0;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 4px 10px;
-            border-radius: 6px;
+        .slide2-tag:hover {
             background: rgba(255, 204, 51, 0.2);
+            border-color: rgba(255, 204, 51, 0.5);
             color: #FFCC33;
-            min-width: 56px;
-            text-align: center;
-        }
-
-        .slide2-schedule-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-
-        .slide2-schedule-time {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #fff;
-            letter-spacing: 0.02em;
-        }
-
-        .slide2-schedule-meal {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .slide2-meals-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 204, 51, 0.1);
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-top: 4px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #FFCC33;
-        }
-
-        .slide2-meals-bar svg {
-            flex-shrink: 0;
-            color: #FFCC33;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
         /* Botões */
+        .slide2-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
         .slide2-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 1rem;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
             text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
         }
-
-        .slide2-btn-outline {
-            background: transparent;
-            color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .slide2-btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
         .slide2-btn-solid {
             background: #FFCC33;
             color: #1a1a1a;
-            border: none;
-            font-weight: 800;
-            box-shadow: 0 8px 24px rgba(255, 204, 51, 0.35);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
         }
-
         .slide2-btn-solid:hover {
             background: #ffe066;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(255, 204, 51, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.6);
+        }
+        .slide2-btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .slide2-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #fff;
+            transform: translateY(-3px);
         }
 
-        /* Botão "Ver Cursos" mais compacto */
-        .slide2-btn-courses {
-            margin-top: 4px;
-            width: auto;
-            align-self: flex-start;
-            padding: 10px 22px;
+        /* Premium Glass Card */
+        .slide2-glass-card {
+            background: rgba(20, 15, 45, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 28px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .slide2-glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #FFCC33, #f59e0b, #db2777);
+        }
+        .glass-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 16px;
+        }
+        .glass-card-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 0;
+            letter-spacing: 0.02em;
+        }
+        .glass-benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .glass-benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .benefit-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .benefit-icon-box.morning { background: rgba(245, 158, 11, 0.15); box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+        .benefit-icon-box.afternoon { background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+        .benefit-icon-box.night { background: rgba(168, 85, 247, 0.15); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+        
+        .benefit-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .benefit-content h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .benefit-content h4 span {
+            font-weight: 400;
             font-size: 0.8rem;
-            border-radius: 8px;
+            color: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .benefit-content p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            margin: 0;
+        }
+        .glass-card-footer {
+            margin-top: 4px;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+        }
+        .footer-highlight {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 204, 51, 0.15);
+            color: #FFCC33;
+            padding: 12px;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        /* ========== RESPONSIVO ========== */
+        /* Responsividade para manter o card e reordenar de forma bela */
         @media (max-width: 992px) {
-            .slide2-wrapper {
-                flex-direction: column;
-                gap: 24px;
-                padding: 40px 5% 110px;
+            #slide2 .hero-image-right {
+                display: flex !important;
+                flex: 0 0 auto !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 0 5% !important;
+                order: 2;
+            }
+            #slide2 .slide2-glass-card {
+                max-width: 100%;
+                width: 100%;
+                padding: 14px !important;
+                gap: 10px !important;
+            }
+            #slide2 .slide2-tags-cloud {
+                justify-content: center;
+                gap: 6px !important;
+            }
+            #slide2 .slide2-actions {
+                justify-content: center;
+                gap: 8px !important;
+            }
+            /* Layout compacto horizontal de turnos */
+            .glass-benefits-list {
+                flex-direction: row !important;
+                flex-wrap: wrap;
+                gap: 6px !important;
+                justify-content: center;
+            }
+            .glass-benefit-item {
+                flex: 1 1 90px;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center;
+                gap: 2px !important;
+            }
+            .benefit-icon-box {
+                width: 34px !important;
+                height: 34px !important;
+                font-size: 1rem !important;
+                border-radius: 8px !important;
+            }
+            .benefit-content {
                 align-items: center;
-                text-align: center;
             }
-
-            .slide2-col-left,
-            .slide2-col-right {
-                flex: 1 1 auto;
-                width: 100%;
-                align-items: center;
-                text-align: center;
+            .benefit-content h4 {
+                font-size: 0.75rem !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 1px !important;
             }
-
-            .slide2-badge {
-                margin: 0 auto 16px auto;
-                transform: scale(0.85);
+            .benefit-content h4 span {
+                font-size: 0.65rem !important;
+                padding: 1px 4px !important;
+                margin-left: 0 !important;
             }
-
-            .slide2-title {
-                font-size: 2.2rem;
-                line-height: 1.1;
-                min-height: auto;
-                text-align: center;
+            .benefit-content p {
+                display: none !important;
             }
-
-            .slide2-subtitle {
-                font-size: 1rem;
-                max-width: 90%;
-                margin: 0 auto;
-                min-height: auto;
-                text-align: center;
+            .glass-card-header {
+                padding-bottom: 6px !important;
+                justify-content: center;
+                gap: 6px !important;
             }
-
-            .slide2-courses-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                width: 100%;
-                max-width: 500px;
-                margin: 10px auto;
+            .glass-card-header h3 {
+                font-size: 0.95rem !important;
             }
-
-            .slide2-course-pill {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-                justify-content: flex-start;
+            .glass-card-footer {
+                margin-top: 0 !important;
+                padding-top: 6px !important;
             }
-
-            .slide2-schedule-card {
-                padding: 18px 16px;
-                width: 100%;
-                max-width: 500px;
-                margin: 0 auto;
-                text-align: left;
-            }
-
-            .slide2-btn {
-                font-size: 1rem;
-                padding: 16px 10px;
-                border-radius: 16px;
-                width: 100%;
-                max-width: 500px;
-                margin: 0 auto;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            }
-
-            .slide2-btn-courses {
-                margin-top: 10px;
-                align-self: center;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .slide2-btn {
-                padding: 20px;
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .slide2-title {
-                font-size: 1.8rem;
-            }
-
-            .slide2-subtitle {
-                font-size: 0.95rem;
-            }
-
-            .slide2-courses-grid {
-                grid-template-columns: 1fr;
-                gap: 6px;
-            }
-
-            .slide2-course-pill {
-                font-size: 0.78rem;
-                padding: 9px 12px;
-            }
-
-            .slide2-schedule-badge {
-                font-size: 0.68rem;
-                min-width: 48px;
-                padding: 3px 8px;
-            }
-
-            .slide2-schedule-time {
-                font-size: 0.78rem;
-            }
-
-            .slide2-schedule-meal {
-                font-size: 0.68rem;
+            .footer-highlight {
+                padding: 6px 10px !important;
+                font-size: 0.75rem !important;
             }
         }
     </style>
@@ -456,6 +469,7 @@
                 </span>
             </a>
             <div class="nav-links">
+                <a href="jogos-ferias.html" class="nav-link-hot" style="display: none;">Jogos de Férias</a>
                 <a href="historia.html">Nossa História</a>
                 <a href="cursos.html">Cursos</a>
                 <a href="eventos.html">Eventos</a>
@@ -500,9 +514,6 @@
                 style="background: linear-gradient(110deg, #a74783 0%, #bf5d9a 40%, #E3835C 100%);">
                 <div class="hero-main-row">
                     <div class="hero-content-left">
-                        <span class="hero-badge animate-on-scroll delay-1"
-                            style="background: rgba(255, 255, 255, 0.2); color: #fff; margin-bottom: 24px;">CEDESP
-                            JAGUARÉ</span>
                         <h1 class="hero-title animate-on-scroll delay-1">Quebrando barreiras,<br>mudando destinos</h1>
                         <p class="hero-subtitle animate-on-scroll delay-2">Juntos, construímos um futuro com mais
                             oportunidades
@@ -565,122 +576,95 @@
             <!-- ================================================================ -->
             <!-- SLIDE 2: INSCRIÇÕES ABERTAS – LAYOUT REDESENHADO E RESPONSIVO -->
             <!-- ================================================================ -->
-            <div class="hero-slide"
-                style="background: linear-gradient(110deg, #1e1b4b 0%, #4c1d95 38%, #7c3aed 65%, #f59e0b 100%);">
-                <div class="hero-main-row" style="padding: 0;">
-                    <div class="slide2-wrapper">
+            <div class="hero-slide" id="slide2"
+                style="background: linear-gradient(135deg, #1e1b4b 0%, #3b0764 45%, #9333ea 80%, #f59e0b 115%);">
+                
+                <!-- Abstract glowing orbs for background depth -->
+                <div class="slide2-bg-orb orb-1"></div>
+                <div class="slide2-bg-orb orb-2"></div>
 
-                        <!-- COLUNA ESQUERDA: Badge + Título + Descrição + Grade de Cursos + Botão Ver Cursos -->
-                        <div class="slide2-col-left">
-                            <span class="slide2-badge animate-on-scroll delay-1">INSCRIÇÕES ABERTAS</span>
-                            <h1 class="slide2-title animate-on-scroll delay-1">
-                                Cursos Gratuitos:<br><span class="highlight">Inscrições Abertas</span>
-                            </h1>
-                            <p class="slide2-subtitle animate-on-scroll delay-2">
-                                Garanta sua pré-inscrição em cursos de capacitação com certificação padrão SENAI. Vagas
-                                100% gratuitas para a comunidade do Jaguaré.
-                            </p>
+                <div class="hero-main-row" style="position: relative; z-index: 2;">
+                    <!-- COLUNA ESQUERDA: Textos principais, tags de cursos e botões -->
+                    <div class="hero-content-left">
+                        
+                        <h1 class="slide2-title hero-title animate-on-scroll delay-1">
+                            Capacitação <span class="highlight">Gratuita</span><br> Padrão SENAI
+                        </h1>
+                        
+                        <p class="slide2-subtitle hero-subtitle animate-on-scroll delay-2">
+                            Transforme seu futuro! Garanta sua pré-inscrição com vagas limitadas e 100% gratuitas para a comunidade do Jaguaré.
+                        </p>
 
-                            <!-- Grade de cursos (2 colunas) -->
-                            <div class="slide2-courses-grid animate-on-scroll delay-2">
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Tecnologia da Informação
-                                </div>
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Web Designer
-                                </div>
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Informática Básica
-                                </div>
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Eletricista Instalador
-                                </div>
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Ajustador Mecânico
-                                </div>
-                                <div class="slide2-course-pill">
-                                    <span class="slide2-course-dot"></span>Reparador Linha Branca
-                                </div>
-                                <div class="slide2-course-pill" style="grid-column: 1 / -1;">
-                                    <span class="slide2-course-dot"></span>Administração / RH / Logística
-                                </div>
-                            </div>
-
-                            <!-- Botão "Ver Cursos Ofertados" -->
-                            <a href="cursos.html#filtros-cursos"
-                                class="slide2-btn slide2-btn-outline slide2-btn-courses animate-on-scroll delay-3">
-                                Ver Cursos Ofertados
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            </a>
+                        <!-- Grade de Cursos como Tags Modernas -->
+                        <div class="slide2-tags-cloud animate-on-scroll delay-2">
+                            <span class="slide2-tag">💻 Tecnologia da Informação</span>
+                            <span class="slide2-tag">🎨 Web Designer</span>
+                            <span class="slide2-tag">🖥️ Informática Básica</span>
+                            <span class="slide2-tag">⚡ Eletricista Instalador</span>
+                            <span class="slide2-tag">⚙️ Ajustador Mecânico</span>
+                            <span class="slide2-tag">❄️ Reparador Linha Branca</span>
+                            <span class="slide2-tag">📊 Administração & RH</span>
                         </div>
 
-                        <!-- COLUNA DIREITA: Card de Turnos & Alimentação + Botão Matricule-se -->
-                        <div class="slide2-col-right animate-on-scroll delay-3">
-                            <div class="slide2-schedule-card">
-                                <h4 class="slide2-schedule-title">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    Turnos &amp; Alimentação
-                                </h4>
-
-                                <div class="slide2-schedule-item">
-                                    <span class="slide2-schedule-badge">MANHÃ</span>
-                                    <div class="slide2-schedule-info">
-                                        <span class="slide2-schedule-time">08:00 às 11:15</span>
-                                        <span class="slide2-schedule-meal">Café da manhã e almoço gratuitos</span>
-                                    </div>
-                                </div>
-
-                                <div class="slide2-schedule-item">
-                                    <span class="slide2-schedule-badge">TARDE</span>
-                                    <div class="slide2-schedule-info">
-                                        <span class="slide2-schedule-time">13:00 às 16:50</span>
-                                        <span class="slide2-schedule-meal">Almoço e café da tarde gratuitos</span>
-                                    </div>
-                                </div>
-
-                                <div class="slide2-schedule-item">
-                                    <span class="slide2-schedule-badge">NOITE</span>
-                                    <div class="slide2-schedule-info">
-                                        <span class="slide2-schedule-time">19:00 às 21:30</span>
-                                        <span class="slide2-schedule-meal">Janta gratuita, no local</span>
-                                    </div>
-                                </div>
-
-                                <!-- Barra de destaque: refeições -->
-                                <div class="slide2-meals-bar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                        viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-                                    </svg>
-                                    <span>Todas as refeições são gratuitas no local</span>
-                                </div>
-                            </div>
-
-                            <!-- Botão MATRICULE-SE JÁ -->
-                            <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!"
-                                target="_blank" class="slide2-btn slide2-btn-solid animate-on-scroll delay-4">
+                        <!-- Botões Lado a Lado -->
+                        <div class="slide2-actions animate-on-scroll delay-3">
+                            <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" target="_blank" class="slide2-btn slide2-btn-solid">
                                 MATRICULE-SE JÁ
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path
-                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                    </path>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                 </svg>
+                            </a>
+                            <a href="cursos.html#filtros-cursos" class="slide2-btn slide2-btn-outline">
+                                Ver Cursos Ofertados
                             </a>
                         </div>
                     </div>
+
+                    <!-- COLUNA DIREITA: Card Glassmorphism Premium de Benefícios -->
+                    <div class="hero-image-right animate-on-scroll delay-3">
+                        <div class="slide2-glass-card">
+                            <div class="glass-card-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFCC33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                <h3>Turnos & Benefícios</h3>
+                            </div>
+
+                            <div class="glass-benefits-list">
+                                <div class="glass-benefit-item">
+                                    <div class="benefit-icon-box morning">🌅</div>
+                                    <div class="benefit-content">
+                                        <h4>MANHÃ <span>08h00 - 11h15</span></h4>
+                                        <p>Café da manhã e almoço inclusos</p>
+                                    </div>
+                                </div>
+                                <div class="glass-benefit-item">
+                                    <div class="benefit-icon-box afternoon">☀️</div>
+                                    <div class="benefit-content">
+                                        <h4>TARDE <span>13h00 - 16h50</span></h4>
+                                        <p>Almoço e café da tarde inclusos</p>
+                                    </div>
+                                </div>
+                                <div class="glass-benefit-item">
+                                    <div class="benefit-icon-box night">🌙</div>
+                                    <div class="benefit-content">
+                                        <h4>NOITE <span>19h00 - 21h30</span></h4>
+                                        <p>Jantar no local incluso</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card-footer">
+                                <div class="footer-highlight">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                    </svg>
+                                    100% Gratuito (Cursos e Refeições)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <!-- ================================================================ -->
@@ -692,11 +676,8 @@
                 style="background: linear-gradient(110deg, #1e1b4b 0%, #4c1d95 45%, #db2777 100%);">
                 <div class="hero-main-row">
                     <div class="hero-content-left">
-                        <span class="hero-badge animate-on-scroll delay-1"
-                            style="background: rgba(219, 39, 119, 0.2); color: #fbcfe8; border: 1px solid rgba(219, 39, 119, 0.4); margin-bottom: 24px;">GRANDE
-                            EVENTO</span>
                         <h1 class="hero-title animate-on-scroll delay-1">Feira de Profissões<br><span
-                                class="hero-text-highlight" style="color: #fbcfe8;">Dias 19 e 20</span></h1>
+                                class="hero-text-highlight" style="color: #fbcfe8;">Dias 26 e 27 de Junho</span></h1>
                         <p class="hero-subtitle animate-on-scroll delay-2">Venha descobrir seu futuro! Participe de
                             oficinas práticas, palestras exclusivas, orientação profissional e conheça nossos
                             laboratórios de perto.</p>
@@ -716,7 +697,7 @@
                                 </div>
                                 <div class="badge-text">
                                     <span class="badge-title" style="color: #fbcfe8;">Entrada Franca</span>
-                                    <span class="badge-sub">Dias 19 e 20</span>
+                                    <span class="badge-sub">Dias 26 e 27 de Junho</span>
                                 </div>
                             </div>
                             <div class="trust-badge location-badge"
@@ -823,6 +804,35 @@
             </div>
         </div>
     </header>
+
+    <!-- SEÇÃO DE REDES SOCIAIS -->
+    <section class="social-feed-section" id="social-feed">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2>Conecte-se Conosco</h2>
+                <p>Acompanhe o dia a dia, eventos e novidades diretamente do nosso Instagram.</p>
+            </div>
+            
+            <!-- WIDGETS DE FEED AO VIVO (Elfsight Feed) -->
+            <script src="https://elfsightcdn.com/platform.js" async></script>
+            
+            <div class="live-feeds-wrapper" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
+                <!-- Feed do Instagram Ativo -->
+                <div class="elfsight-app-97597cf5-b597-47e8-83ca-e5ce34163aea" data-elfsight-app-lazy></div>
+                
+                <!-- Logo da Rede Comunitá cobrindo o selo do Elfsight -->
+                <div class="elfsight-logo-mask">
+                    <img src="images/logo_rede_comunita.png?v=1.2" alt="Rede Comunitá">
+                </div>
+            </div>
+            
+            <div class="social-footer-actions animate-on-scroll delay-3">
+                <a href="https://www.instagram.com/cedespjaguare/" target="_blank" class="btn btn-outline btn-large">
+                    <span>Siga no Instagram</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <section class="impact-section" id="impacto">
         <div class="container">

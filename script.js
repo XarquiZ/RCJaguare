@@ -134,13 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Force reflow
                 incoming.offsetHeight;
 
-                // Fade in incoming, fade out outgoing
-                incoming.style.transition = 'opacity 0.8s ease';
+                // Crossfade
+                incoming.style.transition = 'opacity 0.7s ease';
                 incoming.style.opacity = '1';
-                outgoing.style.transition = 'opacity 0.8s ease';
+                outgoing.style.transition = 'opacity 0.7s ease';
                 outgoing.style.opacity = '0';
 
-                // Cleanup after animation completes (guaranteed by setTimeout)
+                // Cleanup after animation completes
                 setTimeout(() => {
                     outgoing.classList.remove('active');
                     outgoing.style.opacity = '';
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     incoming.style.transition = '';
                     currentIndex = index;
                     isAnimating = false;
-                }, animDuration);
+                }, 750);
             }
 
             function nextSlide() {
@@ -649,4 +649,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ===== REMOVER MARCA D'ÁGUA DO ELFSIGHT (SHADOW DOM) =====
+    const hideElfsightWatermark = () => {
+        const elfsightWidgets = document.querySelectorAll('[class*="elfsight-app-"]');
+        elfsightWidgets.forEach(widget => {
+            if (widget && widget.shadowRoot) {
+                // Busca agressiva por links do elfsight
+                const allLinks = widget.shadowRoot.querySelectorAll('a');
+                allLinks.forEach(link => {
+                    if (link.href && (link.href.includes('elfsight') || link.href.includes('elf.site'))) {
+                        link.style.setProperty('display', 'none', 'important');
+                        link.style.setProperty('visibility', 'hidden', 'important');
+                        link.style.setProperty('height', '0', 'important');
+                        link.style.setProperty('opacity', '0', 'important');
+                        link.style.setProperty('pointer-events', 'none', 'important');
+                        
+                        // Oculta também o container pai do link se for pequeno (o balão do selo)
+                        if (link.parentElement) {
+                            link.parentElement.style.setProperty('display', 'none', 'important');
+                            link.parentElement.style.setProperty('visibility', 'hidden', 'important');
+                            link.parentElement.style.setProperty('height', '0', 'important');
+                        }
+                    }
+                });
+                
+                // Oculta elementos que contenham classes de marca d'água/badge
+                const allElements = widget.shadowRoot.querySelectorAll('*');
+                allElements.forEach(el => {
+                    const classes = el.className || '';
+                    const classStr = typeof classes === 'string' ? classes : classes.toString();
+                    if (classStr.includes('Badge') || classStr.includes('Branding') || classStr.includes('Logo') || classStr.includes('Copyright')) {
+                        el.style.setProperty('display', 'none', 'important');
+                        el.style.setProperty('visibility', 'hidden', 'important');
+                        el.style.setProperty('height', '0', 'important');
+                    }
+                });
+            }
+        });
+    };
+    hideElfsightWatermark();
+    setInterval(hideElfsightWatermark, 200);
 });
