@@ -650,44 +650,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== REMOVER MARCA D'ÁGUA DO ELFSIGHT (SHADOW DOM) =====
-    const hideElfsightWatermark = () => {
-        const elfsightWidgets = document.querySelectorAll('[class*="elfsight-app-"]');
-        elfsightWidgets.forEach(widget => {
-            if (widget && widget.shadowRoot) {
-                // Busca agressiva por links do elfsight
-                const allLinks = widget.shadowRoot.querySelectorAll('a');
-                allLinks.forEach(link => {
-                    if (link.href && (link.href.includes('elfsight') || link.href.includes('elf.site'))) {
-                        link.style.setProperty('display', 'none', 'important');
-                        link.style.setProperty('visibility', 'hidden', 'important');
-                        link.style.setProperty('height', '0', 'important');
-                        link.style.setProperty('opacity', '0', 'important');
-                        link.style.setProperty('pointer-events', 'none', 'important');
-                        
-                        // Oculta também o container pai do link se for pequeno (o balão do selo)
-                        if (link.parentElement) {
-                            link.parentElement.style.setProperty('display', 'none', 'important');
-                            link.parentElement.style.setProperty('visibility', 'hidden', 'important');
-                            link.parentElement.style.setProperty('height', '0', 'important');
-                        }
+    // ===== REMOVER MARCA D'ÁGUA DO BEHOLD (DENTRO DO SHADOW DOM) =====
+    const hideBeholdWatermark = () => {
+        const beholdWidget = document.querySelector('behold-widget');
+        if (beholdWidget && beholdWidget.shadowRoot) {
+            // Remove o link de marca d'água se já tiver sido renderizado no DOM
+            const links = beholdWidget.shadowRoot.querySelectorAll('a');
+            links.forEach(link => {
+                if (link.href && (link.href.includes('behold.so') || link.innerText.toLowerCase().includes('behold'))) {
+                    link.style.setProperty('display', 'none', 'important');
+                    link.style.setProperty('visibility', 'hidden', 'important');
+                    link.style.setProperty('height', '0', 'important');
+                    link.style.setProperty('opacity', '0', 'important');
+                    link.style.setProperty('pointer-events', 'none', 'important');
+                    
+                    if (link.parentElement) {
+                        link.parentElement.style.setProperty('display', 'none', 'important');
+                        link.parentElement.style.setProperty('visibility', 'hidden', 'important');
+                        link.parentElement.style.setProperty('height', '0', 'important');
                     }
-                });
-                
-                // Oculta elementos que contenham classes de marca d'água/badge
-                const allElements = widget.shadowRoot.querySelectorAll('*');
-                allElements.forEach(el => {
-                    const classes = el.className || '';
-                    const classStr = typeof classes === 'string' ? classes : classes.toString();
-                    if (classStr.includes('Badge') || classStr.includes('Branding') || classStr.includes('Logo') || classStr.includes('Copyright')) {
-                        el.style.setProperty('display', 'none', 'important');
-                        el.style.setProperty('visibility', 'hidden', 'important');
-                        el.style.setProperty('height', '0', 'important');
+                }
+            });
+
+            // Injeta o estilo preventivo para o caso de novas renderizações
+            if (!beholdWidget.shadowRoot.querySelector('#hide-behold-style')) {
+                const style = document.createElement('style');
+                style.id = 'hide-behold-style';
+                style.textContent = `
+                    a[href*="behold.so"], 
+                    div[class*="watermark"], 
+                    [class*="branding"],
+                    div[style*="justify-content: center"] > a { 
+                        display: none !important; 
+                        visibility: hidden !important; 
+                        opacity: 0 !important; 
+                        height: 0 !important; 
+                        pointer-events: none !important;
                     }
-                });
+                `;
+                beholdWidget.shadowRoot.appendChild(style);
             }
-        });
+        }
     };
-    hideElfsightWatermark();
-    setInterval(hideElfsightWatermark, 200);
+
+    // Roda de forma contínua no início para pegar o delay do carregamento
+    const beholdInterval = setInterval(hideBeholdWatermark, 150);
+    // Limpa o interval após 10 segundos para economizar processamento do navegador
+    setTimeout(() => clearInterval(beholdInterval), 10000);
 });

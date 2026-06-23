@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Bloqueia pastas desnecessárias
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /scratch/
+
+# Sitemap
+Sitemap: https://www.cedespjaguare.com.br/sitemap.xml
