@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Feira de Profissões da Rede Comunitá Jaguaré. Conheça nossos cursos, veja projetos incríveis e tire suas dúvidas.">
+    <title>Feira de Profissões | Rede Comunitá Jaguaré</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+    <style>
+        /* Estilos Específicos para a Feira de Profissões - Vibe Jovem/Tech */
+        :root {
+            --feira-primary: #00f2fe;
+            --feira-secondary: #4facfe;
+            --feira-accent: #ff007f; /* Rosa Neon */
+            --feira-dark: #0a0f1c;
+            --feira-text: #e2e8f0;
+        }
+
+        .feira-header {
+            background: linear-gradient(135deg, var(--feira-dark), #120b22);
+            padding: 160px 0 120px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--feira-accent);
+        }
+
+        /* Grade Animada Cyberpunk */
+        .feira-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: gridMove 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); }
+        }
+
+        .feira-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #00f2fe, var(--feira-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .feira-subtitle {
+            font-size: 1.3rem;
+            color: var(--feira-text);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+        }
+
+        .feira-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 0, 127, 0.15);
+            border: 1px solid rgba(255, 0, 127, 0.4);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.2);
+            position: relative;
+            z-index: 2;
+            animation: pulse-glow-pink 2s infinite;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes pulse-glow-pink {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 127, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0); }
+        }
+
+        /* Emojis Flutuantes */
+        .floating-emoji {
+            position: absolute;
+            font-size: 3.5rem;
+            z-index: 1;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5));
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        .emoji-1 { top: 15%; left: 10%; animation-delay: 0s; font-size: 4rem; }
+        .emoji-2 { top: 50%; right: 10%; animation-delay: -2s; font-size: 4.5rem; filter: drop-shadow(0 0 15px rgba(255, 0, 127, 0.5));}
+        .emoji-3 { bottom: 25%; left: 15%; animation-delay: -4s; font-size: 3rem; }
+        .emoji-4 { top: 10%; right: 20%; animation-delay: -1s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(15deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Fitas Rolantes Infinitas (Marquee) */
+        .tech-tape-wrapper {
+            position: absolute;
+            bottom: -20px;
+            left: -10%;
+            width: 120%;
+            background: var(--feira-primary);
+            color: #000;
+            padding: 12px 0;
+            transform: rotate(-2deg);
+            z-index: 3;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        .tech-tape-wrapper.tape-pink {
+            bottom: 30px;
+            background: var(--feira-accent);
+            color: white;
+            transform: rotate(2deg);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+        }
+        .tech-tape {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollTape 15s linear infinite;
+        }
+        .tech-tape span {
+            padding: 0 20px;
+        }
+        @keyframes scrollTape {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .feira-content-section {
+            padding: 100px 0;
+            background: #ffffff;
+        }
+
+        .feira-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .feira-info-box {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 24px;
+            border-top: 5px solid var(--feira-accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .feira-info-box:hover {
+            transform: translateY(-10px);
+        }
+
+        .feira-info-box h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--feira-dark);
+            font-weight: 800;
+        }
+
+        .feira-info-box p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .feira-info-box ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .feira-info-box ul li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .feira-info-box ul li::before {
+            content: '🚀';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.2rem;
+        }
+
+        .feira-map-container {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.15);
+            position: relative;
+            height: 100%;
+            min-height: 450px;
+            background: #e2e8f0;
+            border: 2px solid rgba(0, 242, 254, 0.2);
+            transition: transform 0.3s ease;
+        }
+        .feira-map-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 60px rgba(255, 0, 127, 0.15);
+        }
+
+        .feira-map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .feira-cta-section {
+            text-align: center;
+            padding: 100px 0;
+            background: var(--feira-dark);
+            color: white;
+            position: relative;
+        }
+
+        .feira-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(45deg, var(--feira-accent), #ff4d4d);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(255, 0, 127, 0.4);
+            text-transform: uppercase;
+        }
+
+        .feira-cta-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 0, 127, 0.6);
+            color: white;
+        }
+
+        .feira-cta-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            background: linear-gradient(to right, #00f2fe, #ff007f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .feira-cta-subtitle {
+            font-size: 1.3rem;
+            color: #a0aec0;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 992px) {
+            .feira-grid { grid-template-columns: 1fr; }
+            .feira-title { font-size: 3.5rem; }
+            .feira-map-container { min-height: 400px; margin-top: 20px; }
+            .feira-info-box { padding: 30px; }
+        }
+        @media (max-width: 768px) {
+            .feira-header { padding: 120px 0 80px; }
+            .feira-title { font-size: 2.5rem; }
+            .feira-subtitle { font-size: 1.1rem; padding: 0 15px; }
+            .feira-date-badge { font-size: 1.1rem; padding: 15px 25px; flex-direction: column; gap: 8px; text-align: center; border-radius: 24px; }
+            .badge-separator { display: none; }
+            
+            .tech-tape-wrapper { font-size: 0.9rem; padding: 8px 0; }
+            .tech-tape-wrapper.tape-pink { bottom: 20px; }
+            .floating-emoji { display: none; }
+            
+            .feira-content-section { padding: 60px 0; }
+            .feira-info-box h2 { font-size: 1.8rem; }
+            .feira-info-box p, .feira-info-box ul li { font-size: 1rem; }
+            .feira-map-container { min-height: 300px; }
+            
+            .feira-cta-section { padding: 60px 20px; }
+            .feira-cta-title { font-size: 2.2rem; }
+            .feira-cta-subtitle { font-size: 1.1rem; }
+            .feira-cta-btn { font-size: 1.1rem; padding: 15px 30px; flex-direction: column; gap: 10px; text-align: center; width: 100%; box-sizing: border-box; }
+        }
+        @media (max-width: 480px) {
+            .feira-title { font-size: 2rem; }
+            .feira-date-badge { font-size: 1rem; }
+            .feira-info-box { padding: 25px 20px; }
+            .feira-info-box h2 { font-size: 1.6rem; }
+            .feira-cta-title { font-size: 1.8rem; }
+            .feira-cta-btn { font-size: 1rem; padding: 12px 20px; }
+            .tech-tape-wrapper { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ticker Topo -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+            <span class="ticker-item">Quebrando barreiras, mudando destinos</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="images/logo_rede_comunita.png?v=1.2" alt="CEDESP Icon" class="logo-icon-crop">
+                <span class="logo-text-cedesp">CEDESP</span>
+                <span class="logo-wrapper">
+                    <span class="logo-highlight">Jaguaré</span>
+                </span>
+            </a>
+            <div class="nav-links">
+                <a href="feira-profissoes.html" class="nav-link-hot-blue active">Feira de Profissões</a>
+                <a href="historia.html">Nossa História</a>
+                <a href="cursos.html" class="nav-link-animated">Cursos</a>
+                <a href="eventos.html">Eventos</a>
+                <a href="calendario.html">Calendário</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-social">
+                    <a href="https://www.instagram.com/cedespjaguare/" target="_blank" class="nav-social-link" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-social-icon"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                </div>
+                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" target="_blank" class="btn btn-primary btn-caps">MATRICULE-SE</a>
+                <button class="mobile-menu-btn" aria-label="Abrir menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Feira -->
+    <header class="feira-header">
+        <div class="floating-emoji emoji-1">💻</div>
+        <div class="floating-emoji emoji-2">🎮</div>
+        <div class="floating-emoji emoji-3">🚀</div>
+        <div class="floating-emoji emoji-4">💡</div>
+
+        <div class="container animate-on-scroll">
+            <h1 class="feira-title">Feira de Profissões</h1>
+            <p class="feira-subtitle">
+                O seu futuro começa agora! Conheça projetos reais, experimente as profissões do amanhã e troque ideias com os nossos alunos e instrutores feras. Bora dar esse start na sua carreira? ⚡
+            </p>
+            <div class="feira-date-badge">
+                <span>🗓️ 27 e 28 de junho</span> <span class="badge-separator">|</span> <span>⏰ 09h às 16h</span>
+            </div>
+        </div>
+
+        <!-- Fitas Tech Animadas -->
+        <div class="tech-tape-wrapper tape-pink">
+            <div class="tech-tape">
+                <span>ADMINISTRAÇÃO</span> ✦ <span>TI</span> ✦ <span>ROBÓTICA</span> ✦ <span>LOGÍSTICA</span> ✦ <span>MARKETING</span> ✦
+                <span>ADMINISTRAÇÃO</span> ✦ <span>TI</span> ✦ <span>ROBÓTICA</span> ✦ <span>LOGÍSTICA</span> ✦ <span>MARKETING</span> ✦
+            </div>
+        </div>
+        <div class="tech-tape-wrapper">
+            <div class="tech-tape">
+                <span>FUTURO</span> ✦ <span>TECNOLOGIA</span> ✦ <span>CARREIRA</span> ✦ <span>INOVAÇÃO</span> ✦ <span>NETWORKING</span> ✦
+                <span>FUTURO</span> ✦ <span>TECNOLOGIA</span> ✦ <span>CARREIRA</span> ✦ <span>INOVAÇÃO</span> ✦ <span>NETWORKING</span> ✦
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <section class="feira-content-section">
+        <div class="container">
+            <div class="feira-grid">
+                <div class="feira-info-box animate-on-scroll">
+                    <h2>O que você vai encontrar?</h2>
+                    <p>A Feira de Profissões é o nosso maior evento acadêmico aberto ao público. É a oportunidade perfeita para interagir com projetos reais, tirar dúvidas direto com os alunos e instrutores, e decidir o seu futuro profissional.</p>
+                    <ul>
+                        <li><strong>Stands Interativos:</strong> Apresentação prática dos cursos (TI, Administração, etc).</li>
+                        <li><strong>Projetos Reais:</strong> Veja o que nossos alunos são capazes de criar.</li>
+                        <li><strong>Orientação de Carreira:</strong> Professores à disposição para tirar dúvidas.</li>
+                        <li><strong>Entrada Gratuita:</strong> Evento totalmente aberto para a comunidade.</li>
+                    </ul>
+                    <div style="margin-top: 40px;">
+                        <h3 style="font-size: 1.4rem; margin-bottom: 10px; color: var(--dark);">📍 Localização</h3>
+                        <p style="margin-bottom: 0;"><strong>CEDESP Jaguaré</strong><br>
+                        R. Floresto Bandecchi, 156 - Jaguaré<br>
+                        São Paulo - SP, 05336-010</p>
+                    </div>
+                </div>
+
+                <div class="feira-map-container animate-on-scroll delay-1">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=R.+Floresto+Bandecchi,+156+-+Jaguar%C3%A9,+S%C3%A3o+Paulo+-+SP,+05336-010&t=&z=17&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feira-cta-section">
+        <div class="container animate-on-scroll">
+            <h2 class="feira-cta-title">Pronto para o próximo nível? 🕹️</h2>
+            <p class="feira-cta-subtitle">Cola com a gente, tira suas dúvidas e descobre como ser o protagonista da sua própria história.</p>
+            <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20saber%20mais%20sobre%20a%20Feira%20de%20Profiss%C3%B5es!" class="feira-cta-btn" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                </svg>
+                Chamar no WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer Padrão -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="footer-brand-container">
+                    <div class="footer-logo-row">
+                        <img src="images/logo_rede_comunita.png?v=1.2" alt="Rede Comunitá" class="logo-img">
+                        <span class="footer-text-cedesp">CEDESP</span>
+                    </div>
+                    <div class="footer-logo-subtitle">
+                        <span class="logo-wrapper">
+                            <span class="logo-highlight">Jaguaré</span>
+                        </span>
+                    </div>
+                </div>
+                <p>Transformando vidas na região do Jaguaré, construindo um futuro com mais dignidade através da educação profissional.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Links</h4>
+                <a href="historia.html">Nossa História</a>
+                <a href="index.html#programas">Programas e Serviços</a>
+                <a href="index.html#sobre">Sobre nós</a>
+                <a href="index.html#impacto">Impacto</a>
+                <a href="index.html#participe">Participe</a>
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contato</h4>
+                <p>R. Floresto Bandecchi, 156 - Jaguaré, São Paulo - SP, 05336-010</p>
+                <a href="https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20me%20matricular%20!" class="btn btn-whatsapp" target="_blank">Falar no WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rede Comunitá Jaguaré. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

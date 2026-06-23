@@ -361,6 +361,25 @@ h2 {
     box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
 }
 
+/* Estilo especial para o link Hot - Feira de Profissões (Cores frias e chamativas) */
+.nav-links a.nav-link-hot-blue {
+    color: #fff !important;
+    font-weight: 800;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #00f2fe, #4facfe, #7c3aed, #00f2fe);
+    background-size: 300% 300%;
+    border: none;
+    transition: all 0.2s ease-in-out;
+    animation: gradient-shift 2.5s ease infinite, scene-stealer-glow-blue 1s ease-in-out infinite;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+}
+
 @keyframes gradient-shift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -378,9 +397,25 @@ h2 {
     }
 }
 
+@keyframes scene-stealer-glow-blue {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(0, 242, 254, 0.6), 0 0 15px rgba(124, 58, 237, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(0, 242, 254, 1), 0 0 40px rgba(79, 172, 254, 0.8), 0 0 10px #7c3aed;
+        transform: scale(1.08);
+    }
+}
+
 .nav-links a.nav-link-hot:hover {
     transform: scale(1.12);
     box-shadow: 0 0 35px rgba(255, 0, 85, 1), 0 0 50px rgba(255, 94, 0, 0.9);
+}
+
+.nav-links a.nav-link-hot-blue:hover {
+    transform: scale(1.12);
+    box-shadow: 0 0 35px rgba(0, 242, 254, 1), 0 0 50px rgba(79, 172, 254, 0.9);
 }
 
 .nav-actions {
