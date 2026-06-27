@@ -13,8 +13,8 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso de Reparador de Linha Branca Gratuito | Jaguaré, Lapa e Osasco</title>
-    <meta name="description" content="Curso profissionalizante gratuito de Reparador de Linha Branca no CEDESP Jaguaré. Refrigeração, lavadoras e fogões com certificação SENAI. Certificação SENAI no Jaguaré, com fácil acesso para Lapa e Osasco.">
+    <title>Curso de Linha Branca &amp; Eletrodomésticos Inteligentes | SENAI Jaguaré</title>
+    <meta name="description" content="Curso gratuito de Reparador de Linha Branca no CEDESP Jaguaré com certificação SENAI. Aprenda manutenção de eletrodomésticos, automação com Alexa/Zigbee e prepare-se para vagas de estágio na Electrolux.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
@@ -127,12 +127,28 @@
     100% { transform: translate(0.0px, 110.0px); }
 }
 
-@keyframes orb_whirlpool_svg_0_ccw {
-    0% { transform: translate(0.0px, -175.0px); }
-    25% { transform: translate(-175.0px, -0.0px); }
-    50% { transform: translate(-0.0px, 175.0px); }
-    75% { transform: translate(175.0px, 0.0px); }
-    100% { transform: translate(0.0px, -175.0px); }
+@keyframes orb_outer_0 {
+    0% { transform: translate(0px, -175px); }
+    25% { transform: translate(175px, 0px); }
+    50% { transform: translate(0px, 175px); }
+    75% { transform: translate(-175px, 0px); }
+    100% { transform: translate(0px, -175px); }
+}
+
+@keyframes orb_outer_120 {
+    0% { transform: translate(151.5px, 87.5px); }
+    25% { transform: translate(-87.5px, 151.5px); }
+    50% { transform: translate(-151.5px, -87.5px); }
+    75% { transform: translate(87.5px, -151.5px); }
+    100% { transform: translate(151.5px, 87.5px); }
+}
+
+@keyframes orb_outer_240 {
+    0% { transform: translate(-151.5px, 87.5px); }
+    25% { transform: translate(-87.5px, -151.5px); }
+    50% { transform: translate(151.5px, -87.5px); }
+    75% { transform: translate(87.5px, 151.5px); }
+    100% { transform: translate(-151.5px, 87.5px); }
 }
 
         /* ── SCROLL HINT ── */
@@ -390,14 +406,13 @@
     <link rel="icon" href="../images/favicon.png" type="image/png" sizes="192x192">
 
     <!-- Open Graph / Redes Sociais -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Curso de Reparador de Linha Branca Gratuito | Jaguaré, Lapa e Osasco">
-    <meta property="og:description" content="Curso profissionalizante gratuito de Reparador de Linha Branca no CEDESP Jaguaré. Refrigeração, lavadoras e fogões com certificação SENAI. Certificação SENAI no Jaguaré, com fácil acesso para Lapa e Osasco.">
+    <meta property="og:title" content="Curso de Linha Branca &amp; Eletrodomésticos Inteligentes | SENAI Jaguaré">
+    <meta property="og:description" content="Curso gratuito de Reparador de Linha Branca no CEDESP Jaguaré com certificação SENAI. Aprenda manutenção de eletrodomésticos, automação com Alexa/Zigbee e prepare-se para vagas de estágio na Electrolux.">
     <meta property="og:image" content="https://cedespjaguare.com.br/images/logo_rede_comunita.png">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Curso de Reparador de Linha Branca Gratuito | Jaguaré, Lapa e Osasco">
-    <meta name="twitter:description" content="Curso profissionalizante gratuito de Reparador de Linha Branca no CEDESP Jaguaré. Refrigeração, lavadoras e fogões com certificação SENAI. Certificação SENAI no Jaguaré, com fácil acesso para Lapa e Osasco.">
+    <meta name="twitter:title" content="Curso de Linha Branca &amp; Eletrodomésticos Inteligentes | SENAI Jaguaré">
+    <meta name="twitter:description" content="Curso gratuito de Reparador de Linha Branca no CEDESP Jaguaré com certificação SENAI. Aprenda manutenção de eletrodomésticos, automação com Alexa/Zigbee e prepare-se para vagas de estágio na Electrolux.">
     <meta name="twitter:image" content="https://cedespjaguare.com.br/images/logo_rede_comunita.png">
     
 
@@ -474,7 +489,7 @@
                         </div>
                     </div>
                     <h1 class="course-title">Reparador de<br><span class="accent">Linha Branca</span></h1>
-                    <p class="course-desc">Especialize-se na manutenção de eletrodomésticos essenciais. Geladeiras, lavadoras e fogões — profissão de alta demanda e excelente retorno de mercado.</p>
+                    <p class="course-desc">Aprenda a consertar geladeiras, lavadoras e fogões e domine a nova tendência de eletrodomésticos inteligentes integrados com Alexa e Zigbee. Destaque-se no mercado e concorra a vagas de estágio na <strong>Electrolux</strong>!</p>
                     <div class="hero-pills">
                         <div class="hero-pill"><span class="pill-value">800h</span>Carga horária</div>
                         <div class="hero-pill"><span class="pill-value">SENAI</span>Certificação</div>
@@ -486,9 +501,11 @@
                 <div class="o-ring o-ring-inner"></div>
                 <div class="o-ring o-ring-outer"></div>
                 <div class="o-core"></div>
-            <div class="o-logo" style="animation:orb_samsung_svg_0_cw 10s linear infinite;"><img src="logos/samsung.svg" alt="Samsung"></div>
-            <div class="o-logo" style="animation:orb_lg_svg_180_cw 10s linear infinite;"><img src="logos/lg.svg" alt="LG"></div>
-            <div class="o-logo" style="animation:orb_whirlpool_svg_0_ccw 17s linear infinite;"><img src="logos/whirlpool.svg" alt="Whirlpool"></div>
+                <div class="o-logo" style="animation:orb_samsung_svg_0_cw 10s linear infinite;"><img src="logos/samsung.svg" alt="Samsung"></div>
+                <div class="o-logo" style="animation:orb_lg_svg_180_cw 10s linear infinite;"><img src="logos/lg.svg" alt="LG"></div>
+                <div class="o-logo" style="animation:orb_outer_0 15s linear infinite;"><img src="logos/electrolux.svg" alt="Electrolux"></div>
+                <div class="o-logo" style="animation:orb_outer_120 15s linear infinite;"><img src="logos/alexa.svg" alt="Alexa"></div>
+                <div class="o-logo" style="animation:orb_outer_240 15s linear infinite;"><img src="logos/zigbee.svg" alt="Zigbee"></div>
             </div>
                 </div>
             </div>
@@ -575,18 +592,18 @@
             </div>
             <div class="c-module animate-on-scroll">
                 <span class="c-module-num">02</span>
-                <h3>Máquinas de Lavar</h3>
-                <p>Funcionamento eletromecânico, bombas de drenagem, falhas em placas eletrônicas de controle e troca de rolamentos.</p>
+                <h3>Máquinas de Lavar e IoT</h3>
+                <p>Funcionamento eletromecânico, placas de controle eletrônico de lavadoras modernas e técnicas para substituição e diagnóstico de painéis digitais.</p>
             </div>
             <div class="c-module animate-on-scroll">
                 <span class="c-module-num">03</span>
-                <h3>Eletricidade Aplicada e Gás</h3>
-                <p>Interpretação de esquemas elétricos, uso de multímetro e capacímetro, manuseio seguro de gás GLP.</p>
+                <h3>Automação Smart Home</h3>
+                <p>Introdução a casas inteligentes: integração de eletrodomésticos inteligentes, programação de rotinas com Alexa, configuração do protocolo Zigbee e sensores sem fio.</p>
             </div>
             <div class="c-module animate-on-scroll">
                 <span class="c-module-num">04</span>
-                <h3>Empreendedorismo Técnico</h3>
-                <p>Como montar orçamentos, precificação de serviços, atendimento ao cliente e formalizar seu próprio negócio.</p>
+                <h3>Carreira &amp; Estágio Electrolux</h3>
+                <p>Preparação focada para o mercado de trabalho, com foco em processos seletivos e preparação para oportunidades de estágio na Electrolux, precificação e orçamentos.</p>
             </div>
                 </div>
             </div>
@@ -610,8 +627,16 @@
                 <span class="c-tool-name">LG ThinQ</span>
             </div>
             <div class="c-tool">
-                <div class="c-tool-icon"><img src="logos/whirlpool.svg" alt="Whirlpool"></div>
-                <span class="c-tool-name">Whirlpool Tech</span>
+                <div class="c-tool-icon"><img src="logos/electrolux.svg" alt="Electrolux"></div>
+                <span class="c-tool-name">Electrolux</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/alexa.svg" alt="Alexa"></div>
+                <span class="c-tool-name">Alexa (Automação)</span>
+            </div>
+            <div class="c-tool">
+                <div class="c-tool-icon"><img src="logos/zigbee.svg" alt="Zigbee"></div>
+                <span class="c-tool-name">Zigbee (Automação)</span>
             </div>
                 </div>
             </div>
