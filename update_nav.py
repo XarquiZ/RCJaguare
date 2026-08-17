@@ -16,7 +16,6 @@ def replace_in_file(filepath):
     pattern = r'<div class="nav-links">.*?</div>'
     
     new_links = f'''<div class="nav-links">
-                <a href="{prefix}feira-profissoes.html" class="nav-link-hot-blue">Feira de Profissões</a>
                 <a href="{prefix}historia.html">Nossa História</a>
                 <a href="{prefix}cursos.html" class="nav-link-animated">Cursos</a>
                 <a href="{prefix}eventos.html">Eventos</a>
