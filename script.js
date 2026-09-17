@@ -697,4 +697,311 @@ document.addEventListener('DOMContentLoaded', () => {
     const beholdInterval = setInterval(hideBeholdWatermark, 150);
     // Limpa o interval após 10 segundos para economizar processamento do navegador
     setTimeout(() => clearInterval(beholdInterval), 10000);
+
+    // ================================================================
+    // ORIGINKIT SMOOTH SCROLL SLIDER MOTOR — CEDESP JAGUARÉ
+    // ================================================================
+    const sliderContainer = document.getElementById('smoothScrollSlider');
+    if (sliderContainer) {
+        const slideData = [
+            {
+                title: "CCA Jaguaré",
+                category: "Desenvolvimento Infantil",
+                desc: "Atendimento social diário, oficinas culturais e acompanhamento nutricional para crianças e adolescentes.",
+                img: "images/fotos/4.jpg",
+                link: "historia.html#cca",
+                btnText: "Conhecer o CCA"
+            },
+            {
+                title: "Projetos da Casa",
+                category: "Cultura & Comunidade",
+                desc: "Iniciativas socioculturais, bazares comunitários e ações de acolhimento para fortalecer famílias locais.",
+                img: "images/fotos/5.webp",
+                link: "eventos.html",
+                btnText: "Ver Projetos & Eventos"
+            },
+            {
+                title: "Cursos SENAI Gratuitos",
+                category: "Qualificação Profissional",
+                desc: "Formação técnica com certificação padrão SENAI nas áreas de TI, Mecânica, Linha Branca e Gestão.",
+                img: "images/fotos/6.jpg",
+                link: "cursos.html#filtros-cursos",
+                btnText: "Explorar Cursos"
+            },
+            {
+                title: "Parceria RD Saúde",
+                category: "Saúde & Farmácia",
+                desc: "Palestras técnicas, atividades sociais e orientação profissional especializada dentro do CEDESP Jaguaré.",
+                img: "images/rd_saude_banner.jpg",
+                link: "https://rdsaude.com.br",
+                btnText: "Saiba Mais"
+            },
+            {
+                title: "Faça Parte da Mudança",
+                category: "Voluntariado & Doações",
+                desc: "Apoie nossos projetos sociais através do voluntariado, parcerias ou participando ativamente.",
+                img: "images/fotos/1.jpg",
+                link: "https://wa.me/5511972423702?text=Ol%C3%A1%20quero%20apoiar%20os%20projetos%20do%20CEDESP%20Jaguar%C3%A9!",
+                btnText: "Falar no WhatsApp"
+            },
+            {
+                title: "Visite Nosso Bazar",
+                category: "Bazar Beneficente",
+                desc: "Roupas, calçados e utensílios com valores simbólicos cuja renda apoia integralmente nossos atendidos.",
+                img: "images/fotos/2.jpg",
+                link: "https://redecomunita.org.br/bazar",
+                btnText: "Visitar Bazar"
+            },
+            {
+                title: "Parceria LOGA",
+                category: "Sustentabilidade",
+                desc: "Educação ambiental e conscientização sobre reciclagem para um Jaguaré mais limpo e sustentável.",
+                img: "images/loga_equipe.jpg",
+                link: "https://www.loga.com.br",
+                btnText: "Conhecer Parceria"
+            },
+            {
+                title: "Nossa Trajetória",
+                category: "História & Legado",
+                desc: "Mais de 70 anos de dedicação contínua transformando destinos na Zona Oeste de São Paulo.",
+                img: "images/fotos/3.JPG",
+                link: "historia.html",
+                btnText: "Ler Nossa História"
+            }
+        ];
+
+        // Constantes da física Originkit
+        const MAX_SCALE = 1.35;
+        const MIN_SCALE = 0.55;
+        const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+        const wrap = (val, span) => ((val % span) + span) % span;
+
+        // Configuração
+        const isMobile = window.innerWidth <= 768;
+        const slideWidth = isMobile ? 315 : 460;
+        const slideHeight = isMobile ? 400 : 500;
+        const spacing = 2;
+        const step = slideWidth + clamp(spacing, 0, 10) * 20;
+        const smoothness = 8;
+        const ease = 0.15 - (clamp(smoothness, 0, 10) / 10) * 0.13;
+        const dimAmount = 0.55;
+        const wheelMultiplier = 1.35;
+        const dragMultiplier = 1.35;
+        const loop = true;
+
+        let width = sliderContainer.getBoundingClientRect().width || window.innerWidth;
+        let repeats = Math.max(1, Math.ceil((width + step * 2) / (slideData.length * step))) + 1;
+
+        // Monta slides repetidos para loop contínuo
+        const allSlides = [];
+        for (let r = 0; r < repeats; r++) {
+            allSlides.push(...slideData);
+        }
+
+        // Renderiza elementos no DOM
+        sliderContainer.innerHTML = '';
+        const nodes = allSlides.map((item, i) => {
+            const el = document.createElement('a');
+            el.className = 'smooth-slide-node';
+            el.href = item.link;
+            if (item.link.startsWith('http')) {
+                el.target = '_blank';
+                el.rel = 'noopener noreferrer';
+            }
+
+            el.innerHTML = `
+                <img src="${item.img}" alt="${item.title}" class="smooth-slide-img" draggable="false" loading="lazy">
+                <div class="smooth-slide-overlay">
+                    <span class="smooth-slide-category">${item.category}</span>
+                    <h3 class="smooth-slide-title">${item.title}</h3>
+                    <p class="smooth-slide-desc">${item.desc}</p>
+                    <div class="smooth-slide-btn">
+                        <span>${item.btnText}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            `;
+            sliderContainer.appendChild(el);
+            return el;
+        });
+
+        // Estado do motor de física
+        let targetX = 0;
+        let currentX = 0;
+        const count = allSlides.length;
+
+        // Resize observer
+        const resizeObserver = new ResizeObserver(entries => {
+            if (entries[0]) {
+                width = entries[0].contentRect.width;
+            }
+        });
+        resizeObserver.observe(sliderContainer);
+
+        // Animação RAF
+        let lastTime = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let lastPointerX = 0;
+        let pointerMoved = 0;
+
+        const tick = (now) => {
+            requestAnimationFrame(tick);
+            const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.1) : 1 / 60;
+            lastTime = now;
+
+            if (!count || step <= 0 || width <= 0) return;
+
+            const span = count * step;
+
+            // Loop wrapping
+            if (loop) {
+                if (currentX > span || currentX < -span) {
+                    const shift = Math.trunc(currentX / span) * span;
+                    currentX -= shift;
+                    targetX -= shift;
+                }
+            } else {
+                targetX = clamp(targetX, 0, (count - 1) * step);
+            }
+
+            // Suavização do movimento (Easing)
+            const k = 1 - Math.pow(1 - ease, delta * 60);
+            currentX += (targetX - currentX) * k;
+
+            // Se não estiver arrastando, adiciona sutil avanço automático contínuo
+            if (!isDragging) {
+                targetX += 0.35;
+            }
+
+            const pad = (width - slideWidth) / 2;
+            const half = width / 2;
+
+            for (let i = 0; i < count; i++) {
+                const node = nodes[i];
+                if (!node) continue;
+
+                const raw = i * step - currentX + pad;
+                const x = loop ? wrap(raw + step, span) - step : raw;
+
+                const distance = x + slideWidth / 2 - half;
+                let scale;
+                let push;
+
+                if (distance > 0) {
+                    scale = Math.min(MAX_SCALE, 1 + distance / width);
+                    push = (scale - 1) * slideWidth * 0.75;
+                } else {
+                    scale = Math.max(MIN_SCALE, 1 + distance / width);
+                    push = 0;
+                }
+
+                const left = x + push;
+                node.style.transform = `translate3d(${left}px, -50%, 0) scale(${scale})`;
+
+                // Ajuste de brilho/dimming nas bordas
+                if (dimAmount > 0 && scale < 1) {
+                    const t = (1 - scale) / Math.max(0.001, 1 - MIN_SCALE);
+                    node.style.filter = `brightness(${1 - t * dimAmount})`;
+                } else {
+                    node.style.filter = 'none';
+                }
+
+                // Z-index baseado na proximidade do centro
+                const centerDist = Math.abs(distance);
+                node.style.zIndex = Math.round(1000 - centerDist);
+            }
+        };
+        requestAnimationFrame(tick);
+
+        // Scroll do mouse (Só intercepta e passa o slider quando os cards estiverem centralizados na tela)
+        sliderContainer.addEventListener('wheel', (e) => {
+            // Se for scroll horizontal (shift + wheel ou touchpad horizontal), sempre permite passar o slider
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                e.preventDefault();
+                targetX += e.deltaX * wheelMultiplier;
+                return;
+            }
+
+            // Para scroll vertical: verifica se a seção/cards estão centralizados no meio da viewport
+            const rect = sliderContainer.getBoundingClientRect();
+            const sliderCenter = rect.top + rect.height / 2;
+            const viewportCenter = window.innerHeight / 2;
+            const tolerance = Math.min(160, rect.height * 0.35); // Faixa de centralização confortável
+
+            const isCentered = Math.abs(sliderCenter - viewportCenter) <= tolerance;
+
+            if (isCentered) {
+                // Está centralizado: intercepta e faz o slider avançar/retroceder
+                e.preventDefault();
+                targetX += e.deltaY * wheelMultiplier;
+            }
+            // Caso NÃO esteja centralizado na tela, NÃO chama preventDefault(): a página rola normalmente até centralizar
+        }, { passive: false });
+    }
+
+    // ================================================================
+    // ORIGINKIT RADIAL REVEAL BUTTON MOTOR (POINTER-ANCHORED EXPANSION)
+    // ================================================================
+    const radialButtons = document.querySelectorAll('.originkit-radial-btn');
+    radialButtons.forEach(btn => {
+        const overlay = btn.querySelector('.overlay-face');
+        if (!overlay) return;
+
+        let isHovered = false;
+
+        function updateCircle(xPct, yPct, radiusPct) {
+            const clip = `circle(${radiusPct}% at ${xPct}% ${yPct}%)`;
+            overlay.style.clipPath = clip;
+            overlay.style.webkitClipPath = clip;
+        }
+
+        btn.addEventListener('pointerenter', e => {
+            isHovered = true;
+            const rect = btn.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+
+            const xPct = (px / rect.width) * 100;
+            const yPct = (py / rect.height) * 100;
+
+            // Calcula o ponto mais distante para garantir que o círculo cubra todo o botão
+            const far = Math.max(
+                Math.hypot(px, py),
+                Math.hypot(rect.width - px, py),
+                Math.hypot(px, rect.height - py),
+                Math.hypot(rect.width - px, rect.height - py)
+            );
+            const unit = Math.hypot(rect.width, rect.height) / Math.SQRT2;
+            const maxRadiusPct = (far / unit) * 100 + 10;
+
+            // Inicia do ponto onde o mouse entrou com raio zero
+            overlay.style.transition = 'none';
+            updateCircle(xPct, yPct, 0);
+
+            // Força repaint para transição suave
+            void overlay.offsetHeight;
+
+            // Expande radialmente
+            overlay.style.transition = 'clip-path 0.45s cubic-bezier(0.25, 1, 0.5, 1), -webkit-clip-path 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
+            updateCircle(xPct, yPct, maxRadiusPct);
+        });
+
+        btn.addEventListener('pointerleave', e => {
+            isHovered = false;
+            const rect = btn.getBoundingClientRect();
+            const px = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+            const py = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+
+            const xPct = (px / rect.width) * 100;
+            const yPct = (py / rect.height) * 100;
+
+            // Retrai o círculo em direção ao ponto de saída
+            overlay.style.transition = 'clip-path 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-clip-path 0.35s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            updateCircle(xPct, yPct, 0);
+        });
+    });
 });

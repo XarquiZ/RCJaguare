@@ -2398,38 +2398,18 @@ h2 {
     margin-bottom: 20px;
 }
 
-.footer-logo-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.footer-brand-container a,
+.footer-brand-container .footer-logo-link {
+    display: inline-block;
+    width: fit-content;
 }
 
-.footer-logo-row .logo-img {
-    height: 50px;
-    filter: brightness(0) invert(1);
-}
-
-.footer-text-cedesp {
-    font-size: 1.4rem;
-    /* Tamanho reduzido para bater com a imagem 'rede comunita' */
-    font-weight: 800;
-    color: var(--light);
-    line-height: 1;
-}
-
-.footer-logo-subtitle {
-    margin-left: 55px;
-    /* Alinha aproximadamente debaixo do início do texto 'REDE' */
-    margin-top: -4px;
-    /* Ajuste sutil pós-redução de fonte */
-}
-
-.footer-logo-subtitle .logo-highlight {
-    font-size: 1.4rem;
-    /* Mesmo tamanho reduzido do CEDESP */
-    border-right: none;
-    animation: none;
-    padding-right: 0;
+.footer-logo-img {
+    height: 68px;
+    width: auto;
+    max-width: 345px;
+    object-fit: contain;
+    display: block;
 }
 
 .footer-brand p {
