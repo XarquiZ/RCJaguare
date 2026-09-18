@@ -433,42 +433,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ===== CONTADOR ANIMADO NO HERO =====
-    const counterElement = document.querySelector('.impact-number');
-    if (counterElement) {
-        const target = parseInt(counterElement.getAttribute('data-target'));
+    // ===== CONTADOR ANIMADO NOS NÚMEROS DE IMPACTO =====
+    const counterElements = document.querySelectorAll('.impact-number[data-target]');
+    if (counterElements.length > 0) {
         const duration = 2000; // 2 segundos
-        let started = false;
 
-        const startCounter = () => {
+        const startCounter = (el) => {
+            const rawTarget = el.getAttribute('data-target');
+            const target = parseInt(rawTarget, 10);
+            if (isNaN(target)) return;
+
+            const prefix = el.getAttribute('data-prefix') || '+';
             let startTimestamp = null;
+
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 const currentCount = Math.floor(progress * target);
-                
-                // Formata com ponto (ex: 7.000)
-                counterElement.textContent = currentCount.toLocaleString('pt-BR');
-                
+
+                el.textContent = `${prefix}${currentCount.toLocaleString('pt-BR')}`;
+
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 } else {
-                    counterElement.textContent = target.toLocaleString('pt-BR');
+                    el.textContent = `${prefix}${target.toLocaleString('pt-BR')}`;
                 }
             };
             window.requestAnimationFrame(step);
         };
 
-        const counterObserver = new IntersectionObserver((entries) => {
+        const counterObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !started) {
-                    started = true;
-                    setTimeout(startCounter, 500); // Pequeno delay para suavidade
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    startCounter(el);
+                    observer.unobserve(el);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.3 });
 
-        counterObserver.observe(counterElement);
+        counterElements.forEach(el => counterObserver.observe(el));
     }
 
     // ===== LÓGICA DE FILTROS DA PÁGINA DE EVENTOS =====
