@@ -96,7 +96,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=16r">
+    <link rel="stylesheet" href="styles.css?v=17r">
 
     <!-- Estilos específicos para o Slide 2 (Estilo Kids School / Admission Minimalista) -->
     <style>
@@ -1573,9 +1573,9 @@
         /* Controles e Indicador de arrasto */
         .smooth-slider-hint {
             text-align: center;
-            margin-top: 30px;
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 0.85rem;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.88rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1591,25 +1591,137 @@
             50% { transform: translateX(6px); }
         }
 
-        @media (max-width: 768px) {
+        /* Comandos Mobile do Carrossel (Botões + Slider Bar) */
+        .smooth-slider-mobile-controls {
+            display: none;
+        }
+
+        @media (max-width: 992px) {
             .smooth-slider-section {
-                padding: 60px 0 70px;
+                padding: 50px 0 60px;
+            }
+            .smooth-slider-header {
+                padding: 0 16px;
+                margin-bottom: 25px;
             }
             .smooth-slider-header h2 {
-                font-size: 1.9rem;
+                font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+                line-height: 1.2;
+                margin-bottom: 12px;
+            }
+            .smooth-slider-header p {
+                font-size: 0.95rem;
+                line-height: 1.5;
             }
             .smooth-slider-viewport {
-                height: 440px;
+                height: 410px;
+                cursor: grab;
+                touch-action: pan-y pinch-zoom;
+            }
+            .smooth-slider-viewport:active {
+                cursor: grabbing;
             }
             .smooth-slide-node {
-                width: 315px;
-                height: 400px;
+                width: 275px;
+                height: 360px;
+                border-radius: 20px;
             }
             .smooth-slide-overlay {
-                padding: 22px;
+                padding: 20px;
             }
             .smooth-slide-title {
-                font-size: 1.35rem;
+                font-size: 1.25rem;
+                margin-bottom: 6px;
+            }
+            .smooth-slide-desc {
+                font-size: 0.84rem;
+                line-height: 1.4;
+                margin-bottom: 12px;
+                -webkit-line-clamp: 2;
+            }
+            .smooth-slide-btn {
+                font-size: 0.85rem;
+            }
+
+            /* Barra de comando de celular para o slider */
+            .smooth-slider-mobile-controls {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+                margin-top: 20px;
+                padding: 0 20px;
+            }
+            .smooth-ctrl-btn {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.12);
+                border: 1.5px solid rgba(255, 255, 255, 0.25);
+                color: #ffffff;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                flex-shrink: 0;
+            }
+            .smooth-ctrl-btn:active {
+                transform: scale(0.92);
+                background: rgba(247, 190, 19, 0.3);
+                border-color: var(--primary);
+                color: var(--primary);
+            }
+            .smooth-slider-track-bar {
+                flex: 1;
+                max-width: 220px;
+                height: 6px;
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: 10px;
+                position: relative;
+                overflow: hidden;
+            }
+            .smooth-slider-thumb-bar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 30%;
+                background: linear-gradient(90deg, #F7BE13, #EA580C);
+                border-radius: 10px;
+                transition: left 0.1s linear;
+            }
+            .smooth-slider-hint {
+                margin-top: 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* iPhone SE e telas estreitas <= 375px */
+        @media (max-width: 375px) {
+            .smooth-slide-node {
+                width: 245px;
+                height: 330px;
+            }
+            .smooth-slider-viewport {
+                height: 370px;
+            }
+            .smooth-slide-overlay {
+                padding: 16px;
+            }
+            .smooth-slide-title {
+                font-size: 1.15rem;
+            }
+            .smooth-ctrl-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .smooth-slider-track-bar {
+                max-width: 160px;
             }
         }
     </style>
@@ -2115,12 +2227,25 @@
             <!-- Os cards são gerados e animados dinamicamente pelo motor JS do Smooth Slider -->
         </div>
 
+        <!-- Comandos Mobile para Celulares (Slider com Botões de Ação + Track Bar) -->
+        <div class="smooth-slider-mobile-controls" id="smoothMobileControls">
+            <button class="smooth-ctrl-btn" id="smoothPrevBtn" aria-label="Card anterior">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="smooth-slider-track-bar">
+                <div class="smooth-slider-thumb-bar" id="smoothThumbBar"></div>
+            </div>
+            <button class="smooth-ctrl-btn" id="smoothNextBtn" aria-label="Próximo card">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
         <div class="smooth-slider-hint">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <polyline points="19 12 12 19 5 12"></polyline>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
-            <span>Role para baixo com o mouse para navegar pelos cards</span>
+            <span>Deslize com o dedo ou use os controles</span>
         </div>
     </section>
 
@@ -2166,7 +2291,7 @@
         </svg>
     </a>
 
-    <script src="script.js?v=16r"></script>
+    <script src="script.js?v=17r"></script>
 </body>
 
 </html>

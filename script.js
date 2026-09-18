@@ -164,27 +164,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 goToSlide((currentIndex - 1 + slides.length) % slides.length, 'prev');
             }
 
-            // Swipe Detection
+            // Swipe Detection Mobile com Trava de Ângulo Direcional
             let touchStartX = 0;
-            const swipeThreshold = 50; // pixels
+            let touchStartY = 0;
+            const swipeThreshold = 35; // pixels otimizado para celulares
+
             heroSlider.addEventListener('touchstart', e => {
-                touchStartX = e.touches[0].clientX;
-            });
+                if (e.touches && e.touches.length > 0) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
             heroSlider.addEventListener('touchend', e => {
+                if (!e.changedTouches || e.changedTouches.length === 0) return;
                 const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
                 const diffX = touchStartX - touchEndX;
-                if (Math.abs(diffX) > swipeThreshold) {
+                const diffY = touchStartY - touchEndY;
+
+                // Só avança o slide se o movimento foi predominantemente horizontal
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
                     if (diffX > 0) {
-                        // swipe left -> next
+                        // swipe para a esquerda -> próximo slide
                         nextSlide();
                         resetTimer();
                     } else {
-                        // swipe right -> previous
+                        // swipe para a direita -> slide anterior
                         prevSlide();
                         resetTimer();
                     }
                 }
-            });
+            }, { passive: true });
             // Optional mouse drag for desktop
             let mouseDownX = 0;
             heroSlider.addEventListener('mousedown', e => {
@@ -771,22 +782,23 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         // Constantes da física Originkit
-        const MAX_SCALE = 1.35;
+        const isMobile = () => window.innerWidth <= 992;
+        const isNarrowMobile = () => window.innerWidth <= 375;
+        const getSlideWidth = () => isNarrowMobile() ? 245 : (isMobile() ? 275 : 460);
+        const getSlideHeight = () => isNarrowMobile() ? 330 : (isMobile() ? 360 : 500);
+        const getMaxScale = () => isMobile() ? 1.15 : 1.35;
         const MIN_SCALE = 0.55;
         const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
         const wrap = (val, span) => ((val % span) + span) % span;
 
         // Configuração
-        const isMobile = window.innerWidth <= 768;
-        const slideWidth = isMobile ? 315 : 460;
-        const slideHeight = isMobile ? 400 : 500;
+        let slideWidth = getSlideWidth();
         const spacing = 2;
-        const step = slideWidth + clamp(spacing, 0, 10) * 20;
+        let step = slideWidth + clamp(spacing, 0, 10) * (isMobile() ? 14 : 20);
         const smoothness = 8;
         const ease = 0.15 - (clamp(smoothness, 0, 10) / 10) * 0.13;
         const dimAmount = 0.55;
         const wheelMultiplier = 1.35;
-        const dragMultiplier = 1.35;
         const loop = true;
 
         let width = sliderContainer.getBoundingClientRect().width || window.innerWidth;
@@ -833,10 +845,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentX = 0;
         const count = allSlides.length;
 
-        // Resize observer
+        // Resize observer para recalibrar nos diferentes iPhones
         const resizeObserver = new ResizeObserver(entries => {
             if (entries[0]) {
                 width = entries[0].contentRect.width;
+                slideWidth = getSlideWidth();
+                step = slideWidth + clamp(spacing, 0, 10) * (isMobile() ? 14 : 20);
             }
         });
         resizeObserver.observe(sliderContainer);
@@ -844,9 +858,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Animação RAF
         let lastTime = 0;
         let isDragging = false;
-        let dragStartX = 0;
+        let startPointerX = 0;
+        let startPointerY = 0;
         let lastPointerX = 0;
-        let pointerMoved = 0;
+        let pointerDeltaAccum = 0;
+        let isHorizontalGesture = null;
+        let velocityX = 0;
+        let lastDragTime = 0;
+
+        // Elemento da thumb bar mobile
+        const thumbBar = document.getElementById('smoothThumbBar');
 
         const tick = (now) => {
             requestAnimationFrame(tick);
@@ -877,8 +898,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetX += 0.35;
             }
 
+            // Atualiza barra de progresso mobile
+            if (thumbBar) {
+                const totalCycle = slideData.length * step;
+                const normalized = wrap(currentX, totalCycle) / totalCycle;
+                const maxLeft = 70; // percentual restante
+                thumbBar.style.left = `${normalized * maxLeft}%`;
+            }
+
             const pad = (width - slideWidth) / 2;
             const half = width / 2;
+            const maxScale = getMaxScale();
 
             for (let i = 0; i < count; i++) {
                 const node = nodes[i];
@@ -892,8 +922,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let push;
 
                 if (distance > 0) {
-                    scale = Math.min(MAX_SCALE, 1 + distance / width);
-                    push = (scale - 1) * slideWidth * 0.75;
+                    scale = Math.min(maxScale, 1 + distance / width);
+                    push = (scale - 1) * slideWidth * (isMobile() ? 0.45 : 0.75);
                 } else {
                     scale = Math.max(MIN_SCALE, 1 + distance / width);
                     push = 0;
@@ -916,6 +946,103 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         requestAnimationFrame(tick);
+
+        // ================================================================
+        // COMANDOS DE CELULAR: TOUCH / DRAG COM FÍSICA E MOMENTUM
+        // ================================================================
+        const onPointerDown = (e) => {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            isDragging = true;
+            startPointerX = e.clientX;
+            startPointerY = e.clientY;
+            lastPointerX = e.clientX;
+            lastDragTime = performance.now();
+            pointerDeltaAccum = 0;
+            isHorizontalGesture = null;
+            velocityX = 0;
+            sliderContainer.setPointerCapture(e.pointerId);
+        };
+
+        const onPointerMove = (e) => {
+            if (!isDragging) return;
+
+            const dx = e.clientX - lastPointerX;
+            const totalDx = e.clientX - startPointerX;
+            const totalDy = e.clientY - startPointerY;
+
+            // Determina direção primária do gesto para não bloquear scroll vertical
+            if (isHorizontalGesture === null) {
+                if (Math.abs(totalDx) > 8 || Math.abs(totalDy) > 8) {
+                    isHorizontalGesture = Math.abs(totalDx) >= Math.abs(totalDy);
+                }
+            }
+
+            if (isHorizontalGesture) {
+                if (e.cancelable) e.preventDefault();
+                pointerDeltaAccum += Math.abs(dx);
+                targetX -= dx * 1.35;
+
+                const now = performance.now();
+                const dt = Math.max(1, now - lastDragTime);
+                velocityX = (dx / dt) * 16;
+                lastDragTime = now;
+            }
+
+            lastPointerX = e.clientX;
+        };
+
+        const onPointerUp = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            try {
+                sliderContainer.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+
+            // Aplica inércia de deslize (momentum)
+            if (isHorizontalGesture && Math.abs(velocityX) > 2) {
+                targetX -= velocityX * 18;
+            }
+
+            // Se arrastou intencionalmente, impede que o clique abra o link acidentalmente
+            if (pointerDeltaAccum > 12) {
+                const preventClick = (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    window.removeEventListener('click', preventClick, true);
+                };
+                window.addEventListener('click', preventClick, true);
+            }
+
+            isHorizontalGesture = null;
+        };
+
+        sliderContainer.addEventListener('pointerdown', onPointerDown, { passive: true });
+        sliderContainer.addEventListener('pointermove', onPointerMove, { passive: false });
+        sliderContainer.addEventListener('pointerup', onPointerUp, { passive: true });
+        sliderContainer.addEventListener('pointercancel', onPointerUp, { passive: true });
+
+        // ================================================================
+        // COMANDOS DE CELULAR: BOTÕES DE AVANÇAR E RETROCEDER (SLIDER)
+        // ================================================================
+        const prevBtn = document.getElementById('smoothPrevBtn');
+        const nextBtn = document.getElementById('smoothNextBtn');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const currentStep = step || 280;
+                targetX -= currentStep * 1.05;
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const currentStep = step || 280;
+                targetX += currentStep * 1.05;
+            });
+        }
 
         // Scroll do mouse (Só intercepta e passa o slider quando os cards estiverem centralizados na tela)
         sliderContainer.addEventListener('wheel', (e) => {
