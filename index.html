@@ -96,7 +96,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=16r">
 
     <!-- Estilos específicos para o Slide 2 (Estilo Kids School / Admission Minimalista) -->
     <style>
@@ -388,19 +388,22 @@
         /* Responsividade Slide 2 */
         @media (max-width: 992px) {
             #slide2 {
-                padding-top: 90px;
+                padding-top: 102px !important;
+                padding-bottom: 20px !important;
+                justify-content: flex-start !important;
             }
-            .slide2-blob-bg, .slide2-blob-secondary {
-                display: none;
+            .slide2-blob-bg, .slide2-blob-secondary, .slide2-blob-left {
+                display: none !important;
             }
             #slide2 .hero-main-row {
                 flex-direction: column;
-                padding-bottom: 30px;
+                padding-bottom: 0 !important;
+                justify-content: flex-start !important;
             }
             #slide2 .hero-content-left {
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding: 10px 5% !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                padding: 0 16px !important;
                 text-align: center;
                 align-items: center;
                 display: flex;
@@ -408,41 +411,93 @@
             }
             .slide2-brand-top {
                 justify-content: center;
+                margin-bottom: 10px !important;
             }
-            .slide2-badge-seal {
-                right: -10px;
-                top: -25px;
-                width: 70px;
-                height: 70px;
-                font-size: 0.68rem;
+            .slide2-brand-logo-img {
+                height: 38px !important;
             }
             .slide2-title-clean {
-                font-size: 1.95rem !important;
+                font-size: clamp(1.6rem, 5.4vw, 2.1rem) !important;
+                line-height: 1.06 !important;
+                margin-bottom: 10px !important;
             }
-            .slide2-benefits-banner {
-                justify-content: center;
+            #slide2 .slide2-shifts-row {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 6px !important;
+                width: 100% !important;
+                max-width: 375px !important;
+                margin: 0 auto 10px auto !important;
             }
-            .slide2-shifts-row {
-                grid-template-columns: 1fr;
+            #slide2 .slide2-shift-pill {
+                padding: 6px 3px !important;
+                border-radius: 12px !important;
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 2px !important;
+                background: #ffffff !important;
+                border: 1px solid #FED7AA !important;
             }
-            .slide2-courses-cloud {
-                justify-content: center;
+            #slide2 .shift-icon-mini {
+                font-size: 1.05rem !important;
+                line-height: 1 !important;
+            }
+            #slide2 .shift-name {
+                font-size: 0.72rem !important;
+                font-weight: 800 !important;
+                color: #1c1917 !important;
+            }
+            #slide2 .shift-hours {
+                font-size: 0.62rem !important;
+                color: #78716c !important;
+                font-weight: 600 !important;
+            }
+            #slide2 .slide2-courses-cloud {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                max-width: 375px !important;
+                margin: 0 auto 12px auto !important;
+            }
+            #slide2 .slide2-course-tag {
+                padding: 5px 10px !important;
+                font-size: 0.76rem !important;
+                border-radius: 100px !important;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
             }
             #slide2 .slide2-actions-row {
-                flex-direction: column;
-                justify-content: center;
-                gap: 16px;
-                width: 100%;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 10px !important;
+                width: 100% !important;
+                max-width: 320px !important;
+                margin: 0 auto !important;
             }
             #slide2 .slide2-actions-row .originkit-radial-btn {
-                max-width: 100%;
-                width: 100%;
+                flex: 0 0 auto !important;
+                width: 100% !important;
+                max-width: 290px !important;
+                height: 48px !important;
+                border-radius: 100px !important;
+                box-shadow: 0 6px 20px rgba(234, 88, 12, 0.22) !important;
+            }
+            #slide2 .slide2-actions-row .radial-face {
+                padding: 0 16px !important;
+                font-size: 0.85rem !important;
+                font-weight: 800 !important;
+            }
+            #slide2 .slide2-brand-side {
+                display: flex !important;
+                justify-content: center !important;
             }
             #slide2 .slide2-brand-side-img {
-                height: 48px;
+                height: 38px !important;
+                width: auto !important;
             }
             #slide2 .hero-image-right {
-                display: none;
+                display: none !important;
             }
         }
 
@@ -701,47 +756,126 @@
             display: block;
         }
 
+        .slide3-photo-bg {
+            display: none;
+        }
+
         /* Responsividade Slide 3 */
         @media (max-width: 992px) {
             #slide3 {
-                padding-top: 90px;
-                padding-bottom: 30px;
+                padding-top: 102px !important;
+                padding-bottom: 20px !important;
+                justify-content: flex-start !important;
+            }
+            .slide3-photo-bg {
+                display: block !important;
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                overflow: hidden;
+                pointer-events: none;
+            }
+            .slide3-photo-bg img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center 25%;
+                opacity: 0.22;
+                display: block;
+            }
+            .slide3-photo-tint {
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at center, rgba(7, 38, 29, 0.6) 0%, rgba(7, 38, 29, 0.96) 100%);
+                pointer-events: none;
             }
             .slide3-geom-diamond-1,
             .slide3-geom-diamond-2,
             .slide3-geom-gold-frame {
-                display: none;
+                display: none !important;
             }
             #slide3 .hero-main-row {
                 flex-direction: column;
-                padding-bottom: 30px;
+                padding-bottom: 0 !important;
+                justify-content: flex-start !important;
             }
             #slide3 .hero-content-left {
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding: 10px 5% !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                padding: 0 16px !important;
                 text-align: center;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                position: relative;
+                z-index: 4;
             }
-            .slide3-top-tag {
-                justify-content: center;
+            #slide3 .slide3-top-tag {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 10px !important;
+                margin-bottom: 10px !important;
             }
-            .slide3-banner-title .title-top {
-                font-size: 1.8rem !important;
+            #slide3 .slide3-rd-logo {
+                height: 24px !important;
+                width: auto !important;
             }
-            .slide3-banner-title .title-bottom {
-                font-size: 2.5rem !important;
+            #slide3 .slide3-tag-pill {
+                font-size: 0.72rem !important;
+                padding: 3px 10px !important;
+                border-radius: 50px !important;
             }
-            .slide3-cta-row {
-                justify-content: center;
+            #slide3 .slide3-banner-title {
+                margin-bottom: 10px !important;
             }
-            .slide3-mini-badges {
-                justify-content: center;
+            #slide3 .slide3-banner-title .title-top {
+                font-size: clamp(1.35rem, 5vw, 1.7rem) !important;
+                letter-spacing: 0.06em !important;
+                line-height: 1.05 !important;
+            }
+            #slide3 .slide3-banner-title .title-bottom {
+                font-size: clamp(2.1rem, 7.5vw, 2.8rem) !important;
+                letter-spacing: 0.03em !important;
+                line-height: 1.02 !important;
+            }
+            #slide3 .slide3-banner-desc {
+                font-size: clamp(0.82rem, 2.9vw, 0.92rem) !important;
+                line-height: 1.45 !important;
+                max-width: 360px !important;
+                margin-bottom: 16px !important;
+                color: #d1fae5 !important;
+            }
+            #slide3 .slide3-cta-row {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 14px !important;
+                margin-bottom: 16px !important;
+            }
+            #slide3 .slide3-btn-gold {
+                padding: 12px 28px !important;
+                font-size: 0.92rem !important;
+                letter-spacing: 0.06em !important;
+                border-radius: 6px !important;
+            }
+            #slide3 .slide3-period-text {
+                font-size: 0.98rem !important;
+            }
+            #slide3 .slide3-mini-badges {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                max-width: 360px !important;
+            }
+            #slide3 .slide3-mini-pill {
+                padding: 5px 10px !important;
+                font-size: 0.74rem !important;
+                border-radius: 6px !important;
             }
             #slide3 .hero-image-right {
-                display: none;
+                display: none !important;
             }
         }
 
@@ -1102,65 +1236,152 @@
 
         @media (max-width: 768px) {
             #slide1-hero {
-                padding-top: 90px;
-                padding-bottom: 20px;
+                padding-top: 102px !important;
+                padding-bottom: 20px !important;
+                justify-content: flex-start !important;
             }
             .slide1-photo-bg {
-                width: 100%;
-                opacity: 0.35;
+                width: 100% !important;
+                opacity: 0.32 !important;
+            }
+            .slide1-photo-bg img {
+                transform: none !important;
+                object-position: center 30% !important;
             }
             .slide1-geo-main {
-                width: 100%;
-                clip-path: none;
-                background: linear-gradient(135deg, rgba(167, 71, 131, 0.95) 0%, rgba(191, 93, 154, 0.92) 50%, rgba(227, 131, 92, 0.9) 100%);
+                width: 100% !important;
+                clip-path: none !important;
+                background: linear-gradient(135deg, rgba(167, 71, 131, 0.95) 0%, rgba(191, 93, 154, 0.92) 50%, rgba(227, 131, 92, 0.9) 100%) !important;
             }
             .slide1-geo-facet, .slide1-geo-accent {
-                display: none;
+                display: none !important;
             }
             #slide1-hero .hero-main-row {
-                flex-direction: column;
-                padding-bottom: 30px;
+                flex-direction: column !important;
+                padding-bottom: 0 !important;
+                justify-content: flex-start !important;
             }
             #slide1-hero .hero-content-left {
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding: 10px 5% !important;
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+                padding: 0 16px !important;
                 text-align: center;
                 align-items: center;
+                display: flex;
+                flex-direction: column;
             }
             .slide1-title {
-                font-size: 1.85rem !important;
-                min-height: auto;
+                font-size: clamp(1.45rem, 5.2vw, 1.85rem) !important;
+                line-height: 1.1 !important;
+                margin-top: 2px !important;
+                margin-bottom: 8px !important;
+                min-height: auto !important;
             }
             .slide1-callout {
-                font-size: 1.1rem;
+                font-size: clamp(0.92rem, 3.2vw, 1.05rem) !important;
+                margin-bottom: 8px !important;
             }
             .slide1-subtitle {
-                font-size: 0.88rem;
+                font-size: clamp(0.8rem, 2.7vw, 0.88rem) !important;
+                line-height: 1.45 !important;
                 text-align: center;
-                min-height: auto;
+                max-width: 360px !important;
+                margin-bottom: 12px !important;
+                min-height: auto !important;
             }
             #slide1-hero .trust-badges {
-                justify-content: center;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+                max-width: 360px !important;
+                width: 100% !important;
+                margin-bottom: 12px !important;
+                justify-content: center !important;
+                transform: none !important;
+            }
+            #slide1-hero .trust-badge {
+                padding: 6px 8px !important;
+                gap: 8px !important;
+                border-radius: 12px !important;
+                width: 100% !important;
+            }
+            #slide1-hero .badge-logo-container {
+                width: 34px !important;
+                height: 34px !important;
+                flex-shrink: 0 !important;
+            }
+            #slide1-hero .badge-title {
+                font-size: 0.72rem !important;
+                line-height: 1.15 !important;
+            }
+            #slide1-hero .badge-sub {
+                font-size: 0.62rem !important;
+                line-height: 1.15 !important;
             }
             #slide1-hero .hero-buttons {
-                flex-direction: column;
-                width: 100%;
-                gap: 12px;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+                max-width: 360px !important;
+                width: 100% !important;
+                margin-bottom: 12px !important;
+                padding: 0 !important;
             }
-            #slide1-hero .hero-buttons .originkit-radial-btn,
-            #slide1-hero .hero-buttons .btn {
-                width: 100%;
+            #slide1-hero .hero-buttons .originkit-radial-btn {
+                height: 44px !important;
+                border-radius: 100px !important;
+                width: 100% !important;
+                font-size: 0.78rem !important;
+            }
+            #slide1-hero .hero-buttons .radial-face {
+                padding: 0 8px !important;
+                font-size: 0.76rem !important;
+                gap: 4px !important;
+                font-weight: 800 !important;
+            }
+            #slide1-hero .hero-buttons .radial-icon {
+                font-size: 0.82rem !important;
             }
             .slide1-bottom-bar {
-                border-radius: 20px;
-                justify-content: center;
-                width: 100%;
-                padding: 8px 16px;
-                gap: 14px;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                border-radius: 100px !important;
+                width: auto !important;
+                max-width: 340px !important;
+                padding: 6px 14px !important;
+                margin: 0 auto !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+            }
+            .slide1-bar-item {
+                font-size: 0.78rem !important;
+                gap: 6px !important;
+            }
+            .slide1-bar-icon {
+                width: 22px !important;
+                height: 22px !important;
+                font-size: 0.7rem !important;
             }
             #slide1-hero .hero-image-right {
-                display: none;
+                display: none !important;
+            }
+        }
+
+        /* Micro-screens: iPhone SE 1st gen (width <= 340px) */
+        @media (max-width: 340px) {
+            #slide1-hero .hero-buttons {
+                grid-template-columns: 1fr !important;
+                gap: 6px !important;
+            }
+            #slide1-hero .hero-buttons .originkit-radial-btn {
+                height: 40px !important;
+            }
+            #slide2 .slide2-shifts-row {
+                gap: 4px !important;
+            }
+            #slide2 .shift-hours {
+                display: none !important;
             }
         }
 
@@ -1690,6 +1911,12 @@
                 <div class="slide3-geom-diamond-1"></div>
                 <div class="slide3-geom-gold-frame"></div>
 
+                <!-- Foto de Farmácia para Mobile com Atmosfera Verde Escuro -->
+                <div class="slide3-photo-bg">
+                    <img src="images/rd_saude_farmacia.jpg" alt="RD Saúde Farmácia" loading="lazy">
+                    <div class="slide3-photo-tint"></div>
+                </div>
+
                 <div class="hero-main-row">
                     <!-- COLUNA ESQUERDA: Tipografia imponente, descritivo e botão dourado -->
                     <div class="hero-content-left">
@@ -1939,7 +2166,7 @@
         </svg>
     </a>
 
-    <script src="script.js?v=15r"></script>
+    <script src="script.js?v=16r"></script>
 </body>
 
 </html>
