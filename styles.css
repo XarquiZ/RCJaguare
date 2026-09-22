@@ -4005,8 +4005,6 @@ h2 {
     border: 2px solid var(--hero-bg);
 }
 
-/* View: Tela Cheia (Slider) */
-.lightbox-fullscreen-view {
 /* View: Originkit Smooth Scroll Gallery Slider */
 .lightbox-originkit-view {
     display: flex;
@@ -4016,6 +4014,7 @@ h2 {
     height: calc(100vh - 90px);
     position: relative;
     overflow: hidden;
+    background: #000000;
 }
 
 .lightbox-originkit-slider {
@@ -4023,8 +4022,11 @@ h2 {
     width: 100%;
     flex: 1;
     overflow: hidden;
+    background: #000000;
     cursor: grab;
     touch-action: pan-y;
+    opacity: 0;
+    transition: opacity 0.35s ease;
 }
 
 .lightbox-originkit-slider:active {
@@ -4122,6 +4124,8 @@ h2 {
         height: calc(100svh - 75px);
     }
 }
+
+.view-grid-btn {
     position: absolute;
     top: 20px;
     left: 40px;
@@ -4134,7 +4138,6 @@ h2 {
     font-weight: 600;
     backdrop-filter: blur(5px);
     display: none;
-    /* Só mostra quando na tela cheia */
     transition: var(--transition);
 }
 

@@ -747,77 +747,122 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Escape') closeLightbox();
         });
 
-        // Motor Originkit Smooth Scroll Slider adaptado para Vanilla JS
+        // Motor Originkit Smooth Scroll Slider adaptado fielmente do código base
         const initOriginkitGallery = (album) => {
             if (!sliderViewport || !album.images || album.images.length === 0) return;
 
-            // Limpa instâncias anteriores
-            if (activeSliderRaf) cancelAnimationFrame(activeSliderRaf);
-            if (cleanupSliderEvents) cleanupSliderEvents();
+            // Limpa instâncias e animações anteriores
+            if (activeSliderRaf) {
+                cancelAnimationFrame(activeSliderRaf);
+                activeSliderRaf = null;
+            }
+            if (cleanupSliderEvents) {
+                cleanupSliderEvents();
+                cleanupSliderEvents = null;
+            }
             sliderViewport.innerHTML = '';
 
             const images = album.images;
             const isMobile = window.innerWidth <= 768;
             const isNarrow = window.innerWidth <= 380;
 
-            const slideWidth = isNarrow ? 260 : (isMobile ? 295 : 420);
-            const slideHeight = isNarrow ? 340 : (isMobile ? 400 : 540);
+            // Originkit Defaults:
+            // "smoothness": 0, "background": "#000000", "sensitivity": 5.1, slideWidth: 400, slideHeight: 400
+            const slideWidth = isNarrow ? 260 : (isMobile ? 310 : 400);
+            const slideHeight = isNarrow ? 260 : (isMobile ? 310 : 400);
             const spacing = 2;
-            const smoothness = 10;
+            const direction = "right";
+            const smoothness = 0; // Preset Originkit
+            const background = "#000000";
+            const radius = 16;
             const dim = 10;
-            const sensitivity = 6;
+            const sensitivity = 5.1; // Preset Originkit
             const loop = images.length > 2;
 
-            const step = slideWidth + Math.min(10, Math.max(0, spacing)) * 20;
-            const ease = 0.15 - (Math.min(10, Math.max(0, smoothness)) / 10) * 0.13;
-            const dimAmount = (Math.min(10, Math.max(0, dim)) / 10) * 0.85;
-            const wheelMultiplier = 0.4 + (Math.min(10, Math.max(0, sensitivity)) / 10) * 1.2;
-            const dragMultiplier = 0.6 + (Math.min(10, Math.max(0, sensitivity)) / 10) * 1.8;
-            const MAX_SCALE = isMobile ? 1.25 : 1.6;
-            const MIN_SCALE = 0.2;
+            const MAX_SCALE = 2.5;
+            const MIN_SCALE = 0.1;
 
-            const wrap = (val, span) => ((val % span) + span) % span;
-            const clamp = (val, min, max) => Math.min(max, Math.max(min, val));
+            const wrap = (value, span) => ((value % span) + span) % span;
+            const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-            let containerWidth = sliderViewport.getBoundingClientRect().width || window.innerWidth;
-            const repeats = loop ? Math.max(1, Math.ceil((containerWidth + step * 2) / (images.length * step))) + 1 : 1;
+            const step = slideWidth + clamp(spacing, 0, 10) * 20;
+            const ease = 0.15 - (clamp(smoothness, 0, 10) / 10) * 0.13;
+            const dimAmount = (clamp(dim, 0, 10) / 10) * 0.85;
+            const wheelMultiplier = 0.4 + (clamp(sensitivity, 0, 10) / 10) * 1.2;
+            const dragMultiplier = 0.6 + (clamp(sensitivity, 0, 10) / 10) * 1.8;
+            const flip = direction === "left";
 
-            const allSlides = [];
+            // Largura inicial do container
+            let containerWidth = sliderViewport.getBoundingClientRect().width || sliderViewport.clientWidth || window.innerWidth;
+            if (containerWidth <= 0) containerWidth = window.innerWidth;
+
+            const repeats = (!loop || containerWidth <= 0 || step <= 0)
+                ? 1
+                : Math.max(1, Math.ceil((containerWidth + step * 2) / (images.length * step)));
+
+            const slides = [];
             for (let r = 0; r < repeats; r++) {
                 images.forEach((imgObj, originalIdx) => {
-                    allSlides.push({ ...imgObj, originalIdx });
+                    slides.push({
+                        src: imgObj.fullUrl || imgObj.thumbUrl,
+                        offsetY: 0,
+                        originalIdx,
+                        alt: imgObj.name || album.title
+                    });
                 });
             }
 
-            // Cria nós DOM
-            const nodes = allSlides.map((slide) => {
+            // Cria nós DOM com estilos idênticos ao React
+            const nodes = slides.map((slide, i) => {
                 const el = document.createElement('div');
                 el.className = 'originkit-slide-item';
+                el.style.position = 'absolute';
+                el.style.top = '50%';
+                el.style.left = '0px';
                 el.style.width = `${slideWidth}px`;
                 el.style.height = `${slideHeight}px`;
+                el.style.borderRadius = `${radius}px`;
+                el.style.overflow = 'hidden';
+                el.style.background = '#111';
+                el.style.willChange = 'transform, filter';
+                el.style.transform = 'translate3d(0, -50%, 0)';
+                el.style.pointerEvents = 'none';
 
-                const img = document.createElement('img');
-                img.alt = slide.name || album.title;
-                img.draggable = false;
-                // Carrega a URL da imagem (thumbUrl carrega ultra leve e rápido no Google)
-                img.src = slide.fullUrl || slide.thumbUrl;
-                el.appendChild(img);
+                if (slide.src) {
+                    const img = document.createElement('img');
+                    img.alt = slide.alt;
+                    img.draggable = false;
+                    img.src = slide.src;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.style.objectPosition = `50% calc(50% + ${slide.offsetY}px)`;
+                    img.style.display = 'block';
+                    img.style.userSelect = 'none';
+                    el.appendChild(img);
+                }
 
                 sliderViewport.appendChild(el);
-                return { el, img, src: slide.fullUrl || slide.thumbUrl, originalIdx: slide.originalIdx };
+                return { el, originalIdx: slide.originalIdx };
             });
+
+            sliderViewport.style.opacity = '1';
+
+            const count = slides.length;
+            const span = count * step;
 
             let targetX = 0;
             let currentX = 0;
-            const count = allSlides.length;
-            const span = count * step;
-
             let lastTime = 0;
 
             const tick = (now) => {
                 activeSliderRaf = requestAnimationFrame(tick);
                 const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.1) : 1 / 60;
                 lastTime = now;
+
+                // Medição dinâmica para evitar que containerWidth seja 0 ou incorreto
+                const currentWidth = sliderViewport.getBoundingClientRect().width || sliderViewport.clientWidth || window.innerWidth;
+                if (currentWidth > 0) containerWidth = currentWidth;
 
                 if (!count || step <= 0 || containerWidth <= 0) return;
 
@@ -841,8 +886,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 let closestIdx = 0;
 
                 for (let i = 0; i < count; i++) {
-                    const item = nodes[i];
-                    if (!item) continue;
+                    const node = nodes[i];
+                    if (!node) continue;
 
                     const raw = i * step - currentX + pad;
                     const x = loop ? wrap(raw + step, span) - step : raw;
@@ -850,10 +895,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const distance = x + slideWidth / 2 - half;
                     const absDist = Math.abs(distance);
 
-                    // Acha a foto central ativa
                     if (absDist < closestDist) {
                         closestDist = absDist;
-                        closestIdx = item.originalIdx;
+                        closestIdx = node.originalIdx;
                     }
 
                     let scale;
@@ -866,17 +910,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         push = 0;
                     }
 
-                    const left = x + push;
-                    item.el.style.transform = `translate3d(${left}px, -50%, 0) scale(${scale})`;
+                    const left = flip ? containerWidth - slideWidth - (x + push) : x + push;
+                    node.el.style.transform = `translate3d(${left}px, -50%, 0) scale(${scale})`;
 
                     if (dimAmount > 0 && scale < 1) {
                         const t = (1 - scale) / Math.max(0.001, 1 - MIN_SCALE);
-                        item.el.style.filter = `brightness(${1 - t * dimAmount})`;
+                        node.el.style.filter = `brightness(${1 - t * dimAmount})`;
                     } else {
-                        item.el.style.filter = 'none';
+                        node.el.style.filter = 'none';
                     }
 
-                    item.el.style.zIndex = Math.round(1000 - absDist);
+                    node.el.style.zIndex = Math.round(1000 - absDist);
                 }
 
                 if (counterCurrent) {
@@ -886,55 +930,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
             activeSliderRaf = requestAnimationFrame(tick);
 
-            // ==================== INTERAÇÃO TOUCH E DRAG ====================
-            let isDragging = false;
-            let startPointerX = 0;
+            // ==================== INTERAÇÕES DE POINTER E WHEEL (ORIGINKIT ORIGINAL) ====================
+            let pointerId = null;
             let lastPointerX = 0;
-            let velocityX = 0;
-            let lastDragTime = 0;
 
-            const onPointerDown = (e) => {
-                if (e.pointerType === 'mouse' && e.button !== 0) return;
-                isDragging = true;
-                startPointerX = e.clientX;
-                lastPointerX = e.clientX;
-                lastDragTime = performance.now();
-                velocityX = 0;
-                try { sliderViewport.setPointerCapture(e.pointerId); } catch(err) {}
+            const onPointerDown = (event) => {
+                if (pointerId !== null) return;
+                pointerId = event.pointerId;
+                lastPointerX = event.clientX;
+                try {
+                    sliderViewport.setPointerCapture(event.pointerId);
+                } catch (err) {}
             };
 
-            const onPointerMove = (e) => {
-                if (!isDragging) return;
-                const dx = e.clientX - lastPointerX;
-                targetX -= dx * dragMultiplier;
-
-                const now = performance.now();
-                const dt = Math.max(1, now - lastDragTime);
-                velocityX = (dx / dt) * 16;
-                lastDragTime = now;
-                lastPointerX = e.clientX;
+            const onPointerMove = (event) => {
+                if (pointerId !== event.pointerId) return;
+                const dx = event.clientX - lastPointerX;
+                lastPointerX = event.clientX;
+                targetX += (flip ? dx : -dx) * dragMultiplier;
             };
 
-            const onPointerUp = (e) => {
-                if (!isDragging) return;
-                isDragging = false;
-                try { sliderViewport.releasePointerCapture(e.pointerId); } catch(err) {}
-
-                // Inércia
-                if (Math.abs(velocityX) > 2) {
-                    targetX -= velocityX * 15;
-                }
+            const onPointerUp = (event) => {
+                if (pointerId !== event.pointerId) return;
+                pointerId = null;
+                try {
+                    if (sliderViewport.hasPointerCapture(event.pointerId)) {
+                        sliderViewport.releasePointerCapture(event.pointerId);
+                    }
+                } catch (err) {}
             };
 
-            sliderViewport.addEventListener('pointerdown', onPointerDown, { passive: true });
-            sliderViewport.addEventListener('pointermove', onPointerMove, { passive: true });
-            sliderViewport.addEventListener('pointerup', onPointerUp, { passive: true });
-            sliderViewport.addEventListener('pointercancel', onPointerUp, { passive: true });
+            sliderViewport.addEventListener('pointerdown', onPointerDown);
+            sliderViewport.addEventListener('pointermove', onPointerMove);
+            sliderViewport.addEventListener('pointerup', onPointerUp);
+            sliderViewport.addEventListener('pointercancel', onPointerUp);
 
-            // Wheel / Scroll do mouse
-            const onWheel = (e) => {
-                e.preventDefault();
-                const dominant = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            // Wheel listener
+            const onWheel = (event) => {
+                event.preventDefault();
+                const dominant = Math.abs(event.deltaX) > Math.abs(event.deltaY)
+                    ? event.deltaX
+                    : event.deltaY;
                 targetX += dominant * wheelMultiplier;
             };
             sliderViewport.addEventListener('wheel', onWheel, { passive: false });
@@ -942,11 +978,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Botões Next / Prev
             const onNextClick = (e) => {
                 e.preventDefault();
-                targetX += step * 1.05;
+                targetX += step;
             };
             const onPrevClick = (e) => {
                 e.preventDefault();
-                targetX -= step * 1.05;
+                targetX -= step;
             };
 
             nextBtn?.addEventListener('click', onNextClick);
@@ -960,7 +996,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             resizeObserver.observe(sliderViewport);
 
-            // Limpeza
+            // Cleanup
             cleanupSliderEvents = () => {
                 sliderViewport.removeEventListener('pointerdown', onPointerDown);
                 sliderViewport.removeEventListener('pointermove', onPointerMove);
