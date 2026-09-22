@@ -23,7 +23,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=19r">
+    <link rel="stylesheet" href="styles.css?v=22r">
 
     <!-- Open Graph / Redes Sociais -->
     <meta property="og:type" content="website">
@@ -222,30 +222,35 @@
         </svg>
     </a>
 
-    <!-- LIGHTBOX ALBUM MODAL -->
+    <!-- LIGHTBOX ALBUM MODAL (ORIGINKIT SMOOTH GALLERY SLIDER) -->
     <div class="lightbox-overlay" id="albumLightbox">
         <div class="lightbox-header">
             <h2 id="lightboxTitle">Nome do Álbum</h2>
             <button class="lightbox-close" aria-label="Fechar Álbum">&times;</button>
         </div>
 
-        <!-- View de Grade com minituaras -->
-        <div class="lightbox-grid-view" id="lightboxGrid">
-            <!-- Miniaturas injetadas via JS -->
-        </div>
-
-        <!-- View de Tela Cheia -->
-        <div class="lightbox-fullscreen-view" id="lightboxFullscreen">
-            <button class="nav-btn prev-btn" aria-label="Foto Anterior">❮</button>
-            <div class="fullscreen-image-container">
-                <img loading="lazy" id="fullscreenImage" src="" alt="Foto Aumentada">
-                <div class="img-counter"><span id="currentImgNum">1</span> / <span id="totalImgNum">97</span></div>
+        <!-- Visualizador Originkit Smooth Scroll Slider -->
+        <div class="lightbox-originkit-view">
+            <div class="lightbox-originkit-slider" id="albumSliderViewport">
+                <!-- Slides gerados dinamicamente com física Originkit -->
             </div>
-            <button class="nav-btn next-btn" aria-label="Próxima Foto">❯</button>
+
+            <!-- Controles Táteis e Indicadores de Posição -->
+            <div class="lightbox-originkit-controls">
+                <button class="originkit-nav-btn" id="albumSliderPrev" aria-label="Foto Anterior">❮</button>
+                <div class="originkit-counter">
+                    <span id="originkitCurrentNum">1</span> / <span id="originkitTotalNum">10</span>
+                </div>
+                <button class="originkit-nav-btn" id="albumSliderNext" aria-label="Próxima Foto">❯</button>
+                <div class="originkit-hint">
+                    <span>Arraste ou use o scroll para navegar</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js?v=19r"></script>
+    <script src="drive_preload.js"></script>
+    <script src="script.js?v=22r"></script>
 </body>
 
 </html>

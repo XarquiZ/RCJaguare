@@ -4007,77 +4007,121 @@ h2 {
 
 /* View: Tela Cheia (Slider) */
 .lightbox-fullscreen-view {
-    display: none;
-    /* Alterna com flex */
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 20px;
-}
-
-.fullscreen-image-container {
-    position: relative;
-    max-width: 90%;
-    max-height: 85vh;
+/* View: Originkit Smooth Scroll Gallery Slider */
+.lightbox-originkit-view {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    height: calc(100vh - 90px);
+    position: relative;
+    overflow: hidden;
 }
 
-.fullscreen-image-container img {
-    max-width: 100%;
-    max-height: 85vh;
-    object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+.lightbox-originkit-slider {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: pan-y;
 }
 
-.img-counter {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 2px;
+.lightbox-originkit-slider:active {
+    cursor: grabbing;
 }
 
-.nav-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    font-size: 2rem;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.originkit-slide-item {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    transition: var(--transition);
-    backdrop-filter: blur(5px);
+    left: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #111;
+    will-change: transform, filter;
+    transform: translate3d(0, -50%, 0);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.nav-btn:hover {
+.originkit-slide-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Barra inferior com contador e botões touch */
+.lightbox-originkit-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 12px 24px 24px;
+    z-index: 10;
+}
+
+.originkit-nav-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.originkit-nav-btn:hover {
     background: var(--hero-bg);
-    transform: translateY(-50%) scale(1.1);
+    border-color: var(--hero-bg);
+    transform: scale(1.08);
 }
 
-.prev-btn {
-    left: 40px;
+.originkit-nav-btn:active {
+    transform: scale(0.94);
 }
 
-.next-btn {
-    right: 40px;
+.originkit-counter {
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* View Button */
-.view-grid-btn {
+.originkit-hint {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+    .originkit-hint {
+        display: none;
+    }
+    .lightbox-originkit-view {
+        height: calc(100svh - 75px);
+    }
+}
     position: absolute;
     top: 20px;
     left: 40px;

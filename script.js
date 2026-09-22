@@ -502,30 +502,58 @@ document.addEventListener('DOMContentLoaded', () => {
         let activeAlbum = null;
         let activePhotoIdx = 0;
 
-        // 1. Função para buscar os dados do Google Apps Script
-        const fetchDriveEvents = async () => {
-            try {
-                // Tenta carregar do cache da sessão primeiro para carregamento instantâneo
-                const cachedData = sessionStorage.getItem('cedesp_drive_albums');
-                if (cachedData) {
-                    driveAlbums = JSON.parse(cachedData);
-                    renderPage();
-                }
+        // Carregamento inicial zero milissegundo (usando pré-carga estática se houver, ou cache do localStorage)
+        let hasRendered = false;
+        try {
+            if (typeof DRIVE_INITIAL_ALBUMS !== 'undefined' && Array.isArray(DRIVE_INITIAL_ALBUMS) && DRIVE_INITIAL_ALBUMS.length > 0) {
+                driveAlbums = DRIVE_INITIAL_ALBUMS;
+                renderPage();
+                hasRendered = true;
+            }
+        } catch (e) {}
 
-                // Busca atualização em segundo plano (ou primeira carga)
+        // 1. Função para buscar os dados do Google Apps Script com Cache Inteligente (Stale-While-Revalidate)
+        const fetchDriveEvents = async () => {
+            let hasCachedData = hasRendered;
+
+            try {
+                // Carrega do localStorage para manter atualização da última visita
+                const cached = localStorage.getItem('cedesp_drive_albums_v2');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        driveAlbums = parsed;
+                        hasCachedData = true;
+                        renderPage(); // Instantâneo!
+                    }
+                }
+            } catch (e) {
+                console.warn('Erro ao ler cache local:', e);
+            }
+
+            try {
+                // Busca atualização do Drive em segundo plano
                 const res = await fetch(GOOGLE_DRIVE_EVENTS_URL);
                 const data = await res.json();
 
                 if (data.status === 'success' && Array.isArray(data.albums)) {
-                    driveAlbums = data.albums;
-                    sessionStorage.setItem('cedesp_drive_albums', JSON.stringify(driveAlbums));
-                    renderPage();
+                    const freshDataStr = JSON.stringify(data.albums);
+                    const oldDataStr = JSON.stringify(driveAlbums);
+
+                    // Só re-renderiza se houver novidade/diferença
+                    if (freshDataStr !== oldDataStr || !hasCachedData) {
+                        driveAlbums = data.albums;
+                        try {
+                            localStorage.setItem('cedesp_drive_albums_v2', freshDataStr);
+                        } catch(e) {}
+                        renderPage();
+                    }
                 } else {
-                    throw new Error(data.message || 'Erro ao carregar dados do Drive');
+                    throw new Error(data.message || 'Dados inválidos do Drive');
                 }
             } catch (err) {
-                console.error('Erro na sincronização com Google Drive:', err);
-                if (driveAlbums.length === 0) {
+                console.error('Erro na sincronização em segundo plano:', err);
+                if (!hasCachedData && driveAlbums.length === 0) {
                     if (loadingState) loadingState.style.display = 'none';
                     if (noEventsMessage) {
                         noEventsMessage.style.display = 'block';
@@ -553,7 +581,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const uniqueYears = new Set();
 
             driveAlbums.forEach(album => {
-                // Tenta extrair ano se houver 4 dígitos (ex: "2026", "2025")
                 const yearMatch = album.title.match(/\b(20\d{2})\b/);
                 if (yearMatch) {
                     album.year = yearMatch[1];
@@ -561,8 +588,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     album.year = 'Recente';
                 }
-
-                // Categoria / Tag (nome da pasta limpo)
                 uniqueCategories.add(album.title);
             });
 
@@ -583,7 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     categoryFiltersContainer.appendChild(btn);
                 });
 
-                // Listener para botão "Todos os Eventos"
                 const allBtn = categoryFiltersContainer.querySelector('[data-filter="all"]');
                 if (allBtn) {
                     allBtn.addEventListener('click', () => {
@@ -595,7 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Popula Dropdown de Anos se houver anos identificados
+            // Popula Dropdown de Anos
             if (uniqueYears.size > 0 && yearSelect && yearFiltersWrapper) {
                 yearFiltersWrapper.style.display = 'flex';
                 yearSelect.innerHTML = '<option value="all">Todos os Anos</option>';
@@ -620,7 +644,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.setAttribute('data-year', album.year || 'all');
                 card.style.animationDelay = `${(idx + 1) * 0.1}s`;
 
-                // Capa da primeira foto
                 const cover = album.coverUrl || (album.images && album.images[0] ? album.images[0].thumbUrl : '');
 
                 card.innerHTML = `
@@ -637,7 +660,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
 
-                // Ao clicar no card, abre o álbum no Lightbox
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
                     openAlbum(album);
@@ -676,94 +698,289 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // 4. Modal / Lightbox do Álbum
+        // ================================================================
+        // 4. MODAL COM ORIGINKIT SMOOTH SCROLL GALLERY SLIDER
+        // ================================================================
+        const sliderViewport = document.getElementById('albumSliderViewport');
+        const counterCurrent = document.getElementById('originkitCurrentNum');
+        const counterTotal = document.getElementById('originkitTotalNum');
+        const prevBtn = document.getElementById('albumSliderPrev');
+        const nextBtn = document.getElementById('albumSliderNext');
+
+        let activeSliderRaf = null;
+        let cleanupSliderEvents = null;
+
         const openAlbum = (album) => {
             activeAlbum = album;
             titleEl.textContent = album.title;
-            gridView.innerHTML = '';
+            if (counterTotal) counterTotal.textContent = album.images.length;
+            if (counterCurrent) counterCurrent.textContent = '1';
 
-            // Monta as miniaturas do Google Drive
-            album.images.forEach((imgObj, idx) => {
-                const img = document.createElement('img');
-                img.src = imgObj.thumbUrl;
-                img.alt = imgObj.name || album.title;
-                img.classList.add('lightbox-thumb');
-                img.loading = 'lazy';
-                img.style.animationDelay = `${(idx % 20) * 0.04}s`;
-
-                img.onload = () => img.classList.add('loaded');
-                img.addEventListener('click', () => openFullscreen(idx));
-
-                gridView.appendChild(img);
-            });
-
-            // Exibe modal em modo grade
-            gridView.style.display = 'grid';
-            fullView.style.display = 'none';
             lightboxOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            initOriginkitGallery(album);
         };
 
-        const openFullscreen = (index) => {
-            activePhotoIdx = index;
-            const photo = activeAlbum.images[activePhotoIdx];
-            fullscreenImg.src = photo.fullUrl || photo.thumbUrl;
-
-            totalImgNum.textContent = activeAlbum.images.length;
-            currentImgNum.textContent = activePhotoIdx + 1;
-
-            gridView.style.display = 'none';
-            fullView.style.display = 'flex';
-        };
-
-        const showNext = () => {
-            if (activeAlbum && activePhotoIdx < activeAlbum.images.length - 1) {
-                openFullscreen(activePhotoIdx + 1);
+        const closeLightbox = () => {
+            if (activeSliderRaf) {
+                cancelAnimationFrame(activeSliderRaf);
+                activeSliderRaf = null;
             }
-        };
-
-        const showPrev = () => {
-            if (activeAlbum && activePhotoIdx > 0) {
-                openFullscreen(activePhotoIdx - 1);
+            if (cleanupSliderEvents) {
+                cleanupSliderEvents();
+                cleanupSliderEvents = null;
             }
+            if (sliderViewport) sliderViewport.innerHTML = '';
+            lightboxOverlay.classList.remove('active');
+            document.body.style.overflow = '';
         };
 
-        document.querySelector('.next-btn')?.addEventListener('click', showNext);
-        document.querySelector('.prev-btn')?.addEventListener('click', showPrev);
+        closeBtn?.addEventListener('click', closeLightbox);
 
         // Suporte a teclado
         document.addEventListener('keydown', (e) => {
             if (!lightboxOverlay.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+        });
 
-            if (e.key === 'Escape') {
-                if (fullView.style.display === 'flex') {
-                    fullView.style.display = 'none';
-                    gridView.style.display = 'grid';
+        // Motor Originkit Smooth Scroll Slider adaptado para Vanilla JS
+        const initOriginkitGallery = (album) => {
+            if (!sliderViewport || !album.images || album.images.length === 0) return;
+
+            // Limpa instâncias anteriores
+            if (activeSliderRaf) cancelAnimationFrame(activeSliderRaf);
+            if (cleanupSliderEvents) cleanupSliderEvents();
+            sliderViewport.innerHTML = '';
+
+            const images = album.images;
+            const isMobile = window.innerWidth <= 768;
+            const isNarrow = window.innerWidth <= 380;
+
+            const slideWidth = isNarrow ? 260 : (isMobile ? 295 : 420);
+            const slideHeight = isNarrow ? 340 : (isMobile ? 400 : 540);
+            const spacing = 2;
+            const smoothness = 10;
+            const dim = 10;
+            const sensitivity = 6;
+            const loop = images.length > 2;
+
+            const step = slideWidth + Math.min(10, Math.max(0, spacing)) * 20;
+            const ease = 0.15 - (Math.min(10, Math.max(0, smoothness)) / 10) * 0.13;
+            const dimAmount = (Math.min(10, Math.max(0, dim)) / 10) * 0.85;
+            const wheelMultiplier = 0.4 + (Math.min(10, Math.max(0, sensitivity)) / 10) * 1.2;
+            const dragMultiplier = 0.6 + (Math.min(10, Math.max(0, sensitivity)) / 10) * 1.8;
+            const MAX_SCALE = isMobile ? 1.25 : 1.6;
+            const MIN_SCALE = 0.2;
+
+            const wrap = (val, span) => ((val % span) + span) % span;
+            const clamp = (val, min, max) => Math.min(max, Math.max(min, val));
+
+            let containerWidth = sliderViewport.getBoundingClientRect().width || window.innerWidth;
+            const repeats = loop ? Math.max(1, Math.ceil((containerWidth + step * 2) / (images.length * step))) + 1 : 1;
+
+            const allSlides = [];
+            for (let r = 0; r < repeats; r++) {
+                images.forEach((imgObj, originalIdx) => {
+                    allSlides.push({ ...imgObj, originalIdx });
+                });
+            }
+
+            // Cria nós DOM
+            const nodes = allSlides.map((slide) => {
+                const el = document.createElement('div');
+                el.className = 'originkit-slide-item';
+                el.style.width = `${slideWidth}px`;
+                el.style.height = `${slideHeight}px`;
+
+                // Lazy loading: inicialmente vazio, carrega imagem apenas quando estiver próximo do centro
+                const img = document.createElement('img');
+                img.alt = slide.name || album.title;
+                img.draggable = false;
+                img.setAttribute('data-src', slide.fullUrl || slide.thumbUrl);
+                el.appendChild(img);
+
+                sliderViewport.appendChild(el);
+                return { el, img, src: slide.fullUrl || slide.thumbUrl, loaded: false, originalIdx: slide.originalIdx };
+            });
+
+            let targetX = 0;
+            let currentX = 0;
+            const count = allSlides.length;
+            const span = count * step;
+
+            let lastTime = 0;
+
+            const tick = (now) => {
+                activeSliderRaf = requestAnimationFrame(tick);
+                const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.1) : 1 / 60;
+                lastTime = now;
+
+                if (!count || step <= 0 || containerWidth <= 0) return;
+
+                if (loop) {
+                    if (currentX > span || currentX < -span) {
+                        const shift = Math.trunc(currentX / span) * span;
+                        currentX -= shift;
+                        targetX -= shift;
+                    }
                 } else {
-                    closeLightbox();
+                    targetX = clamp(targetX, 0, (count - 1) * step);
                 }
-            }
-            if (e.key === 'ArrowRight' && fullView.style.display === 'flex') showNext();
-            if (e.key === 'ArrowLeft' && fullView.style.display === 'flex') showPrev();
-        });
 
-        const closeLightbox = () => {
-            lightboxOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            setTimeout(() => { fullscreenImg.src = ''; }, 300);
+                const k = 1 - Math.pow(1 - ease, delta * 60);
+                currentX += (targetX - currentX) * k;
+
+                const pad = (containerWidth - slideWidth) / 2;
+                const half = containerWidth / 2;
+
+                let closestDist = Infinity;
+                let closestIdx = 0;
+
+                for (let i = 0; i < count; i++) {
+                    const item = nodes[i];
+                    if (!item) continue;
+
+                    const raw = i * step - currentX + pad;
+                    const x = loop ? wrap(raw + step, span) - step : raw;
+
+                    const distance = x + slideWidth / 2 - half;
+                    const absDist = Math.abs(distance);
+
+                    // Apenas as 3 fotos mais próximas da tela recebem o download do Google Drive (Economia total de banda e performance máxima!)
+                    if (absDist < slideWidth * 1.8) {
+                        if (!item.loaded) {
+                            item.img.src = item.src;
+                            item.loaded = true;
+                        }
+                    }
+
+                    // Acha a foto central ativa
+                    if (absDist < closestDist) {
+                        closestDist = absDist;
+                        closestIdx = item.originalIdx;
+                    }
+
+                    let scale;
+                    let push;
+                    if (distance > 0) {
+                        scale = Math.min(MAX_SCALE, 1 + distance / containerWidth);
+                        push = (scale - 1) * slideWidth * 0.75;
+                    } else {
+                        scale = Math.max(MIN_SCALE, 1 + distance / containerWidth);
+                        push = 0;
+                    }
+
+                    const left = x + push;
+                    item.el.style.transform = `translate3d(${left}px, -50%, 0) scale(${scale})`;
+
+                    if (dimAmount > 0 && scale < 1) {
+                        const t = (1 - scale) / Math.max(0.001, 1 - MIN_SCALE);
+                        item.el.style.filter = `brightness(${1 - t * dimAmount})`;
+                    } else {
+                        item.el.style.filter = 'none';
+                    }
+
+                    item.el.style.zIndex = Math.round(1000 - absDist);
+                }
+
+                if (counterCurrent) {
+                    counterCurrent.textContent = (closestIdx + 1);
+                }
+            };
+
+            activeSliderRaf = requestAnimationFrame(tick);
+
+            // ==================== INTERAÇÃO TOUCH E DRAG ====================
+            let isDragging = false;
+            let startPointerX = 0;
+            let lastPointerX = 0;
+            let velocityX = 0;
+            let lastDragTime = 0;
+
+            const onPointerDown = (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                isDragging = true;
+                startPointerX = e.clientX;
+                lastPointerX = e.clientX;
+                lastDragTime = performance.now();
+                velocityX = 0;
+                try { sliderViewport.setPointerCapture(e.pointerId); } catch(err) {}
+            };
+
+            const onPointerMove = (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - lastPointerX;
+                targetX -= dx * dragMultiplier;
+
+                const now = performance.now();
+                const dt = Math.max(1, now - lastDragTime);
+                velocityX = (dx / dt) * 16;
+                lastDragTime = now;
+                lastPointerX = e.clientX;
+            };
+
+            const onPointerUp = (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                try { sliderViewport.releasePointerCapture(e.pointerId); } catch(err) {}
+
+                // Inércia
+                if (Math.abs(velocityX) > 2) {
+                    targetX -= velocityX * 15;
+                }
+            };
+
+            sliderViewport.addEventListener('pointerdown', onPointerDown, { passive: true });
+            sliderViewport.addEventListener('pointermove', onPointerMove, { passive: true });
+            sliderViewport.addEventListener('pointerup', onPointerUp, { passive: true });
+            sliderViewport.addEventListener('pointercancel', onPointerUp, { passive: true });
+
+            // Wheel / Scroll do mouse
+            const onWheel = (e) => {
+                e.preventDefault();
+                const dominant = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                targetX += dominant * wheelMultiplier;
+            };
+            sliderViewport.addEventListener('wheel', onWheel, { passive: false });
+
+            // Botões Next / Prev
+            const onNextClick = (e) => {
+                e.preventDefault();
+                targetX += step * 1.05;
+            };
+            const onPrevClick = (e) => {
+                e.preventDefault();
+                targetX -= step * 1.05;
+            };
+
+            nextBtn?.addEventListener('click', onNextClick);
+            prevBtn?.addEventListener('click', onPrevClick);
+
+            // Resize observer
+            const resizeObserver = new ResizeObserver((entries) => {
+                if (entries[0]) {
+                    containerWidth = entries[0].contentRect.width;
+                }
+            });
+            resizeObserver.observe(sliderViewport);
+
+            // Limpeza
+            cleanupSliderEvents = () => {
+                sliderViewport.removeEventListener('pointerdown', onPointerDown);
+                sliderViewport.removeEventListener('pointermove', onPointerMove);
+                sliderViewport.removeEventListener('pointerup', onPointerUp);
+                sliderViewport.removeEventListener('pointercancel', onPointerUp);
+                sliderViewport.removeEventListener('wheel', onWheel);
+                nextBtn?.removeEventListener('click', onNextClick);
+                prevBtn?.removeEventListener('click', onPrevClick);
+                resizeObserver.disconnect();
+            };
         };
-
-        closeBtn?.addEventListener('click', () => {
-            if (fullView.style.display === 'flex') {
-                fullView.style.display = 'none';
-                gridView.style.display = 'grid';
-            } else {
-                closeLightbox();
-            }
-        });
 
         // Inicia a sincronização ao carregar a página
         fetchDriveEvents();
+    }
     }
 
     // ===== REMOVER MARCA D'ÁGUA DO BEHOLD (DENTRO DO SHADOW DOM) =====
