@@ -719,7 +719,10 @@ document.addEventListener('DOMContentLoaded', () => {
             lightboxOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
-            initOriginkitGallery(album);
+            // Aguarda o próximo frame para garantir que as dimensões do modal (width/height) estejam calculadas
+            requestAnimationFrame(() => {
+                initOriginkitGallery(album);
+            });
         };
 
         const closeLightbox = () => {
@@ -793,15 +796,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.style.width = `${slideWidth}px`;
                 el.style.height = `${slideHeight}px`;
 
-                // Lazy loading: inicialmente vazio, carrega imagem apenas quando estiver próximo do centro
                 const img = document.createElement('img');
                 img.alt = slide.name || album.title;
                 img.draggable = false;
-                img.setAttribute('data-src', slide.fullUrl || slide.thumbUrl);
+                // Carrega a URL da imagem (thumbUrl carrega ultra leve e rápido no Google)
+                img.src = slide.fullUrl || slide.thumbUrl;
                 el.appendChild(img);
 
                 sliderViewport.appendChild(el);
-                return { el, img, src: slide.fullUrl || slide.thumbUrl, loaded: false, originalIdx: slide.originalIdx };
+                return { el, img, src: slide.fullUrl || slide.thumbUrl, originalIdx: slide.originalIdx };
             });
 
             let targetX = 0;
@@ -846,14 +849,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const distance = x + slideWidth / 2 - half;
                     const absDist = Math.abs(distance);
-
-                    // Apenas as 3 fotos mais próximas da tela recebem o download do Google Drive (Economia total de banda e performance máxima!)
-                    if (absDist < slideWidth * 1.8) {
-                        if (!item.loaded) {
-                            item.img.src = item.src;
-                            item.loaded = true;
-                        }
-                    }
 
                     // Acha a foto central ativa
                     if (absDist < closestDist) {
@@ -980,7 +975,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Inicia a sincronização ao carregar a página
         fetchDriveEvents();
-    }
     }
 
     // ===== REMOVER MARCA D'ÁGUA DO BEHOLD (DENTRO DO SHADOW DOM) =====
