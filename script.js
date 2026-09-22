@@ -475,78 +475,22 @@ document.addEventListener('DOMContentLoaded', () => {
         counterElements.forEach(el => counterObserver.observe(el));
     }
 
-    // ===== LÓGICA DE FILTROS DA PÁGINA DE EVENTOS =====
-    const categoryBtns = document.querySelectorAll('.event-filter-btn');
+    // ===== SINCRONIZAÇÃO DINÂMICA DE EVENTOS (GOOGLE DRIVE ESPELHO) =====
+    const GOOGLE_DRIVE_EVENTS_URL = "https://script.google.com/macros/s/AKfycbwuRr3KOATyHEOl8Nf-ZaNC7dGUm2XHVKI52cYfaJpYe7I7BspR_lnLjeC3riIvSTvs/exec";
+    const eventsGrid = document.getElementById('eventsGrid');
+    const categoryFiltersContainer = document.getElementById('categoryFilters');
+    const yearFiltersWrapper = document.getElementById('yearFiltersWrapper');
     const yearSelect = document.getElementById('yearSelect');
-    const eventCards = document.querySelectorAll('.event-card');
     const noEventsMessage = document.getElementById('noEventsMessage');
+    const loadingState = document.getElementById('eventsLoadingState');
+    const lightboxOverlay = document.getElementById('albumLightbox');
 
-    if (categoryBtns.length > 0 && eventCards.length > 0) {
-        
-        let currentCategory = 'all';
+    if (eventsGrid && lightboxOverlay) {
+        let driveAlbums = [];
+        let currentFilter = 'all';
         let currentYear = 'all';
 
-        const filterEvents = () => {
-            let visibleCount = 0;
-
-            eventCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                const cardYear = card.getAttribute('data-year');
-
-                // Condição de Match
-                const matchCategory = currentCategory === 'all' || cardCategory === currentCategory;
-                const matchYear = currentYear === 'all' || cardYear === currentYear;
-
-                if (matchCategory && matchYear) {
-                    // Mostrar com animação
-                    card.style.display = 'flex';
-                    setTimeout(() => {
-                        card.classList.remove('hiding');
-                    }, 50);
-                    visibleCount++;
-                } else {
-                    // Esconder com animação
-                    card.classList.add('hiding');
-                    setTimeout(() => {
-                        if (card.classList.contains('hiding')) {
-                            card.style.display = 'none';
-                        }
-                    }, 400); // Tempo igual a transição do CSS
-                }
-            });
-
-            // Mostra ou esconde mensagem "nenhum evento"
-            if (noEventsMessage) {
-                setTimeout(() => {
-                    noEventsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
-                }, 400);
-            }
-        };
-
-        // Event Listeners Category
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Atualiza UI dos bots
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                currentCategory = btn.getAttribute('data-filter');
-                filterEvents();
-            });
-        });
-
-        // Event Listener Year
-        if (yearSelect) {
-            yearSelect.addEventListener('change', (e) => {
-                currentYear = e.target.value;
-                filterEvents();
-            });
-        }
-    }
-
-    // ===== LÓGICA DO LIGHTBOX DE ÁLBUNS =====
-    const lightboxOverlay = document.getElementById('albumLightbox');
-    if (lightboxOverlay && typeof ALBUMS_DATA !== 'undefined') {
+        // Elementos do Lightbox
         const titleEl = document.getElementById('lightboxTitle');
         const gridView = document.getElementById('lightboxGrid');
         const fullView = document.getElementById('lightboxFullscreen');
@@ -554,115 +498,272 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentImgNum = document.getElementById('currentImgNum');
         const totalImgNum = document.getElementById('totalImgNum');
         const closeBtn = document.querySelector('.lightbox-close');
-        
-        let currentAlbum = null;
-        let currentIndex = 0;
 
-        // Abrir o álbum a partir dos cartões (toda a área do card)
-        const albumCards = document.querySelectorAll('.event-card[data-album]');
-        albumCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                e.preventDefault();
-                const albumId = card.getAttribute('data-album');
-                if(ALBUMS_DATA[albumId]) {
-                    openAlbum(albumId);
+        let activeAlbum = null;
+        let activePhotoIdx = 0;
+
+        // 1. Função para buscar os dados do Google Apps Script
+        const fetchDriveEvents = async () => {
+            try {
+                // Tenta carregar do cache da sessão primeiro para carregamento instantâneo
+                const cachedData = sessionStorage.getItem('cedesp_drive_albums');
+                if (cachedData) {
+                    driveAlbums = JSON.parse(cachedData);
+                    renderPage();
+                }
+
+                // Busca atualização em segundo plano (ou primeira carga)
+                const res = await fetch(GOOGLE_DRIVE_EVENTS_URL);
+                const data = await res.json();
+
+                if (data.status === 'success' && Array.isArray(data.albums)) {
+                    driveAlbums = data.albums;
+                    sessionStorage.setItem('cedesp_drive_albums', JSON.stringify(driveAlbums));
+                    renderPage();
+                } else {
+                    throw new Error(data.message || 'Erro ao carregar dados do Drive');
+                }
+            } catch (err) {
+                console.error('Erro na sincronização com Google Drive:', err);
+                if (driveAlbums.length === 0) {
+                    if (loadingState) loadingState.style.display = 'none';
+                    if (noEventsMessage) {
+                        noEventsMessage.style.display = 'block';
+                        noEventsMessage.innerHTML = '<p>Não foi possível carregar as fotos no momento. Tente recarregar a página.</p>';
+                    }
+                }
+            }
+        };
+
+        // 2. Renderiza Categorias e Cards
+        const renderPage = () => {
+            if (loadingState) loadingState.style.display = 'none';
+
+            if (!driveAlbums || driveAlbums.length === 0) {
+                eventsGrid.innerHTML = '';
+                if (noEventsMessage) {
+                    noEventsMessage.style.display = 'block';
+                    noEventsMessage.innerHTML = '<p>Nenhum álbum encontrado no Google Drive.</p>';
+                }
+                return;
+            }
+
+            // A) Montar Filtros de Categoria automaticamente pelo nome das pastas
+            const uniqueCategories = new Set();
+            const uniqueYears = new Set();
+
+            driveAlbums.forEach(album => {
+                // Tenta extrair ano se houver 4 dígitos (ex: "2026", "2025")
+                const yearMatch = album.title.match(/\b(20\d{2})\b/);
+                if (yearMatch) {
+                    album.year = yearMatch[1];
+                    uniqueYears.add(yearMatch[1]);
+                } else {
+                    album.year = 'Recente';
+                }
+
+                // Categoria / Tag (nome da pasta limpo)
+                uniqueCategories.add(album.title);
+            });
+
+            // Popula os botões de categorias
+            if (categoryFiltersContainer) {
+                categoryFiltersContainer.innerHTML = '<button class="event-filter-btn active" data-filter="all">Todos os Eventos</button>';
+                driveAlbums.forEach(album => {
+                    const btn = document.createElement('button');
+                    btn.className = 'event-filter-btn';
+                    btn.setAttribute('data-filter', album.id);
+                    btn.textContent = album.title;
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.event-filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        currentFilter = album.id;
+                        applyFilter();
+                    });
+                    categoryFiltersContainer.appendChild(btn);
+                });
+
+                // Listener para botão "Todos os Eventos"
+                const allBtn = categoryFiltersContainer.querySelector('[data-filter="all"]');
+                if (allBtn) {
+                    allBtn.addEventListener('click', () => {
+                        document.querySelectorAll('.event-filter-btn').forEach(b => b.classList.remove('active'));
+                        allBtn.classList.add('active');
+                        currentFilter = 'all';
+                        applyFilter();
+                    });
+                }
+            }
+
+            // Popula Dropdown de Anos se houver anos identificados
+            if (uniqueYears.size > 0 && yearSelect && yearFiltersWrapper) {
+                yearFiltersWrapper.style.display = 'flex';
+                yearSelect.innerHTML = '<option value="all">Todos os Anos</option>';
+                Array.from(uniqueYears).sort().reverse().forEach(yr => {
+                    const opt = document.createElement('option');
+                    opt.value = yr;
+                    opt.textContent = yr;
+                    yearSelect.appendChild(opt);
+                });
+                yearSelect.onchange = (e) => {
+                    currentYear = e.target.value;
+                    applyFilter();
+                };
+            }
+
+            // B) Renderizar os Cards de Álbuns
+            eventsGrid.innerHTML = '';
+            driveAlbums.forEach((album, idx) => {
+                const card = document.createElement('div');
+                card.className = 'event-card animate-on-scroll';
+                card.setAttribute('data-album-id', album.id);
+                card.setAttribute('data-year', album.year || 'all');
+                card.style.animationDelay = `${(idx + 1) * 0.1}s`;
+
+                // Capa da primeira foto
+                const cover = album.coverUrl || (album.images && album.images[0] ? album.images[0].thumbUrl : '');
+
+                card.innerHTML = `
+                    <div class="event-image-wrap">
+                        <div class="image-placeholder" style="background: linear-gradient(135deg,rgba(0,0,0,0.6), rgba(0,0,0,0.15)), url('${cover}') center/cover no-repeat;">
+                        </div>
+                        <div class="event-year-tag">${album.photoCount} fotos</div>
+                    </div>
+                    <div class="event-content">
+                        <span class="event-date">Álbum Google Drive</span>
+                        <h3>${album.title}</h3>
+                        <p>Galeria com ${album.photoCount} foto${album.photoCount > 1 ? 's' : ''} sincronizada diretamente com a pasta oficial.</p>
+                        <a href="#" class="view-album-btn">Ver Fotos <span>→</span></a>
+                    </div>
+                `;
+
+                // Ao clicar no card, abre o álbum no Lightbox
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openAlbum(album);
+                });
+
+                eventsGrid.appendChild(card);
+            });
+
+            applyFilter();
+        };
+
+        // 3. Filtragem de Cards
+        const applyFilter = () => {
+            const cards = eventsGrid.querySelectorAll('.event-card');
+            let countVisible = 0;
+
+            cards.forEach(card => {
+                const albumId = card.getAttribute('data-album-id');
+                const cardYear = card.getAttribute('data-year');
+
+                const matchCategory = (currentFilter === 'all' || albumId === currentFilter);
+                const matchYear = (currentYear === 'all' || cardYear === currentYear);
+
+                if (matchCategory && matchYear) {
+                    card.style.display = 'flex';
+                    card.classList.remove('hiding');
+                    countVisible++;
+                } else {
+                    card.classList.add('hiding');
+                    card.style.display = 'none';
                 }
             });
-        });
 
-        function openAlbum(albumId) {
-            currentAlbum = ALBUMS_DATA[albumId];
-            titleEl.textContent = currentAlbum.title;
-            
-            // Limpa o grid antigo e monta o novo
+            if (noEventsMessage) {
+                noEventsMessage.style.display = (countVisible === 0) ? 'block' : 'none';
+            }
+        };
+
+        // 4. Modal / Lightbox do Álbum
+        const openAlbum = (album) => {
+            activeAlbum = album;
+            titleEl.textContent = album.title;
             gridView.innerHTML = '';
-            
-            currentAlbum.images.forEach((imgName, idx) => {
+
+            // Monta as miniaturas do Google Drive
+            album.images.forEach((imgObj, idx) => {
                 const img = document.createElement('img');
-                img.src = `${currentAlbum.path}thumb/${imgName}`;
+                img.src = imgObj.thumbUrl;
+                img.alt = imgObj.name || album.title;
                 img.classList.add('lightbox-thumb');
                 img.loading = 'lazy';
-                img.style.animationDelay = `${(idx % 15) * 0.05}s`;
-                
+                img.style.animationDelay = `${(idx % 20) * 0.04}s`;
+
                 img.onload = () => img.classList.add('loaded');
-                
-                img.addEventListener('click', () => {
-                    openFullscreen(idx);
-                });
-                
+                img.addEventListener('click', () => openFullscreen(idx));
+
                 gridView.appendChild(img);
             });
 
-            // Reseta Views
+            // Exibe modal em modo grade
             gridView.style.display = 'grid';
             fullView.style.display = 'none';
             lightboxOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Evita scroll do site atrás do modal
-        }
+            document.body.style.overflow = 'hidden';
+        };
 
-        // Navegação Tela Cheia
-        function openFullscreen(index) {
-            currentIndex = index;
-            const imgName = currentAlbum.images[currentIndex];
-            fullscreenImg.src = `${currentAlbum.path}full/${imgName}`;
-            
-            totalImgNum.textContent = currentAlbum.images.length;
-            currentImgNum.textContent = currentIndex + 1;
-            
+        const openFullscreen = (index) => {
+            activePhotoIdx = index;
+            const photo = activeAlbum.images[activePhotoIdx];
+            fullscreenImg.src = photo.fullUrl || photo.thumbUrl;
+
+            totalImgNum.textContent = activeAlbum.images.length;
+            currentImgNum.textContent = activePhotoIdx + 1;
+
             gridView.style.display = 'none';
             fullView.style.display = 'flex';
-        }
+        };
 
-        function showNext() {
-            if(currentIndex < currentAlbum.images.length - 1) {
-                openFullscreen(currentIndex + 1);
+        const showNext = () => {
+            if (activeAlbum && activePhotoIdx < activeAlbum.images.length - 1) {
+                openFullscreen(activePhotoIdx + 1);
             }
-        }
+        };
 
-        function showPrev() {
-            if(currentIndex > 0) {
-                openFullscreen(currentIndex - 1);
+        const showPrev = () => {
+            if (activeAlbum && activePhotoIdx > 0) {
+                openFullscreen(activePhotoIdx - 1);
             }
-        }
+        };
 
         document.querySelector('.next-btn')?.addEventListener('click', showNext);
         document.querySelector('.prev-btn')?.addEventListener('click', showPrev);
 
-        // Suporte a Setas do Teclado e Esc para fechar
+        // Suporte a teclado
         document.addEventListener('keydown', (e) => {
-            if(!lightboxOverlay.classList.contains('active')) return;
-            
-            if(e.key === 'Escape') {
-                if(fullView.style.display === 'flex') {
-                    // Se estava tela cheia, volta pra grade
+            if (!lightboxOverlay.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                if (fullView.style.display === 'flex') {
                     fullView.style.display = 'none';
                     gridView.style.display = 'grid';
                 } else {
-                    // Fecha o modal inteiro
                     closeLightbox();
                 }
             }
-            if(e.key === 'ArrowRight' && fullView.style.display === 'flex') showNext();
-            if(e.key === 'ArrowLeft' && fullView.style.display === 'flex') showPrev();
+            if (e.key === 'ArrowRight' && fullView.style.display === 'flex') showNext();
+            if (e.key === 'ArrowLeft' && fullView.style.display === 'flex') showPrev();
         });
 
-        function closeLightbox() {
+        const closeLightbox = () => {
             lightboxOverlay.classList.remove('active');
             document.body.style.overflow = '';
-            // Limpa fonte d'água grande após animação
-            setTimeout(() => { fullscreenImg.src = ''; }, 400); 
-        }
+            setTimeout(() => { fullscreenImg.src = ''; }, 300);
+        };
 
-        closeBtn.addEventListener('click', () => {
+        closeBtn?.addEventListener('click', () => {
             if (fullView.style.display === 'flex') {
-                // Se estava tela cheia, volta pra grade
                 fullView.style.display = 'none';
                 gridView.style.display = 'grid';
             } else {
-                // Fecha o modal inteiro
                 closeLightbox();
             }
         });
+
+        // Inicia a sincronização ao carregar a página
+        fetchDriveEvents();
     }
 
     // ===== REMOVER MARCA D'ÁGUA DO BEHOLD (DENTRO DO SHADOW DOM) =====

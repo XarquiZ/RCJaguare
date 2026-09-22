@@ -23,7 +23,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=19r">
 
     <!-- Open Graph / Redes Sociais -->
     <meta property="og:type" content="website">
@@ -139,111 +139,34 @@
     <main class="events-main" id="galeria-eventos">
         <div class="container">
 
-            <!-- Barra de Filtros -->
+            <!-- Barra de Filtros (gerada dinamicamente com base nas pastas do Google Drive) -->
             <div class="event-filters animate-on-scroll">
 
-                <!-- Filtro por Categoria -->
-                <div class="filter-group category-filters">
+                <!-- Filtro por Categoria / Temas das Pastas -->
+                <div class="filter-group category-filters" id="categoryFilters">
                     <button class="event-filter-btn active" data-filter="all">Todos os Eventos</button>
-                    <button class="event-filter-btn" data-filter="halloween">Halloween</button>
-                    <button class="event-filter-btn" data-filter="cultura">Cultura & Arte</button>
-                    <button class="event-filter-btn" data-filter="formatura">Formaturas</button>
                 </div>
 
                 <!-- Dropdown / Filtro por Ano -->
-                <div class="filter-group year-filters">
+                <div class="filter-group year-filters" id="yearFiltersWrapper" style="display: none;">
                     <span class="filter-label">Ano:</span>
                     <select id="yearSelect" class="year-select">
                         <option value="all">Todos</option>
-                        <option value="2026">2026</option>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
                     </select>
                 </div>
 
             </div>
 
-            <!-- Grade Dinâmica de Eventos -->
+            <!-- Grade Dinâmica de Eventos Espelhados do Google Drive -->
             <div class="events-grid" id="eventsGrid">
-                <!-- Álbum: Halloween 2025 -->
-                <div class="event-card animate-on-scroll delay-2" data-category="halloween" data-year="2025"
-                    data-album="halloween-2025">
-                    <div class="event-image-wrap">
-                        <div class="image-placeholder"
-                            style="background: linear-gradient(135deg,rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url('images/otimizadas/halloween-2025/thumb/img_0643.webp') center/cover;">
-                        </div>
-                        <div class="event-year-tag">2025</div>
-                    </div>
-                    <div class="event-content">
-                        <span class="event-date">Outubro 2025</span>
-                        <h3>Festa de Halloween 2025</h3>
-                        <p>A tradicional festa de Halloween da Rede Comunitá Jaguaré. Veja quem assustou mais!</p>
-                        <a href="#" class="view-album-btn" data-album="halloween-2025" data-count="97">Ver +50 Fotos
-                            <span>→</span></a>
-                    </div>
+                <!-- Estado de Carregamento (Loading Skeleton) -->
+                <div class="events-loading-state" id="eventsLoadingState" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                    <div class="spinner-sync" style="display: inline-block; width: 48px; height: 48px; border: 4px solid rgba(227,131,92,0.2); border-top-color: var(--hero-bg); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p style="margin-top: 20px; font-weight: 600; color: #666; font-size: 1.1rem;">Sincronizando álbuns com o Google Drive...</p>
                 </div>
-
-                <!-- Álbum: Outubro Rosa 2025 -->
-                <div class="event-card animate-on-scroll delay-2" data-category="cultura" data-year="2025"
-                    data-album="outubro-rosa-2025">
-                    <div class="event-image-wrap">
-                        <div class="image-placeholder"
-                            style="background: linear-gradient(135deg,rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url('images/otimizadas/outubro-rosa-2025/thumb/img_9954.webp') center/cover;">
-                        </div>
-                        <div class="event-year-tag">2025</div>
-                    </div>
-                    <div class="event-content">
-                        <span class="event-date">Outubro 2025</span>
-                        <h3>Ação Outubro Rosa 2025</h3>
-                        <p>Conscientização e celebração da vida no nosso evento do Outubro Rosa, focado na prevenção e
-                            cuidados preventivos.</p>
-                        <a href="#" class="view-album-btn" data-album="outubro-rosa-2025" data-count="20">Ver Todas as
-                            Fotos <span>→</span></a>
-                    </div>
-                </div>
-
-                <!-- Álbum: Novembro Azul 2025 -->
-                <div class="event-card animate-on-scroll delay-3" data-category="cultura" data-year="2025"
-                    data-album="novembro-azul-2025">
-                    <div class="event-image-wrap">
-                        <div class="image-placeholder"
-                            style="background: linear-gradient(135deg,rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url('images/otimizadas/novembro-azul-2025/thumb/20251125_142632.webp') center/cover;">
-                        </div>
-                        <div class="event-year-tag">2025</div>
-                    </div>
-                    <div class="event-content">
-                        <span class="event-date">Novembro 2025</span>
-                        <h3>Ação Novembro Azul 2025</h3>
-                        <p>Palestras e ações focadas na conscientização da saúde do homem e combate ao câncer de
-                            próstata.</p>
-                        <a href="#" class="view-album-btn" data-album="novembro-azul-2025" data-count="85">Ver +80 Fotos
-                            <span>→</span></a>
-                    </div>
-                </div>
-
-                <!-- Álbum: TCS 2025 -->
-                <div class="event-card animate-on-scroll delay-4" data-category="formatura" data-year="2025"
-                    data-album="tcs-2025">
-                    <div class="event-image-wrap">
-                        <div class="image-placeholder"
-                            style="background: linear-gradient(135deg,rgba(0,0,0,0.8), rgba(0,0,0,0.3)), url('images/otimizadas/tcs-2025/thumb/20251204_083930.webp') center/cover;">
-                        </div>
-                        <div class="event-year-tag">2025</div>
-                    </div>
-                    <div class="event-content">
-                        <span class="event-date">Dezembro 2025</span>
-                        <h3>TCS - Projetos Finais 2025</h3>
-                        <p>Apresentação incríveL dos Trabalhos de Conclusão de Semestre (TCS) dos nossos jovens
-                            talentos.</p>
-                        <a href="#" class="view-album-btn" data-album="tcs-2025" data-count="245">Ver +240 Fotos
-                            <span>→</span></a>
-                    </div>
-                </div>
-
-
             </div>
 
-            <!-- Caixa Vazia (Caso o filtro não encontre nada) -->
+            <!-- Caixa Vazia (Caso o filtro não encontre nada ou erro) -->
             <div id="noEventsMessage" class="no-events-msg" style="display: none;">
                 <p>Nenhum evento encontrado para esse filtro.</p>
             </div>
@@ -322,8 +245,7 @@
         </div>
     </div>
 
-    <script src="albums_data.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=19r"></script>
 </body>
 
 </html>
