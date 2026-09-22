@@ -779,8 +779,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const sensitivity = 5.1; // Preset Originkit
             const loop = images.length > 2;
 
-            const MAX_SCALE = 2.5;
-            const MIN_SCALE = 0.1;
+            // Escala ideal: centro com destaque (1.35x) e laterais visíveis e elegantes (0.7x)
+            const MAX_SCALE = isMobile ? 1.15 : 1.35;
+            const MIN_SCALE = isMobile ? 0.65 : 0.7;
 
             const wrap = (value, span) => ((value % span) + span) % span;
             const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -900,21 +901,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         closestIdx = node.originalIdx;
                     }
 
-                    let scale;
-                    let push;
-                    if (distance > 0) {
-                        scale = Math.min(MAX_SCALE, 1 + distance / containerWidth);
-                        push = (scale - 1) * slideWidth * 0.75;
-                    } else {
-                        scale = Math.max(MIN_SCALE, 1 + distance / containerWidth);
-                        push = 0;
-                    }
+                    // A imagem central tem distance = 0 (absDist = 0) e deve ser a MAIOR.
+                    // Conforme se afasta do centro para a esquerda ou direita, o scale diminui suavemente.
+                    const normDist = clamp(absDist / (containerWidth * 0.5), 0, 1);
+                    const scale = MAX_SCALE - normDist * (MAX_SCALE - MIN_SCALE);
 
-                    const left = flip ? containerWidth - slideWidth - (x + push) : x + push;
+                    const left = flip ? containerWidth - slideWidth - x : x;
                     node.el.style.transform = `translate3d(${left}px, -50%, 0) scale(${scale})`;
 
-                    if (dimAmount > 0 && scale < 1) {
-                        const t = (1 - scale) / Math.max(0.001, 1 - MIN_SCALE);
+                    if (dimAmount > 0) {
+                        const t = normDist;
                         node.el.style.filter = `brightness(${1 - t * dimAmount})`;
                     } else {
                         node.el.style.filter = 'none';
