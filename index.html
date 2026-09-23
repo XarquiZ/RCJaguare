@@ -1449,6 +1449,23 @@
                 font-size: 0.72rem !important;
             }
 
+            /* Slide 1 laptop geometric facets and photo position */
+            .slide1-photo-bg {
+                width: 62% !important;
+            }
+            .slide1-photo-bg img {
+                transform: translateX(10%) !important;
+                object-position: center 25% !important;
+            }
+            .slide1-geo-main {
+                width: 57% !important;
+                clip-path: polygon(0 0, 84% 0, 99% 48%, 72% 100%, 0 100%) !important;
+            }
+            .slide1-geo-facet {
+                width: 61% !important;
+                clip-path: polygon(0 0, 77% 0, 100% 56%, 70% 100%, 0 100%) !important;
+            }
+
             /* Slide 2 laptop adjustments */
             #slide2 {
                 padding-top: 86px !important;
@@ -1456,6 +1473,9 @@
             }
             #slide2 .hero-main-row {
                 padding-bottom: 10px !important;
+            }
+            #slide2 .hero-image-right {
+                transform: translateY(0) !important;
             }
             .slide2-title-clean {
                 font-size: clamp(1.8rem, 2.8vw, 2.5rem) !important;
@@ -1502,17 +1522,32 @@
             .slide2-brand-side-img {
                 height: 44px !important;
             }
+            .slide2-student-showcase {
+                max-width: 460px !important;
+                margin-right: 20px !important;
+            }
             .slide2-student-frame {
-                width: 330px !important;
-                height: 410px !important;
+                width: 335px !important;
+                height: 415px !important;
+                border-radius: 30% 70% 68% 32% / 32% 32% 68% 68% !important;
+                border: 7px solid #ffffff !important;
+            }
+            .slide2-student-frame img {
+                object-position: center 15% !important;
             }
             .slide2-blob-bg {
-                width: 440px !important;
-                height: 440px !important;
+                top: 50% !important;
+                right: 3% !important;
+                transform: translateY(-46%) !important;
+                width: 480px !important;
+                height: 480px !important;
             }
             .slide2-blob-secondary {
-                width: 500px !important;
-                height: 490px !important;
+                top: 48% !important;
+                right: -1% !important;
+                transform: translateY(-46%) !important;
+                width: 550px !important;
+                height: 540px !important;
             }
 
             /* Slide 3 laptop adjustments */
