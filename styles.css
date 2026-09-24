@@ -3723,6 +3723,47 @@ h2 {
     box-shadow: 0 4px 15px rgba(227, 131, 92, 0.3);
 }
 
+.event-filter-btn .filter-count {
+    opacity: 0.8;
+    font-size: 0.85em;
+    margin-left: 2px;
+}
+
+.event-category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(30, 41, 59, 0.85);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.event-category-badge.palestras {
+    background: linear-gradient(135deg, rgba(227, 131, 92, 0.95), rgba(200, 90, 70, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.event-category-badge.feiras {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
+}
+
+.event-category-badge.formaturas {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+}
+
+.event-category-badge.visitas {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(109, 40, 217, 0.95));
+}
+
 .year-filters .filter-label {
     font-weight: 700;
     color: var(--dark);

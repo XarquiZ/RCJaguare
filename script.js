@@ -576,9 +576,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // A) Montar Filtros de Categoria automaticamente pelo nome das pastas
-            const uniqueCategories = new Set();
+            // A) Classificação Inteligente de Categoria e Ano
             const uniqueYears = new Set();
+            const categoryGroups = new Map(); // categoryKey -> { label, albums: [] }
+
+            // Helper para identificar a categoria a partir do título do álbum
+            const detectCategory = (title) => {
+                const lower = (title || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                if (lower.includes('palestra') || lower.includes('workshop') || lower.includes('seminario')) {
+                    return { key: 'palestras', label: 'Palestras', tag: 'Palestra' };
+                }
+                if (lower.includes('feira') || lower.includes('profiss')) {
+                    return { key: 'feiras', label: 'Feiras & Profissões', tag: 'Feira' };
+                }
+                if (lower.includes('formatura') || lower.includes('certificad') || lower.includes('conclus')) {
+                    return { key: 'formaturas', label: 'Formaturas', tag: 'Formatura' };
+                }
+                if (lower.includes('visita') || lower.includes('empresa') || lower.includes('tecnica')) {
+                    return { key: 'visitas', label: 'Visitas Técnicas', tag: 'Visita Técnica' };
+                }
+                if (lower.includes('comemorac') || lower.includes('festa') || lower.includes('dia d') || lower.includes('confraternizacao')) {
+                    return { key: 'comemoracoes', label: 'Comemorações', tag: 'Comemoração' };
+                }
+                return { key: 'eventos-gerais', label: 'Outros Eventos', tag: 'Evento' };
+            };
 
             driveAlbums.forEach(album => {
                 const yearMatch = album.title.match(/\b(20\d{2})\b/);
@@ -588,21 +609,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     album.year = 'Recente';
                 }
-                uniqueCategories.add(album.title);
+
+                const catInfo = detectCategory(album.title);
+                album.categoryKey = catInfo.key;
+                album.categoryLabel = catInfo.label;
+                album.categoryTag = catInfo.tag;
+
+                if (!categoryGroups.has(catInfo.key)) {
+                    categoryGroups.set(catInfo.key, {
+                        key: catInfo.key,
+                        label: catInfo.label,
+                        count: 0
+                    });
+                }
+                categoryGroups.get(catInfo.key).count++;
             });
 
-            // Popula os botões de categorias
+            // Popula os botões de filtros por Categoria
             if (categoryFiltersContainer) {
                 categoryFiltersContainer.innerHTML = '<button class="event-filter-btn active" data-filter="all">Todos os Eventos</button>';
-                driveAlbums.forEach(album => {
+                
+                // Prioriza "Palestras" logo após "Todos" se existir
+                const sortedCategories = Array.from(categoryGroups.values()).sort((a, b) => {
+                    if (a.key === 'palestras') return -1;
+                    if (b.key === 'palestras') return 1;
+                    return a.label.localeCompare(b.label);
+                });
+
+                sortedCategories.forEach(cat => {
                     const btn = document.createElement('button');
                     btn.className = 'event-filter-btn';
-                    btn.setAttribute('data-filter', album.id);
-                    btn.textContent = album.title;
+                    btn.setAttribute('data-filter', cat.key);
+                    btn.innerHTML = `${cat.label} <span class="filter-count">(${cat.count})</span>`;
                     btn.addEventListener('click', () => {
                         document.querySelectorAll('.event-filter-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
-                        currentFilter = album.id;
+                        currentFilter = cat.key;
                         applyFilter();
                     });
                     categoryFiltersContainer.appendChild(btn);
@@ -610,6 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const allBtn = categoryFiltersContainer.querySelector('[data-filter="all"]');
                 if (allBtn) {
+                    allBtn.innerHTML = `Todos os Eventos <span class="filter-count">(${driveAlbums.length})</span>`;
                     allBtn.addEventListener('click', () => {
                         document.querySelectorAll('.event-filter-btn').forEach(b => b.classList.remove('active'));
                         allBtn.classList.add('active');
@@ -641,8 +684,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = document.createElement('div');
                 card.className = 'event-card animate-on-scroll';
                 card.setAttribute('data-album-id', album.id);
+                card.setAttribute('data-category', album.categoryKey || 'outros');
                 card.setAttribute('data-year', album.year || 'all');
-                card.style.animationDelay = `${(idx + 1) * 0.1}s`;
+                card.style.animationDelay = `${(idx + 1) * 0.08}s`;
 
                 const cover = album.coverUrl || (album.images && album.images[0] ? album.images[0].thumbUrl : '');
 
@@ -650,12 +694,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="event-image-wrap">
                         <div class="image-placeholder" style="background: linear-gradient(135deg,rgba(0,0,0,0.6), rgba(0,0,0,0.15)), url('${cover}') center/cover no-repeat;">
                         </div>
+                        <span class="event-category-badge ${album.categoryKey}">${album.categoryTag}</span>
                         <div class="event-year-tag">${album.photoCount} fotos</div>
                     </div>
                     <div class="event-content">
-                        <span class="event-date">Álbum Google Drive</span>
+                        <span class="event-date">${album.categoryLabel} • CEDESP</span>
                         <h3>${album.title}</h3>
-                        <p>Galeria com ${album.photoCount} foto${album.photoCount > 1 ? 's' : ''} sincronizada diretamente com a pasta oficial.</p>
+                        <p>Galeria com ${album.photoCount} foto${album.photoCount > 1 ? 's' : ''} sincronizada diretamente com o Google Drive.</p>
                         <a href="#" class="view-album-btn">Ver Fotos <span>→</span></a>
                     </div>
                 `;
@@ -677,10 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
             let countVisible = 0;
 
             cards.forEach(card => {
-                const albumId = card.getAttribute('data-album-id');
+                const cardCategory = card.getAttribute('data-category');
                 const cardYear = card.getAttribute('data-year');
 
-                const matchCategory = (currentFilter === 'all' || albumId === currentFilter);
+                const matchCategory = (currentFilter === 'all' || cardCategory === currentFilter);
                 const matchYear = (currentYear === 'all' || cardYear === currentYear);
 
                 if (matchCategory && matchYear) {
