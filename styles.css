@@ -3877,10 +3877,10 @@ h2 {
 }
 
 .event-content p {
-    font-size: 0.95rem;
-    color: #666;
+    font-size: 0.94rem;
+    color: #555;
     line-height: 1.6;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     flex-grow: 1;
 }
 

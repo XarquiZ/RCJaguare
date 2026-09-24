@@ -601,6 +601,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { key: 'eventos-gerais', label: 'Outros Eventos', tag: 'Evento' };
             };
 
+            // Gerador automático de descrições enriquecidas que elevam o valor pedagógico e profissional
+            const generateEnrichedDescription = (title, categoryKey) => {
+                const cleanTitle = (title || '').replace(/\b(20\d{2})\b/g, '').trim();
+                const lower = cleanTitle.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                // 1. Temas frequentes em Palestras
+                if (lower.includes('ansiedade') || lower.includes('saude mental') || lower.includes('emocional') || lower.includes('psico')) {
+                    return 'Encontro formativo focado em inteligência emocional e saúde mental, proporcionando aos alunos ferramentas indispensáveis para o bem-estar e o equilíbrio profissional.';
+                }
+                if (lower.includes('marketing') || lower.includes('digital') || lower.includes('midias') || lower.includes('redes sociais')) {
+                    return 'Imersão em estratégias digitais contemporâneas, preparando nossos jovens para posicionamento de marca, inovação comercial e oportunidades na economia conectada.';
+                }
+                if (lower.includes('financeira') || lower.includes('financ') || lower.includes('dinheiro') || lower.includes('orcamento')) {
+                    return 'Capacitação prática em gestão financeira e planejamento pessoal, essencial para a autonomia socioeconômica, consumo consciente e futuro sustentável dos educandos.';
+                }
+                if (lower.includes('sexualidade') || lower.includes('afetividade') || lower.includes('saude sexual')) {
+                    return 'Espaço de acolhimento e conscientização com base científica e respeito, abordando autocuidado, prevenção e cidadania responsável para a juventude.';
+                }
+                if (lower.includes('violencia') || lower.includes('mulher') || lower.includes('genero') || lower.includes('direitos')) {
+                    return 'Roda de reflexão e fortalecimento da cidadania sobre os direitos da mulher e combate à violência, estimulando uma postura ética, crítica e transformadora na comunidade.';
+                }
+                if (lower.includes('carreira') || lower.includes('entrevista') || lower.includes('trabalho') || lower.includes('curriculo') || lower.includes('empregabilidade')) {
+                    return 'Orientações práticas de postura profissional, elaboração de currículo e preparação para processos seletivos em grandes empresas parceiras.';
+                }
+                if (lower.includes('lideranca') || lower.includes('etica') || lower.includes('comunicacao')) {
+                    return 'Desenvolvimento de soft skills, protagonismo e comunicação assertiva, capacitando os estudantes a liderarem suas próprias trajetórias profissionais.';
+                }
+
+                // 2. Palestras com qualquer outro tema não mapeado (extrai o assunto principal do título)
+                if (categoryKey === 'palestras' || lower.includes('palestra') || lower.includes('workshop')) {
+                    const subject = cleanTitle.replace(/^(Palestra|Workshop|Semin[aá]rio)\s*(sobre|de|da|do|para)?\s*/i, '').trim();
+                    if (subject) {
+                        return `Encontro de desenvolvimento integral dedicado a ${subject}, conectando os alunos a especialistas e referências fundamentais para sua evolução pessoal e profissional.`;
+                    }
+                    return 'Encontro enriquecedor com profissionais convidados, ampliando a visão de mundo e preparando os alunos com competências essenciais para o mercado de trabalho.';
+                }
+
+                // 3. Outras Categorias de Eventos
+                if (categoryKey === 'feiras') {
+                    return 'Mostra de talentos e conexão direta com o universo produtivo, evidenciando o potencial técnico e criativo dos estudantes em projetos reais.';
+                }
+                if (categoryKey === 'formaturas') {
+                    return 'Celebração da conquista de um marco na trajetória acadêmica e profissional de quem concluiu seu curso com excelência e dedicação.';
+                }
+                if (categoryKey === 'visitas') {
+                    return 'Experiência prática in loco no ecossistema corporativo, aproximando a teoria da sala de aula da rotina real das indústrias e empresas.';
+                }
+
+                return `Momento marcante vivenciado pela comunidade do CEDESP Jaguaré, celebrando o aprendizado coletivo e o impacto positivo na formação dos jovens.`;
+            };
+
             driveAlbums.forEach(album => {
                 const yearMatch = album.title.match(/\b(20\d{2})\b/);
                 if (yearMatch) {
@@ -689,6 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.style.animationDelay = `${(idx + 1) * 0.08}s`;
 
                 const cover = album.coverUrl || (album.images && album.images[0] ? album.images[0].thumbUrl : '');
+                const enrichedDescription = generateEnrichedDescription(album.title, album.categoryKey);
 
                 card.innerHTML = `
                     <div class="event-image-wrap">
@@ -700,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="event-content">
                         <span class="event-date">${album.categoryLabel} • CEDESP</span>
                         <h3>${album.title}</h3>
-                        <p>Galeria com ${album.photoCount} foto${album.photoCount > 1 ? 's' : ''} sincronizada diretamente com o Google Drive.</p>
+                        <p class="event-enriched-desc">${enrichedDescription}</p>
                         <a href="#" class="view-album-btn">Ver Fotos <span>→</span></a>
                     </div>
                 `;
