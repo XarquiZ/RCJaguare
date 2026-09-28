@@ -1444,54 +1444,56 @@
 
         /* ================================================================ */
         /* 16:9 LAPTOPS (1366x768 etc.) — height ≤ 780px                    */
-        /* Escala proporcional para manter as mesmas proporções do 16:10     */
+        /* Proporções exatamente iguais ao 16:10, escalonado com precisão   */
         /* ================================================================ */
         @media (min-width: 993px) and (max-height: 780px) {
 
-            /* ── Ajuste global dos slides: padding-top menor para caber ── */
+            /* ── Ajuste global dos slides: padding-top proporcional à navbar compacta ── */
             .hero-slide {
-                padding-top: 120px !important;
+                padding-top: 96px !important;
+                padding-bottom: 12px !important;
             }
 
             /* ═══════ SLIDE 1 ═══════ */
             #slide1-hero {
-                padding-top: 90px !important;
-                padding-bottom: 0 !important;
+                padding-top: 96px !important;
+                padding-bottom: 12px !important;
             }
 
             #slide1-hero .hero-main-row {
-                padding-bottom: 16px !important;
+                padding-bottom: 14px !important;
             }
 
             #slide1-hero .hero-content-left {
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
+                flex: 0 0 54% !important;
+                max-width: 54% !important;
+                padding: 0 3% 0 8% !important;
             }
 
             .slide1-title {
-                font-size: clamp(1.7rem, 2.6vw, 2.3rem) !important;
+                font-size: clamp(2.0rem, 3.2vw, 2.85rem) !important;
                 margin-top: 0 !important;
-                margin-bottom: 6px !important;
+                margin-bottom: 8px !important;
                 line-height: 1.08 !important;
             }
 
             .slide1-callout {
-                font-size: 1.1rem !important;
+                font-size: 1.15rem !important;
                 margin-bottom: 8px !important;
             }
 
             .slide1-subtitle {
-                font-size: 0.88rem !important;
-                line-height: 1.4 !important;
-                margin-bottom: 12px !important;
-                max-width: 500px !important;
+                font-size: 0.86rem !important;
+                line-height: 1.45 !important;
+                margin-bottom: 14px !important;
+                max-width: 490px !important;
             }
 
             #slide1-hero .trust-badges {
                 margin-top: 0 !important;
                 margin-bottom: 12px !important;
                 gap: 12px !important;
-                max-width: 500px !important;
+                max-width: 490px !important;
             }
 
             #slide1-hero .trust-badge {
@@ -1501,106 +1503,124 @@
             }
 
             #slide1-hero .badge-logo-container {
-                width: 40px !important;
-                height: 40px !important;
-                padding: 6px !important;
+                width: 38px !important;
+                height: 38px !important;
+                padding: 5px !important;
             }
 
             #slide1-hero .badge-title {
-                font-size: 0.76rem !important;
+                font-size: 0.74rem !important;
             }
 
             #slide1-hero .badge-sub {
-                font-size: 0.66rem !important;
+                font-size: 0.64rem !important;
             }
 
             #slide1-hero .hero-buttons {
                 margin-top: 0 !important;
-                margin-bottom: 10px !important;
+                margin-bottom: 12px !important;
                 gap: 12px !important;
-                max-width: 500px !important;
+                max-width: 490px !important;
             }
 
             #slide1-hero .hero-buttons .originkit-radial-btn {
-                height: 46px !important;
-                font-size: 0.85rem !important;
+                height: 45px !important;
+                font-size: 0.84rem !important;
             }
 
             #slide1-hero .hero-buttons .radial-face {
-                padding: 0 14px !important;
-                font-size: 0.84rem !important;
+                padding: 0 16px !important;
+                font-size: 0.82rem !important;
                 gap: 6px !important;
             }
 
             .slide1-bottom-bar {
                 padding: 7px 14px !important;
-                max-width: 500px !important;
+                max-width: 490px !important;
                 border-radius: 14px !important;
             }
 
             .slide1-bar-item {
-                font-size: 0.82rem !important;
+                font-size: 0.80rem !important;
                 gap: 8px !important;
             }
 
             .slide1-bar-icon {
-                width: 26px !important;
-                height: 26px !important;
+                width: 24px !important;
+                height: 24px !important;
                 font-size: 0.75rem !important;
             }
 
-            /* Slide 1 geometric facets and photo position */
+            /* Slide 1: Geometria idêntica ao 16:10 */
             .slide1-photo-bg {
-                width: 62% !important;
+                width: 65% !important;
             }
 
             .slide1-photo-bg img {
-                transform: translateX(10%) !important;
-                object-position: center 25% !important;
+                transform: translateX(25%) !important;
+                object-position: center 35% !important;
             }
 
             .slide1-geo-main {
-                width: 57% !important;
-                clip-path: polygon(0 0, 84% 0, 99% 48%, 72% 100%, 0 100%) !important;
+                width: 62% !important;
+                clip-path: polygon(0 0, 80% 0, 96% 40%, 68% 100%, 0 100%) !important;
             }
 
             .slide1-geo-facet {
-                width: 61% !important;
-                clip-path: polygon(0 0, 77% 0, 100% 56%, 70% 100%, 0 100%) !important;
+                width: 66% !important;
+                clip-path: polygon(0 0, 72% 0, 100% 52%, 65% 100%, 0 100%) !important;
+            }
+
+            .slide1-geo-accent {
+                display: none !important;
             }
 
             /* ═══════ SLIDE 2 ═══════ */
             #slide2 {
-                padding-top: 90px !important;
-                padding-bottom: 0 !important;
+                padding-top: 96px !important;
+                padding-bottom: 12px !important;
             }
 
             #slide2 .hero-main-row {
-                padding-bottom: 16px !important;
+                padding-bottom: 14px !important;
             }
 
             #slide2 .hero-content-left {
-                padding-top: 6px !important;
+                flex: 0 0 54% !important;
+                max-width: 54% !important;
+                padding: 0 3% 0 8% !important;
             }
 
             #slide2 .hero-image-right {
-                transform: translateY(2%) !important;
+                flex: 0 0 46% !important;
+                max-width: 46% !important;
+                transform: translateY(6%) !important;
+            }
+
+            .slide2-brand-top {
+                margin-bottom: 10px !important;
+            }
+
+            .slide2-brand-logo-img {
+                height: 40px !important;
             }
 
             .slide2-title-clean {
-                font-size: clamp(1.9rem, 3vw, 2.6rem) !important;
-                margin-bottom: 10px !important;
+                font-size: clamp(2.1rem, 3.4vw, 3.0rem) !important;
+                margin-bottom: 12px !important;
+                line-height: 1.06 !important;
             }
 
             .slide2-shifts-row {
                 gap: 8px !important;
                 margin-bottom: 12px !important;
-                max-width: 480px !important;
+                max-width: 490px !important;
             }
 
             .slide2-shift-pill {
                 padding: 7px 10px !important;
                 gap: 8px !important;
+                border-radius: 12px !important;
             }
 
             .shift-icon-mini {
@@ -1608,36 +1628,39 @@
             }
 
             .shift-name {
-                font-size: 0.78rem !important;
+                font-size: 0.76rem !important;
             }
 
             .shift-hours {
-                font-size: 0.68rem !important;
+                font-size: 0.66rem !important;
             }
 
             .slide2-courses-cloud {
                 gap: 7px !important;
                 margin-bottom: 14px !important;
-                max-width: 480px !important;
+                max-width: 490px !important;
             }
 
             .slide2-course-tag {
-                padding: 6px 13px !important;
-                font-size: 0.8rem !important;
+                padding: 6px 12px !important;
+                font-size: 0.78rem !important;
+                gap: 5px !important;
             }
 
             .slide2-actions-row {
                 gap: 16px !important;
-                max-width: 480px !important;
+                max-width: 490px !important;
             }
 
             .slide2-actions-row .originkit-radial-btn {
-                height: 46px !important;
-                flex: 0 0 240px !important;
+                height: 45px !important;
+                flex: 0 0 235px !important;
+                max-width: 245px !important;
+                font-size: 0.82rem !important;
             }
 
             .slide2-actions-row .radial-face {
-                font-size: 0.84rem !important;
+                font-size: 0.82rem !important;
             }
 
             .slide2-brand-side-img {
@@ -1650,10 +1673,10 @@
             }
 
             .slide2-student-frame {
-                width: 360px !important;
-                height: 440px !important;
-                border-radius: 30% 70% 68% 32% / 32% 32% 68% 68% !important;
-                border: 7px solid #ffffff !important;
+                width: 380px !important;
+                height: 465px !important;
+                border-radius: 32% 68% 68% 32% / 32% 32% 68% 68% !important;
+                border: 6px solid #ffffff !important;
             }
 
             .slide2-student-frame img {
@@ -1663,35 +1686,53 @@
             .slide2-blob-bg {
                 top: 50% !important;
                 right: 2% !important;
-                transform: translateY(-44%) !important;
+                transform: translateY(-40%) !important;
                 width: 500px !important;
                 height: 500px !important;
+                border-radius: 42% 58% 65% 35% / 45% 45% 55% 55% !important;
             }
 
             .slide2-blob-secondary {
-                top: 48% !important;
+                top: 46% !important;
                 right: -2% !important;
-                transform: translateY(-44%) !important;
-                width: 580px !important;
-                height: 560px !important;
+                transform: translateY(-40%) !important;
+                width: 585px !important;
+                height: 570px !important;
+                border-radius: 58% 42% 38% 62% / 52% 58% 42% 48% !important;
             }
 
             /* ═══════ SLIDE 3 ═══════ */
             #slide3 {
-                padding-top: 90px !important;
-                padding-bottom: 0 !important;
+                padding-top: 96px !important;
+                padding-bottom: 12px !important;
             }
 
             #slide3 .hero-main-row {
-                padding-bottom: 16px !important;
+                padding-bottom: 14px !important;
             }
 
             #slide3 .hero-content-left {
-                padding-top: 10px !important;
+                flex: 0 0 55% !important;
+                max-width: 55% !important;
+                padding: 10px 4% 0 8% !important;
+            }
+
+            #slide3 .hero-image-right {
+                flex: 0 0 45% !important;
+                max-width: 45% !important;
             }
 
             .slide3-top-tag {
                 margin-bottom: 10px !important;
+            }
+
+            .slide3-top-tag img {
+                height: 26px !important;
+            }
+
+            .slide3-tag-pill {
+                padding: 3px 12px !important;
+                font-size: 0.72rem !important;
             }
 
             .slide3-banner-title {
@@ -1699,32 +1740,32 @@
             }
 
             .slide3-banner-title .title-top {
-                font-size: clamp(1.7rem, 2.8vw, 2.4rem) !important;
+                font-size: clamp(1.9rem, 3.2vw, 2.9rem) !important;
             }
 
             .slide3-banner-title .title-bottom {
-                font-size: clamp(2.4rem, 4.2vw, 3.5rem) !important;
+                font-size: clamp(2.6rem, 4.4vw, 4.0rem) !important;
             }
 
             .slide3-banner-desc {
-                font-size: 0.92rem !important;
+                font-size: 0.88rem !important;
                 line-height: 1.45 !important;
-                margin-bottom: 16px !important;
-                max-width: 480px !important;
+                margin-bottom: 14px !important;
+                max-width: 490px !important;
             }
 
             .slide3-cta-row {
-                margin-bottom: 16px !important;
-                gap: 16px !important;
+                margin-bottom: 14px !important;
+                gap: 14px !important;
             }
 
             .slide3-btn-gold {
-                padding: 12px 28px !important;
-                font-size: 0.92rem !important;
+                padding: 11px 26px !important;
+                font-size: 0.88rem !important;
             }
 
             .slide3-period-text {
-                font-size: 1rem !important;
+                font-size: 0.95rem !important;
             }
 
             .slide3-mini-badges {
@@ -1733,27 +1774,36 @@
 
             .slide3-mini-pill {
                 padding: 5px 12px !important;
-                font-size: 0.78rem !important;
+                font-size: 0.74rem !important;
             }
 
             .slide3-student-card {
-                width: 270px !important;
-                height: 370px !important;
+                width: 275px !important;
+                height: 375px !important;
             }
 
             .slide3-geom-diamond-1 {
-                width: 380px !important;
-                height: 380px !important;
+                width: 395px !important;
+                height: 395px !important;
+                top: 50% !important;
+                right: 14% !important;
+                border-radius: 24px !important;
             }
 
             .slide3-geom-diamond-2 {
-                width: 320px !important;
-                height: 320px !important;
+                width: 325px !important;
+                height: 325px !important;
+                top: 45% !important;
+                right: 2% !important;
+                border-radius: 20px !important;
             }
 
             .slide3-geom-gold-frame {
-                width: 300px !important;
-                height: 300px !important;
+                width: 310px !important;
+                height: 310px !important;
+                top: 50% !important;
+                right: 15% !important;
+                border: 7px solid #4ca15d !important;
             }
         }
 
