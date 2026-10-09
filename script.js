@@ -1159,7 +1159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ================================================================
     const sliderContainer = document.getElementById('smoothScrollSlider');
     if (sliderContainer) {
-        const slideData = [
+        let initialized = false;
+
+        const initSmoothSlider = () => {
+            if (initialized) return;
+            initialized = true;
+
+            const slideData = [
             {
                 title: "CCA Jaguaré",
                 category: "Desenvolvimento Infantil",
@@ -1267,7 +1273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             el.innerHTML = `
-                <img src="${item.img}" alt="${item.title}" class="smooth-slide-img" draggable="false" loading="lazy">
+                <img src="${item.img}" alt="${item.title}" class="smooth-slide-img" draggable="false" loading="lazy" decoding="async" width="460" height="500">
                 <div class="smooth-slide-overlay">
                     <span class="smooth-slide-category">${item.category}</span>
                     <h3 class="smooth-slide-title">${item.title}</h3>
@@ -1314,8 +1320,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Elemento da thumb bar mobile
         const thumbBar = document.getElementById('smoothThumbBar');
 
+        let isSliderVisible = false;
+        let rafId = null;
+
+        const startTick = () => {
+            if (!rafId && isSliderVisible) {
+                lastTime = performance.now();
+                rafId = requestAnimationFrame(tick);
+            }
+        };
+
+        const stopTick = () => {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+        };
+
         const tick = (now) => {
-            requestAnimationFrame(tick);
+            if (!isSliderVisible) {
+                rafId = null;
+                return;
+            }
+            rafId = requestAnimationFrame(tick);
             const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.1) : 1 / 60;
             lastTime = now;
 
@@ -1390,7 +1417,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 node.style.zIndex = Math.round(1000 - centerDist);
             }
         };
-        requestAnimationFrame(tick);
+
+        // IntersectionObserver para pausar RAF quando fora de tela
+        if ('IntersectionObserver' in window) {
+            const visObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isSliderVisible = entry.isIntersecting;
+                    if (isSliderVisible) {
+                        startTick();
+                    } else {
+                        stopTick();
+                    }
+                });
+            }, { rootMargin: '100px 0px 100px 0px' });
+            visObserver.observe(sliderContainer);
+        } else {
+            isSliderVisible = true;
+            startTick();
+        }
 
         // ================================================================
         // COMANDOS DE CELULAR: TOUCH / DRAG COM FÍSICA E MOMENTUM
@@ -1513,6 +1557,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Caso NÃO esteja centralizado na tela, NÃO chama preventDefault(): a página rola normalmente até centralizar
         }, { passive: false });
+        };
+
+        // Inicialização inteligente: carrega quando a seção se aproxima da viewport
+        if ('IntersectionObserver' in window) {
+            const initObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    initSmoothSlider();
+                    initObserver.disconnect();
+                }
+            }, { rootMargin: '400px 0px 400px 0px' });
+            initObserver.observe(sliderContainer);
+        } else {
+            initSmoothSlider();
+        }
     }
 
     // ================================================================

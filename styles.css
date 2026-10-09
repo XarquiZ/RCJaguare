@@ -2473,7 +2473,9 @@ h2 {
 }
 
 .footer-links h4,
-.footer-contact h4 {
+.footer-links h3,
+.footer-contact h4,
+.footer-contact h3 {
     color: var(--light);
     margin-bottom: 24px;
     font-size: 1.2rem;
@@ -2552,13 +2554,26 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #777;
+    color: #a3a3a3;
     font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    color: #a3a3a3;
 }
 
 .footer-legal {
     display: flex;
     gap: 20px;
+}
+
+.footer-legal a {
+    color: #a3a3a3;
+    transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+    color: #ffffff;
 }
 
 /* Responsive */
